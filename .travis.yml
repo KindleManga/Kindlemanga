@@ -1,0 +1,17 @@
+language: python
+dist: trusty
+sudo: required
+
+addons:
+  sonarcloud:
+    organization: "dosontung007-github"
+    token:
+      secure: "7c872be084016efb11534b6a9a8d173ae2cf9826"
+    branches:
+      - master
+jdk:
+  - oraclejdk8
+script:  - sonar-scanner
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
