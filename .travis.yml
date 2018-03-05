@@ -1,0 +1,11 @@
+language: python
+sudo: enable
+addons:
+  sonarcloud:
+    organization: "dosontung007-github"
+    token:
+      secure: 988edae93e257da45ae30a9da90407819c082568
+    github_token:
+      secure: e031356f6d800065f9fc302189f8bc2d2c7b59f9
+script:
+  - sonar-scanner
