@@ -1,8 +1,9 @@
-from requests_html import HTMLSession
-import re
 import subprocess
+
 import os
-import logging
+import re
+import yaml
+from requests_html import HTMLSession
 
 
 def isach(link):
@@ -28,25 +29,11 @@ def isach(link):
 
 
 def wget(lst_links):
-    """"
-    Wget image file and remove wget-log
-    """
-
-    logger = logging.getLogger(__name__)
-
     for i in range(len(lst_links)):
         link = lst_links[i]
 
         subprocess.Popen(['wget', '-O {}.jpg'.format(i), link])
-        logger.info('Downloaded {}.jpg'.format(i))
-
-        if i == 0:
-            remove_file = 'wget-log'
-        else:
-            remove_file = 'wget-log.{}'.format(i)
-
-        os.remove(remove_file)
-        logger.info('Removed {}'.format(remove_file))
+        #TODO debug to don't save wget-log
 
 
 def generate_manga(dir, profile):
@@ -55,12 +42,17 @@ def generate_manga(dir, profile):
                       '-f MOBI',
                       '{}'.format(dir)])
 
-
 def main():
-    logging.basicConfig(level=logging.INFO)
-
     with open('link.txt') as f:
         lst_chap_links = f.read().splitlines()
+
+    with open('profile.yaml') as f:
+        profile = yaml.safe_load(f)['profile']
+
+    profile_list = ['KO', 'KV', 'KPW', 'K578', 'KoA', 'KoAHD', 'KoAH2O', 'KoAO']
+
+    if profile not in profile_list:
+        raise ValueError('Profile is not in list profile. Edit it in profile.yaml')
 
     for link in lst_chap_links:
         dir = link[link.rfind('=') + 1:]
@@ -72,6 +64,7 @@ def main():
         wget(jpg_lst_links)
 
         os.chdir('..')
+        generate_manga(dir=dir, profile=profile)
 
 
 if __name__ == '__main__':
