@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 import os
 import re
@@ -11,7 +12,8 @@ def isach(link):
     r = session.get(link)
 
     if r.status_code == 200:
-        post_link = 'http://isach.info/web/common/ajax/load_comic_images_ajax.php'
+        post_link = 'http://isach.info/web/common/ajax/load_comic_' \
+                    'images_ajax.php'
 
         load_id = r.html.find('#load_id', first=True).attrs['value']
         load_session = r.html.find("#load_session", first=True).attrs['value']
@@ -28,19 +30,20 @@ def isach(link):
             return re.findall(pattern, r1.text)
 
 
-def wget(lst_links):
-    for i in range(len(lst_links)):
-        link = lst_links[i]
-
-        subprocess.Popen(['wget', '-O {}.jpg'.format(i), link])
-        #TODO debug to don't save wget-log
+def download_image_files(list_url):
+    for index in range(len(list_url)):
+        url = list_url[index]
+        subprocess.Popen(['wget', '-o -', '-O {}.jpg'.format(index), url])
 
 
 def generate_manga(dir, profile):
-    subprocess.Popen(['kcc-c2e', '-q',
-                      '-p {}'.format(profile),
+    subprocess.Popen(['kcc-c2e',
+                      '-q',
+                      '-p' + profile,
                       '-f MOBI',
-                      '{}'.format(dir)])
+                      '{}'.format(dir)]
+                     )
+
 
 def main():
     with open('link.txt') as f:
@@ -49,10 +52,12 @@ def main():
     with open('profile.yaml') as f:
         profile = yaml.safe_load(f)['profile']
 
-    profile_list = ['KO', 'KV', 'KPW', 'K578', 'KoA', 'KoAHD', 'KoAH2O', 'KoAO']
+    profile_list = ['KO', 'KV', 'KPW', 'K578',
+                    'KoA', 'KoAHD', 'KoAH2O', 'KoAO']
 
     if profile not in profile_list:
-        raise ValueError('Profile is not in list profile. Edit it in profile.yaml')
+        raise ValueError('Profile is not in list profile' +
+                         '. Edit it in profile.yaml')
 
     for link in lst_chap_links:
         dir = link[link.rfind('=') + 1:]
@@ -61,8 +66,8 @@ def main():
         os.chdir(dir)
 
         jpg_lst_links = isach(link)
-        wget(jpg_lst_links)
-
+        download_image_files(jpg_lst_links)
+        time.sleep(14)
         os.chdir('..')
         generate_manga(dir=dir, profile=profile)
 

@@ -1,6 +1,5 @@
 language: python
 python: 3.6
-sudo: enable
 addons:
   sonarcloud:
     organization: "dosontung007-github"
@@ -10,3 +9,4 @@ addons:
       secure: e031356f6d800065f9fc302189f8bc2d2c7b59f9
 script:
   - sonar-scanner
+  -flake8 *.py
