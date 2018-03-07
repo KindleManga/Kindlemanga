@@ -1,3 +1,4 @@
+import shlex
 import subprocess
 import time
 
@@ -30,6 +31,7 @@ def isach(link):
             return re.findall(pattern, r1.text)
 
 
+
 def download_image_files(list_url):
     for index in range(len(list_url)):
         url = list_url[index]
@@ -37,12 +39,10 @@ def download_image_files(list_url):
 
 
 def generate_manga(dir, profile):
-    subprocess.Popen(['kcc-c2e',
-                      '-q',
-                      '-p' + profile,
-                      '-f MOBI',
-                      '{}'.format(dir)]
-                     )
+    args = shlex.split('kcc-c2e -q -p {} -f MOBI {}'.format(profile, dir))
+    p = subprocess.Popen(args, stdout=subprocess.PIPE)
+    print(p.communicate())
+    # import ipdb; ipdb.set_trace()
 
 
 def main():
@@ -62,13 +62,17 @@ def main():
     for link in lst_chap_links:
         dir = link[link.rfind('=') + 1:]
 
-        os.mkdir(dir)
-        os.chdir(dir)
+        try:
+            os.mkdir(dir)
+            os.chdir(dir)
+            jpg_lst_links = isach(link)
+            download_image_files(jpg_lst_links)
+            os.chdir('..')
 
-        jpg_lst_links = isach(link)
-        download_image_files(jpg_lst_links)
-        time.sleep(14)
-        os.chdir('..')
+        except FileExistsError:
+            pass
+
+        time.sleep(16)
         generate_manga(dir=dir, profile=profile)
 
 
