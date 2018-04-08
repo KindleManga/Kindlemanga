@@ -20,7 +20,7 @@ class MangaCrawlerPipeline(object):
         manga.save()
         logger.info('Manga added')
 
-        chapters = item['chapters']
+        chapters = item['chapters'][::-1]
         k = enumerate(
             [chapters[x:x+12] for x in range(0, len(chapters), 12)],
             start=1

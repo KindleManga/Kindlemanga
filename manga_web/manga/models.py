@@ -28,7 +28,7 @@ class Volume(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} - Volumn {}".format(self.manga.name, self.number)
+        return "{} - Volume {}".format(self.manga.name, self.number)
 
 
 class Chapter(models.Model):
@@ -37,7 +37,7 @@ class Chapter(models.Model):
     source = models.URLField(max_length=500)
 
     def __str__(self):
-        return "{} - Volumn {} - {}".format(
+        return "{} - Volume {} - {}".format(
             self.volume.manga.name,
             self.volume.number,
             self.name

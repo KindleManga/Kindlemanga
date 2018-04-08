@@ -138,7 +138,7 @@ STATIC_URL = '/static/'
 # REDIS related settings
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
-REDIS_VHOST = "0"
+REDIS_VHOST = '0'
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_VHOST)
