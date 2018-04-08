@@ -4,9 +4,9 @@ from django.template.defaultfilters import slugify
 
 class Manga(models.Model):
     name = models.CharField(max_length=255, null=False)
-    source = models.URLField(max_length=255, null=False)
+    source = models.URLField(max_length=500, null=False)
     total_chap = models.IntegerField(null=True)
-    image_src = models.URLField(max_length=255, null=True)
+    image_src = models.URLField(max_length=500, null=True)
     slug = models.SlugField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -23,7 +23,7 @@ class Manga(models.Model):
 class Volume(models.Model):
     manga = models.ForeignKey(Manga, on_delete=models.CASCADE)
     number = models.IntegerField(null=True)
-    download_link = models.URLField(max_length=255, null=True)
+    download_link = models.URLField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -34,7 +34,7 @@ class Volume(models.Model):
 class Chapter(models.Model):
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    source = models.URLField(max_length=255)
+    source = models.URLField(max_length=500)
 
     def __str__(self):
         return "{} - Volumn {} - {}".format(

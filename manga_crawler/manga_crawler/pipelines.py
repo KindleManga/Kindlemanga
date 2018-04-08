@@ -1,6 +1,5 @@
 import logging
 
-from .items import MangaCrawlerItem
 from manga.models import Manga, Volume, Chapter
 
 logger = logging.getLogger(__name__)
@@ -8,6 +7,10 @@ logger = logging.getLogger(__name__)
 
 class MangaCrawlerPipeline(object):
     def process_item(self, item, spider):
+        if Manga.objects.filter(name=item['name'][0]):
+            logger.info('Manga existed')
+            return item
+
         manga = Manga(
             name=item['name'][0],
             source=item['source'][0],
