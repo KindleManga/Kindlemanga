@@ -34,11 +34,14 @@ class HvttSpider(CrawlSpider):
         manga.add_xpath('name', '//h3[@class="__name"]/text()', MapCompose(str.strip))
         manga.add_value('source', response.url)
         manga.add_xpath('image_src', '//*[@class="__image"]/img/@src')
-        manga.add_xpath(
+        manga.add_value(
             'total_chap',
-            '//*[@class="table table-hover"]/tbody/tr[1]/td[1]/a//text()',
-            TakeFirst(),
-            MapCompose(lambda x: re.findall(r'\d+', x))
+            max(
+                [int(i) for i in
+                    manga.get_xpath(
+                        '//*[@class="table table-hover"]/tbody//tr//td//a//text()',
+                        MapCompose(lambda x: re.findall(r'\d+', x)))]
+            )
         )
 
         chapter_source = manga.get_xpath('//*[@class="table table-hover"]/tbody//tr//td//a/@href')
