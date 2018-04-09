@@ -27,13 +27,14 @@ class HvttSpider(CrawlSpider):
         """
         @url http://hocvientruyentranh.com/manga/2/shokugeki-no-souma-
         @returns items 1
-        @scrapes name source total_chap chapters
+        @scrapes name source total_chap chapters description
         """
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
 
         manga.add_xpath('name', '//h3[@class="__name"]/text()', MapCompose(str.strip))
         manga.add_value('source', response.url)
         manga.add_xpath('image_src', '//*[@class="__image"]/img/@src')
+        manga.add_xpath('description', '//*[@class="__description"]//p/text()', Join('\n'))
         manga.add_value(
             'total_chap',
             max(

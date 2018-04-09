@@ -25,5 +25,6 @@ redis==2.10.6
 requests-toolbelt==0.8.0  # via mediafire
 requests==2.11.1          # via mediafire, requests-toolbelt
 six==1.11.0               # via mediafire
+unidecode==1.0.22
 vine==1.1.4               # via amqp
 yarl==1.1.1               # via aiohttp

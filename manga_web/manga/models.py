@@ -1,10 +1,13 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
+from unidecode import unidecode
+
 
 class Manga(models.Model):
     name = models.CharField(max_length=255, null=False)
     source = models.URLField(max_length=500, null=False)
+    description = models.TextField(null=True)
     total_chap = models.IntegerField(null=True)
     image_src = models.URLField(max_length=500, null=True)
     slug = models.SlugField()
@@ -16,7 +19,7 @@ class Manga(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(unidecode(self.name))
         super(Manga, self).save(*args, **kwargs)
 
 
