@@ -15,10 +15,11 @@ class MangaCrawlerPipeline(object):
             name=item['name'][0],
             source=item['source'][0],
             total_chap=item['total_chap'][0],
-            image_src=item['image_src'][0]
+            image_src=item['image_src'][0],
+            description=item['description'][0]
         )
         manga.save()
-        logger.info('Manga added')
+        logger.info('Manga {} added'.format(item['name'][0]))
 
         chapters = item['chapters'][::-1]
         k = enumerate(

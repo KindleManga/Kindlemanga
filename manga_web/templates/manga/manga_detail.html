@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="section">
+  <p class="title is-3">{{manga.name}}</p>
+  <figure class="image is-128x128">
+    <img src="{{manga.image_src}}" alt="">
+  </figure>
+  </div>
+  <section class="section">
+  {% for vol in volume_list %}
+    <div class="card">
+      <div class="card-content">
+        <div class="content">
+          <span class="title is-5"><a href="{% url 'volume' pk=vol.pk %}">Volume {{vol.number}}</a></span>
+          <br>
+          {% if vol.download_link %}
+            <a class="button is-primary" href="{{vol.download_link}}" target="_blank">Download</a>
+          {% else %}
+            <a class="button is-danger" href="">Make</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </section>
+{% endblock %}
