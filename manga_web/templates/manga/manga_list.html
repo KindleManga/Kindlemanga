@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="columns is-multiline">
+    {% for manga in mangas %}
+    <div class="column is-4">
+      <div class="card" style="height: 100%;">
+        <div class="card-image">
+          <figure class="image">
+            <img src="{{manga.image_src}}" alt="">
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media-content">
+            <p class="title is-5"><a href="{{manga.slug}}">{{manga.name}}</a></p>
+            <div class="content">
+              {{manga.description}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if is_paginated %}
+    <div class="columns">
+      <div class="column is-10 is-offset-1">
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+          {% else %}
+          <a class="pagination-previous" disabled>Previous</a>
+          {% endif %}
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next page</a>
+          {% else %}
+          <a class="pagination-next" disabled>Next page</a>
+          {% endif %}
+          <ul class="pagination-list">
+            {% if page_obj.number > 2 %}
+              <li><a href="?page=1" class="pagination-link">1</a></li>
+              <li><span class="pagination-ellipsis">&hellip;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+              {% if page_obj.number == i %}
+              <li>
+                <a href="" class="pagination-link is-current">{{ i }}</a>
+              </li>
+              {% elif i > page_obj.number|add:'-2' and i < page_obj.number|add:'2' %}
+              <li>
+                <a href="?page={{ i }}" class="pagination-link">{{ i }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+              <li><span class="pagination-ellipsis">&hellip;</span></li>
+              <li><a href="?page={{page_obj.paginator.num_pages}}" class="pagination-link">{{ page_obj.paginator.num_pages }}</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
