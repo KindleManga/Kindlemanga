@@ -22,6 +22,9 @@ class Manga(models.Model):
             self.slug = slugify(unidecode(self.name))
         super(Manga, self).save(*args, **kwargs)
 
+    def as_dict(self):
+        return {'name': self.name, 'slug': self.slug, 'image': self.image_src}
+
 
 class Volume(models.Model):
     manga = models.ForeignKey(Manga, on_delete=models.CASCADE)

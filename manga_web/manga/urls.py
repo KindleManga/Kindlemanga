@@ -1,8 +1,15 @@
 from django.urls import path
-from .views import MangaListView, MangaDetailView, VolumeView
+from .views import (
+    MangaListView, MangaDetailView, MangaSearchView,
+    VolumeView, HomeView, search_ajax
+)
 
+app_name = "manga"
 urlpatterns = [
-    path('', MangaListView.as_view(), name="manga_list"),
-    path('<slug:slug>/', MangaDetailView.as_view(), name='manga_detail'),
+    path('', HomeView.as_view(), name="home"),
+    path('ajax/search/', search_ajax, name="search_ajax"),
+    path('manga/', MangaListView.as_view(), name="list"),
+    path('search/', MangaSearchView.as_view(), name="search"),
+    path('manga/<slug:slug>/', MangaDetailView.as_view(), name='detail'),
     path('volume/<int:pk>/', VolumeView.as_view(), name='volume'),
 ]
