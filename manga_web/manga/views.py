@@ -1,13 +1,56 @@
+from functools import reduce
+
 from django.views.generic import ListView, DetailView
+from django.db.models import Q
 from django.views.generic.edit import FormView
-from .models import Manga, Volume
-from .forms import CreateVolumeForm
+from django.urls import reverse_lazy
+from django.http import JsonResponse
+
+from .models import Manga
+from .forms import CreateVolumeForm, SearchForm
+
+
+class HomeView(FormView):
+    template_name = 'manga/index.html'
+    form_class = SearchForm
+    success_url = reverse_lazy()
+
+
+def search_ajax(request):
+    if request.method == 'GET':
+        keywords = request.GET.get('q')
+        qs = Manga.objects.filter(
+            reduce(lambda x, y: x | y, [Q(name__unaccent__icontains=word) for word in keywords.split()])
+        )[:10]
+        data = {'results': [i.as_dict() for i in qs]}
+        return JsonResponse(data)
+
+
+class MangaSearchView(ListView):
+    model = Manga
+    paginate_by = 10
+    context_object_name = 'mangas'
+    template_name = 'manga/search_result.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MangaSearchView, self).get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q')
+        return context
+
+    def get_queryset(self):
+        keywords = self.request.GET.get('q')
+        if keywords:
+            qs = Manga.objects.filter(
+                reduce(lambda x, y: x | y, [Q(name__unaccent__icontains=word) for word in keywords.split()])
+            )
+            return qs
 
 
 class MangaListView(ListView):
     model = Manga
     context_object_name = 'mangas'
-    paginate_by = 6
+    paginate_by = 8
+    ordering = 'name'
 
 
 class MangaDetailView(DetailView):

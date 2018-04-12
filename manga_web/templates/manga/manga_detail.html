@@ -11,7 +11,7 @@
     <div class="card">
       <div class="card-content">
         <div class="content">
-          <span class="title is-5"><a href="{% url 'volume' pk=vol.pk %}">Volume {{vol.number}}</a></span>
+          <span class="title is-5"><a href="{% url 'manga:volume' pk=vol.pk %}">Volume {{vol.number}}</a></span>
           <br>
           {% if vol.download_link %}
             <a class="button is-primary" href="{{vol.download_link}}" target="_blank">Download</a>

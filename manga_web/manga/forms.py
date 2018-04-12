@@ -8,3 +8,7 @@ class CreateVolumeForm(forms.Form):
     def create_volume(self, volume_id):
         r = make_volume(volume_id)
         return r
+
+
+class SearchForm(forms.Form):
+    name = forms.CharField()

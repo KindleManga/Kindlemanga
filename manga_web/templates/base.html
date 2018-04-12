@@ -4,17 +4,17 @@
   <head>
     <meta charset="utf-8">
     <title>Kindle Manga</title>
-    <link rel="stylesheet" href="{% static "css/bulma.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
   </head>
   <body>
     <div class="container">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="{% url "manga_list" %}">
-            <h1 class="title">Kindle Manga</h1>
+          <a class="navbar-item" href="{% url "manga:home" %}">
+            <h1 class="title is-3">Kindle Manga</h1>
           </a>
 
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -23,24 +23,36 @@
         <div class="navbar-menu" id="navMenu">
           <div class="navbar-end">
             <!-- navbar items -->
-            <a class="navbar-item" href="{% url "manga_list" %}">
-              Home
+            <a class="navbar-item" href="{% url "manga:home" %}">
+              <span class="icon is-left"><i class="fas fa-home"></i></span> Home
             </a>
-            <a class="navbar-item" href="{% url "manga_list" %}">
-              Manga List
+
+            <a class="navbar-item" href="{% url "manga:list" %}">
+              <span class="icon is-left"><i class="fas fa-book"></i></span> Manga List
             </a>
+            <a class="navbar-item" href="">
+              <span class="icon is-left"><i class="fas fa-question"></i></span> F.A.Q
+            </a>
+            <a class="navbar-item" href="">
+              <span class="icon is-left"><i class="fas fa-envelope"></i></span> Contact
+            </a>
+            <div class="navbar-item">
+              <a href="https://github.com/tudoanh/Kindlemanga" target="_blank" class="button is-info">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Github</span>
+              </a>
+            </div>
           </div>
         </div>
       </nav>
     </div>
-    <section class="section">
-      <div class="container">
-        {% block body %}
-
-        {% endblock %}
-      </div>
-    </section>
-
+    {% block body %}
+    {% endblock %}
+    {% block extra_js %}
+    {% endblock %}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function () {
 

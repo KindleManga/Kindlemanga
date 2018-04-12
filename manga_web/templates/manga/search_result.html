@@ -1,0 +1,62 @@
+{% extends 'manga/manga_list.html' %}
+{% block body %}
+<section class="section">
+  <div class="container">
+    {% for manga in mangas %}
+      <div class="box">
+        <article class="media">
+          <div class="media-left">
+            <figure class="image is-128x128 is-1by1">
+              <img src="{{manga.image_src}}" alt="">
+            </figure>
+          </div>
+          <div class="media-content">
+            <div class="content">
+              <p class="title is-5"><a href="{{manga.slug}}">{{manga.name}}</a></p>
+              <p>{{manga.description|truncatechars:420}}</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    {% endfor %}
+    </div>
+  </section>
+{% if is_paginated %}
+<div class="columns">
+  <div class="column is-10 is-offset-1">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      {% if page_obj.has_previous %}
+      <a href="?{% if job_type %}type={{job_type}}&{% endif %}{% if query %}q={{query}}&{% endif %}{% if city %}city={{city}}&{% endif %}page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+      {% else %}
+      <a class="pagination-previous" disabled>Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+      <a href="?{% if job_type %}type={{job_type}}&{% endif %}{% if query %}q={{query}}&{% endif %}{% if city %}city={{city}}&{% endif %}page={{ page_obj.next_page_number }}" class="pagination-next">Next page</a>
+      {% else %}
+      <a class="pagination-next" disabled>Next page</a>
+      {% endif %}
+      <ul class="pagination-list">
+        {% for i in paginator.page_range %}
+          {% if page_obj.number == i %}
+          <li>
+            <a href="" class="pagination-link is-current">{{ i }}</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="?{% if job_type %}type={{job_type}}&{% endif %}{% if query %}q={{query}}&{% endif %}{% if city %}city={{city}}&{% endif %}page={{ i }}" class="pagination-link">{{ i }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+</script>
+{% endblock %}
