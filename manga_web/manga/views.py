@@ -90,3 +90,7 @@ class FAQView(TemplateView):
 
 class ContactView(TemplateView):
     template_name = "manga/contact.html"
+
+
+class ThanksView(TemplateView):
+    template_name = "manga/thanks.html"
