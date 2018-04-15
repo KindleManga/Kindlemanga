@@ -1,12 +1,14 @@
 from functools import reduce
 
 from django.views.generic import ListView, DetailView
+from django.views.generic.base import TemplateView
+from django.views.generic.detail import SingleObjectMixin
 from django.db.models import Q
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 
-from .models import Manga
+from .models import Manga, Volume
 from .forms import CreateVolumeForm, SearchForm
 
 
@@ -60,7 +62,7 @@ class MangaDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         manga = self.get_object()
-        context['volume_list'] = manga.volume_set.all()
+        context['volume_list'] = manga.volume_set.all().order_by('number')
         return context
 
 
@@ -69,7 +71,22 @@ class VolumeView(FormView):
     form_class = CreateVolumeForm
     success_url = '/thanks/'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        volume_id = self.kwargs['pk']
+        volume = Volume.objects.get(pk=volume_id)
+        context['volume'] = volume
+        return context
+
     def form_valid(self, form):
         volume_id = self.kwargs['pk']
         form.create_volume(volume_id)
         return super().form_valid(form)
+
+
+class FAQView(TemplateView):
+    template_name = "manga/faq.html"
+
+
+class ContactView(TemplateView):
+    template_name = "manga/contact.html"

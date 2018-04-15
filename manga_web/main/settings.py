@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django_celery_beat',
     'django_celery_results',
+    'widget_tweaks',
     'manga',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +157,6 @@ CELERY_TIMEZONE = TIME_ZONE
 MEDIAFIRE_EMAIL = get_env_variable('MEDIAFIRE_EMAIL')
 MEDIAFIRE_PASSWORD = get_env_variable('MEDIAFIRE_PASSWORD')
 MEDIAFIRE_FOLDER = 'mf:/KindleManga/'
+RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
+NOCAPTCHA = True
