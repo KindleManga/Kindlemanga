@@ -24,21 +24,21 @@
           <div class="navbar-end">
             <!-- navbar items -->
             <a class="navbar-item" href="{% url "manga:home" %}">
-              <span class="icon is-left"><i class="fas fa-home"></i></span> Home
+              <span class="icon is-left has-text-primary"><i class="fas fa-home"></i></span> <span>Home</span>
             </a>
 
-            <a class="navbar-item" href="{% url "manga:list" %}">
-              <span class="icon is-left"><i class="fas fa-book"></i></span> Manga List
+            <a class="navbar-item" href="{% url 'manga:list' %}">
+              <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Manga List</span>
             </a>
-            <a class="navbar-item" href="">
-              <span class="icon is-left"><i class="fas fa-question"></i></span> F.A.Q
+            <a class="navbar-item" href="{% url 'manga:faq' %}">
+              <span class="icon is-left has-text-success"><i class="fas fa-question"></i></span> <span>F.A.Q</span>
             </a>
-            <a class="navbar-item" href="">
-              <span class="icon is-left"><i class="fas fa-envelope"></i></span> Contact
+            <a class="navbar-item" href="{% url 'manga:contact' %}">
+              <span class="icon is-left has-text-link"><i class="fas fa-envelope"></i></span> <span>Contact</span>
             </a>
             <div class="navbar-item">
               <a href="https://github.com/tudoanh/Kindlemanga" target="_blank" class="button is-info">
-                  <span class="icon">
+                  <span class="icon has-text-white">
                     <i class="fab fa-github"></i>
                   </span>
                   <span>Github</span>
