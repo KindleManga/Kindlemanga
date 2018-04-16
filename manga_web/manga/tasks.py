@@ -65,7 +65,7 @@ def download_volume(volume_id):
 
 @task(name="generate_manga")
 def generate_manga(path, profile='KV'):
-    time.sleep(45)
+    time.sleep(60)
     args = shlex.split('kcc-c2e -m -q -p {0} -f MOBI {1}'.format(profile, shlex.quote(path)))
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
