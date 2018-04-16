@@ -1,26 +1,57 @@
 {% extends "base.html" %}
+{% block meta_title %}{{ manga.name }} - {{ manga.total_chap }} chapters{% endblock %}
+{% block meta_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block meta_description %}{{ manga.description }}{% endblock %}
 {% block body %}
   <div class="section">
-  <p class="title is-3">{{manga.name}}</p>
-  <figure class="image is-128x128">
-    <img src="{{manga.image_src}}" alt="">
-  </figure>
-  </div>
-  <section class="section">
-  {% for vol in volume_list %}
-    <div class="card">
-      <div class="card-content">
-        <div class="content">
-          <span class="title is-5"><a href="{% url 'volume' pk=vol.pk %}">Volume {{vol.number}}</a></span>
-          <br>
-          {% if vol.download_link %}
-            <a class="button is-primary" href="{{vol.download_link}}" target="_blank">Download</a>
-          {% else %}
-            <a class="button is-danger" href="">Make</a>
-          {% endif %}
+    <div class="container">
+      <div class="columns">
+        <div class="column is-5">
+          <div class="columns">
+            <div class="column is-4 is-offset-4">
+              <figure class="image">
+            <img src="{{manga.image_src}}" alt="">
+          </figure>
+            </div>
+          </div>
+          <div class="media">
+            <div class="media-content">
+              <div class="content">
+                <p class="title is-3">{{manga.name}}</p>
+                {% if manga.description %}
+                  <p>{{manga.description|linebreaks}}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          {% for vol in volume_list %}
+          <div class="card">
+            <div class="card-content">
+              <div class="content">
+                <span class="title is-5">Tập {{vol.number}}</span>
+                <br>
+                {% if vol.download_link %}
+                <a class="button is-primary" href="{{vol.download_link}}" target="_blank">
+                  <span class="icon">
+                    <i class="fas fa-toggle-on"></i>
+                  </span>
+                  <span>Tải về</span>
+                </a>
+                {% else %}
+                <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}">
+                  <span class="icon">
+                    <i class="fas fa-toggle-off"></i>
+                  </span>
+                  <span>Yêu cầu</span>
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
-  {% endfor %}
-  </section>
 {% endblock %}
