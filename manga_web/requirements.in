@@ -1,5 +1,4 @@
 django
-aiohttp
 celery
 redis
 django-celery-beat
@@ -9,3 +8,4 @@ mediafire
 unidecode
 django-widget-tweaks
 django-recaptcha
+django-contact-form

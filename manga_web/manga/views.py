@@ -88,9 +88,5 @@ class FAQView(TemplateView):
     template_name = "manga/faq.html"
 
 
-class ContactView(TemplateView):
-    template_name = "manga/contact.html"
-
-
 class ThanksView(TemplateView):
     template_name = "manga/thanks.html"

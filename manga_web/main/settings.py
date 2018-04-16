@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'manga',
     'captcha',
+    'djcelery_email',
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,11 @@ MEDIAFIRE_FOLDER = 'mf:/KindleManga/'
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 NOCAPTCHA = True
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = get_env_variable('GMAIL_EMAIL')
+EMAIL_HOST_PASSWORD = get_env_variable('GMAIL_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+MANAGERS = [('Tu', 'tu0703@gmail.com'), ]

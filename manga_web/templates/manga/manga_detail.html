@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block meta_title %}{{ manga.name }} - {{ manga.total_chap }} chapters{% endblock %}
+{% block meta_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block meta_description %}{{ manga.description }}{% endblock %}
 {% block body %}
   <div class="section">
     <div class="container">
