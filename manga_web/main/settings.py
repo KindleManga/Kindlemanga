@@ -167,3 +167,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 MANAGERS = [('Tu', 'tu0703@gmail.com'), ]
+VENV_PATH = get_env_variable('VENV_PATH')
