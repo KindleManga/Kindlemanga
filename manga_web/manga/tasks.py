@@ -127,11 +127,11 @@ def send_notification(volume_id, email):
     v = Volume.objects.get(id=volume_id)
     send_mail(
         'Your manga volume has been converted successful',
-        'Hello {0}, your manga {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
-            email, v.manga.name, v.number, v.manga.get_absolute_url()
+        'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
+            email, v.manga.name, v.number, 'https://kindlemanga.xyz/' + v.manga.get_absolute_url()
         ),
         'meatyminus@gmail.com',
-        [email, 'tu0703@gmail.com']
+        [email, 'doanhtu@yandex.com']
     )
 
 
