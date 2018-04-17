@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.template.defaultfilters import slugify
 
 from unidecode import unidecode
@@ -24,6 +25,9 @@ class Manga(models.Model):
 
     def as_dict(self):
         return {'name': self.name, 'slug': self.slug, 'image': self.image_src}
+
+    def get_absolute_url(self):
+        return reverse('manga:detail', kwargs={'slug': self.slug})
 
 
 class Volume(models.Model):
