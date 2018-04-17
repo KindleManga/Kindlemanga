@@ -18,6 +18,7 @@ from .models import Volume, Chapter
 
 
 BUCKET_NAME = settings.BUCKET_NAME
+VENV_PATH = settings.VENV_PATH
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 s3 = boto3.resource('s3')
@@ -33,6 +34,7 @@ def download(chapter_id, index, path, url):
 
 
 def upload(path, file_name):
+    time.sleep(30)
     with open(shlex.quote(path), 'rb') as f:
         obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
         return obj
@@ -84,7 +86,11 @@ def download_volume(volume_id):
 @task(name="generate_manga")
 def generate_manga(path, profile='KV'):
     time.sleep(60)
-    args = shlex.split('kcc-c2e -m -q -p {0} -f MOBI {1}'.format(profile, shlex.quote(path)))
+    args = shlex.split('{0}/kcc-c2e -m -q -p {1} -f MOBI {2}'.format(
+        VENV_PATH,
+        profile,
+        shlex.quote(path)
+    ))
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
     return "{}.mobi".format(path)
