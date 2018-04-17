@@ -7,6 +7,7 @@ import subprocess
 import time
 
 from django.conf import settings
+from django.core.mail import send_mail
 from celery import group, chain
 from celery.decorators import task
 from PIL import Image
@@ -35,7 +36,7 @@ def download(chapter_id, index, path, url):
 
 def upload(path, file_name):
     time.sleep(30)
-    with open(shlex.quote(path), 'rb') as f:
+    with open(path, 'rb') as f:
         obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
         return obj
 
@@ -118,13 +119,28 @@ def upload_and_save(path, volume_id):
     v.save()
     shutil.rmtree(path.split('.mobi')[0])
     os.remove(path)
+    return v
 
 
-def make_volume(volume_id):
+@task(name="send_notification")
+def send_notification(volume_id, email):
+    v = Volume.objects.get(id=volume_id)
+    send_mail(
+        'Your manga volume has been converted successful',
+        'Hello {0}, your manga {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
+            email, v.manga.name, v.number, v.manga.get_absolute_url()
+        ),
+        'meatyminus@gmail.com',
+        [email, 'tu0703@gmail.com']
+    )
+
+
+def make_volume(volume_id, email):
     res = chain(
         download_volume.s(volume_id),
         delete_corrupt_file.s(),
         generate_manga.s(),
-        upload_and_save.s(volume_id)
+        upload_and_save.s(volume_id),
+        send_notification.si(volume_id, email)
     )()
     return res

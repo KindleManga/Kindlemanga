@@ -2,7 +2,6 @@ from functools import reduce
 
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
-from django.views.generic.detail import SingleObjectMixin
 from django.db.models import Q
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
@@ -80,7 +79,8 @@ class VolumeView(FormView):
 
     def form_valid(self, form):
         volume_id = self.kwargs['pk']
-        form.create_volume(volume_id)
+        email = form.cleaned_data['email']
+        form.create_volume(volume_id, email)
         return super().form_valid(form)
 
 
