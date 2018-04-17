@@ -6,6 +6,8 @@
 #
 amqp==2.2.2               # via kombu
 billiard==3.5.0.3         # via celery
+boto3==1.7.4
+botocore==1.10.4          # via boto3, s3transfer
 celery==4.1.0
 django-celery-beat==1.1.1
 django-celery-results==1.0.1
@@ -13,13 +15,14 @@ django-contact-form==1.5
 django-recaptcha==1.4.0
 django-widget-tweaks==1.4.2
 django==2.0.4
+docutils==0.14            # via botocore
+jmespath==0.9.3           # via boto3, botocore
 kombu==4.1.0              # via celery
-mediafire==0.6.0
 psycopg2-binary==2.7.4
-pytz==2018.3              # via celery, django
+python-dateutil==2.6.1    # via botocore
+pytz==2018.4              # via celery, django
 redis==2.10.6
-requests-toolbelt==0.8.0  # via mediafire
-requests==2.11.1          # via mediafire, requests-toolbelt
-six==1.11.0               # via mediafire
+s3transfer==0.1.13        # via boto3
+six==1.11.0               # via python-dateutil
 unidecode==1.0.22
 vine==1.1.4               # via amqp

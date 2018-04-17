@@ -7,22 +7,20 @@ import subprocess
 import time
 
 from django.conf import settings
-from celery import group, chord, chain
+from celery import group, chain
 from celery.decorators import task
 from PIL import Image
+import boto3
 import requests
-from mediafire.client import MediaFireClient, File, Folder
 
 from .utils import url2filename, extract_images_url
-from .models import Manga, Volume, Chapter
+from .models import Volume, Chapter
 
-client = MediaFireClient()
-client.login(email=settings.MEDIAFIRE_EMAIL, password=settings.MEDIAFIRE_PASSWORD, app_id='42511')
-UPLOAD_FOLDER = settings.MEDIAFIRE_FOLDER
 
+BUCKET_NAME = settings.BUCKET_NAME
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-
+s3 = boto3.resource('s3')
 
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
@@ -34,12 +32,24 @@ def download(chapter_id, index, path, url):
                 f.write(chunk)
 
 
-@task(name="download_chapter")
-def download_chapter(path, chapter_id):
-    c = Chapter.objects.get(id=chapter_id)
-    urls = extract_images_url(c.source)
-    for index, url in enumerate(urls):
-        download(chapter_id, index, path, url)
+def upload(path, file_name):
+    with open(shlex.quote(path), 'rb') as f:
+        obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
+        return obj
+
+
+def generate_key(vol):
+    return "{0} - Volume {1}.mobi".format(vol.manga.name, vol.number)
+
+
+def make_download_link(file_name):
+    bucket_location = boto3.client('s3').get_bucket_location(Bucket=BUCKET_NAME)
+    url = "https://s3-{0}.amazonaws.com/{1}/{2}".format(
+        bucket_location['LocationConstraint'],
+        BUCKET_NAME,
+        file_name
+    )
+    return url
 
 
 def make_volume_dir(volume_id):
@@ -53,6 +63,14 @@ def extract_chapters(volume_id):
     v = Volume.objects.get(id=volume_id)
     chapters = v.chapter_set.all()
     return chapters
+
+
+@task(name="download_chapter")
+def download_chapter(path, chapter_id):
+    c = Chapter.objects.get(id=chapter_id)
+    urls = extract_images_url(c.source)
+    for index, url in enumerate(urls):
+        download(chapter_id, index, path, url)
 
 
 @task(name="download_volume")
@@ -87,8 +105,9 @@ def delete_corrupt_file(path):
 @task(name="upload_and_save")
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    r = client.upload_file(path, UPLOAD_FOLDER)
-    link = "http://www.mediafire.com/file/{}".format(r.quickkey)
+    file_name = generate_key(v)
+    r = upload(path, file_name)
+    link = make_download_link(file_name)
     v.download_link = link
     v.save()
     shutil.rmtree(path.split('.mobi')[0])
