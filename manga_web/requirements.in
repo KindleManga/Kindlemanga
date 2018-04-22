@@ -4,8 +4,8 @@ redis
 django-celery-beat
 django-celery-results
 psycopg2-binary
-mediafire
 unidecode
 django-widget-tweaks
 django-recaptcha
 django-contact-form
+boto3
