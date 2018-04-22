@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>Kindle Manga</title>
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" value="summary">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="{% block meta_title %}{% endblock %}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{% block meta_url %}https://kindlemanga.xyz/{% endblock %}" />
+    <meta property="og:image" content="{% block meta_image %}https://i.imgur.com/yVthrKd.jpg{% endblock %}" />
+    <meta property="og:description" content="{% block meta_description %}Tải bộ truyện tranh yêu thích của bạn về Kindle và đọc mọi lúc mọi nơi. Hoàn toàn miễn phí.{% endblock %}" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="{% url "manga:home" %}">
+            <h1 class="title is-3">Kindle Manga</h1>
+          </a>
+
+          <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+          <div class="navbar-end">
+            <!-- navbar items -->
+            <a class="navbar-item" href="{% url "manga:home" %}">
+              <span class="icon is-left has-text-primary"><i class="fas fa-home"></i></span> <span>Home</span>
+            </a>
+
+            <a class="navbar-item" href="{% url 'manga:list' %}">
+              <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Manga List</span>
+            </a>
+            <a class="navbar-item" href="{% url 'manga:faq' %}">
+              <span class="icon is-left has-text-success"><i class="fas fa-question"></i></span> <span>F.A.Q</span>
+            </a>
+            <a class="navbar-item" href="{% url 'contact_form' %}">
+              <span class="icon is-left has-text-link"><i class="fas fa-envelope"></i></span> <span>Contact</span>
+            </a>
+            <div class="navbar-item">
+              <a href="https://github.com/tudoanh/Kindlemanga" target="_blank" class="button is-info">
+                <span class="icon has-text-white">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>Github</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    {% block body %}
+    {% endblock %}
+    {% block extra_js %}
+    {% endblock %}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+
+        // Get all "navbar-burger" elements
+        var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+
+          // Add a click event on each of them
+          $navbarBurgers.forEach(function ($el) {
+            $el.addEventListener('click', function () {
+
+              // Get the target from the "data-target" attribute
+              var target = $el.dataset.target;
+              var $target = document.getElementById(target);
+
+              // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+              $el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+
+            });
+          });
+        }
+
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+<section class="hero is-large">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <h1 class="title">Kindle Manga</h1>
+      <h2 class="subtitle">Tìm kiếm và tải Manga yêu thích của bạn về Kindle</h2>
+      <form action="{% url "manga:search" %}" class="control">
+        <div class="columns">
+          <div class="column is-10-mobile is-offset-1-mobile is-8-desktop is-offset-2-desktop">
+            <input type="text" class="input is-primary" name="q" placeholder="Tên manga, từ khóa ...">
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-2-desktop is-offset-5-desktop has-text-centered">
+            <button class="button is-primary is-medium" type="submit">
+              <span class="icon is-left"><i class="fas fa-search"></i></span> <span>Tìm kiếm</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
