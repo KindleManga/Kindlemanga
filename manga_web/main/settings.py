@@ -35,7 +35,7 @@ SECRET_KEY = '_z^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -155,9 +155,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
-MEDIAFIRE_EMAIL = get_env_variable('MEDIAFIRE_EMAIL')
-MEDIAFIRE_PASSWORD = get_env_variable('MEDIAFIRE_PASSWORD')
-MEDIAFIRE_FOLDER = 'mf:/KindleManga/'
+BUCKET_NAME = 'kindle-manga'
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 NOCAPTCHA = True
@@ -169,3 +167,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 MANAGERS = [('Tu', 'tu0703@gmail.com'), ]
+VENV_PATH = get_env_variable('VENV_PATH')

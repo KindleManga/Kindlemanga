@@ -7,22 +7,22 @@ import subprocess
 import time
 
 from django.conf import settings
-from celery import group, chord, chain
+from django.core.mail import send_mail
+from celery import group, chain
 from celery.decorators import task
 from PIL import Image
+import boto3
 import requests
-from mediafire.client import MediaFireClient, File, Folder
 
 from .utils import url2filename, extract_images_url
-from .models import Manga, Volume, Chapter
+from .models import Volume, Chapter
 
-client = MediaFireClient()
-client.login(email=settings.MEDIAFIRE_EMAIL, password=settings.MEDIAFIRE_PASSWORD, app_id='42511')
-UPLOAD_FOLDER = settings.MEDIAFIRE_FOLDER
 
+BUCKET_NAME = settings.BUCKET_NAME
+VENV_PATH = settings.VENV_PATH
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-
+s3 = boto3.resource('s3')
 
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
@@ -34,12 +34,25 @@ def download(chapter_id, index, path, url):
                 f.write(chunk)
 
 
-@task(name="download_chapter")
-def download_chapter(path, chapter_id):
-    c = Chapter.objects.get(id=chapter_id)
-    urls = extract_images_url(c.source)
-    for index, url in enumerate(urls):
-        download(chapter_id, index, path, url)
+def upload(path, file_name):
+    time.sleep(30)
+    with open(path, 'rb') as f:
+        obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
+        return obj
+
+
+def generate_key(vol):
+    return "{0} - Volume {1}.mobi".format(vol.manga.name, vol.number)
+
+
+def make_download_link(file_name):
+    bucket_location = boto3.client('s3').get_bucket_location(Bucket=BUCKET_NAME)
+    url = "https://s3-{0}.amazonaws.com/{1}/{2}".format(
+        bucket_location['LocationConstraint'],
+        BUCKET_NAME,
+        file_name
+    )
+    return url
 
 
 def make_volume_dir(volume_id):
@@ -55,6 +68,14 @@ def extract_chapters(volume_id):
     return chapters
 
 
+@task(name="download_chapter")
+def download_chapter(path, chapter_id):
+    c = Chapter.objects.get(id=chapter_id)
+    urls = extract_images_url(c.source)
+    for index, url in enumerate(urls):
+        download(chapter_id, index, path, url)
+
+
 @task(name="download_volume")
 def download_volume(volume_id):
     path = make_volume_dir(volume_id)
@@ -66,7 +87,11 @@ def download_volume(volume_id):
 @task(name="generate_manga")
 def generate_manga(path, profile='KV'):
     time.sleep(60)
-    args = shlex.split('kcc-c2e -m -q -p {0} -f MOBI {1}'.format(profile, shlex.quote(path)))
+    args = shlex.split('{0}/kcc-c2e -m -q -p {1} -f MOBI {2}'.format(
+        VENV_PATH,
+        profile,
+        shlex.quote(path)
+    ))
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
     return "{}.mobi".format(path)
@@ -87,19 +112,35 @@ def delete_corrupt_file(path):
 @task(name="upload_and_save")
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    r = client.upload_file(path, UPLOAD_FOLDER)
-    link = "http://www.mediafire.com/file/{}".format(r.quickkey)
+    file_name = generate_key(v)
+    r = upload(path, file_name)
+    link = make_download_link(file_name)
     v.download_link = link
     v.save()
     shutil.rmtree(path.split('.mobi')[0])
     os.remove(path)
+    return v
 
 
-def make_volume(volume_id):
+@task(name="send_notification")
+def send_notification(volume_id, email):
+    v = Volume.objects.get(id=volume_id)
+    send_mail(
+        'Your manga volume has been converted successful',
+        'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
+            email, v.manga.name, v.number, 'https://kindlemanga.xyz/' + v.manga.get_absolute_url()
+        ),
+        'meatyminus@gmail.com',
+        [email, 'doanhtu@yandex.com']
+    )
+
+
+def make_volume(volume_id, email):
     res = chain(
         download_volume.s(volume_id),
         delete_corrupt_file.s(),
         generate_manga.s(),
-        upload_and_save.s(volume_id)
+        upload_and_save.s(volume_id),
+        send_notification.si(volume_id, email)
     )()
     return res
