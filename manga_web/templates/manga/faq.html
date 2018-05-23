@@ -5,22 +5,45 @@
     <h1 class="title">F.A.Q - Những câu hỏi thường gặp</h1>
   </div>
 </section>
+<section class="section">
 <div class="container">
-  <div class="footer">
-    <ul>
-      <li>Bạn không tìm thấy truyện của mình?
-        <blockquote>
-        Vì kho dữ liệu của chúng tôi chưa được lớn nên còn nhiều truyện chưa được cập nhật. Bạn vui lòng để lại link truyện ở đây:<br>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScSFwyk3gxqTnKPWYBcOWlJU4mpelVcwM79K0uKRk1fk6esGA/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Đang tải...</iframe>
-        </blockquote>
-      </li>
-      <li>Bạn không thấy email thông báo sau 20 phút?
-      <blockquote>
-        Bạn vui lòng trang truyện bạn vừa yêu cầu và mục spam của email. Nếu vẫn chưa thấy truyện trên trang web, bạn vui lòng feedback lại cho chúng tôi ở đây:<br>
-        <a href="https://kindlemanga.xyz/contact/">Feedback</a>
-      </blockquote>
-      </li>
-    </ul>
+  <div class="columns">
+    <div class="column is-6">
+      <div class="content">
+        <ul>
+          <li>Bạn không tìm thấy truyện của mình? Vui lòng để lại link truyện ở đây:
+            <article class="message is-success">
+              <div class="message-body">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScSFwyk3gxqTnKPWYBcOWlJU4mpelVcwM79K0uKRk1fk6esGA/viewform?embedded=true" width="500" height="500" frameborder="0" marginheight="0" marginwidth="0">Đang tải...</iframe>
+              </div>
+            </article>
+          </li>
+          <li>Bạn không thấy email thông báo sau 20 phút?
+            <article class="message is-success">
+              <div class="message-body">
+                Bạn vui lòng vào lại trang truyện bạn vừa yêu cầu hoặc kiểm tra ở mục spam của email. <br>
+                Nếu vẫn chưa thấy truyện trên trang web, bạn vui lòng feedback lại cho chúng tôi ở đây:<br>
+                <a href="{% url 'contact_form' %}">Feedback</a>
+              </div>
+            </article>
+          </li>
+          <li>Truyện bị thiếu trang/lỗi?
+            <article class="message is-success">
+              <div class="message-body">
+                Vui lòng truy cập vào link gốc của truyện, vì rất có thể truyện đó đã bị die các link ảnh nên chúng tôi không thể convert được.
+              </div>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="column has-text-centered">
+      <figure class="image">
+        <img src="https://cdn.dribbble.com/users/1003768/screenshots/3407204/faq.jpg" alt="">
+      </figure>
+      <em>Image source: https://dribbble.com/shots/3407204-DA-FAQ</em>
+    </div>
   </div>
 </div>
+  </section>
 {% endblock %}
