@@ -129,6 +129,7 @@ def send_notification(volume_id, email):
         'Your manga volume has been converted successful',
         'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
             email, v.manga.name, v.number, 'https://kindlemanga.xyz' + v.manga.get_absolute_url()
+            email, v.manga.name, v.number, 'https://kindlemanga.xyz/' + v.manga.get_absolute_url()
         ),
         'meatyminus@gmail.com',
         [email, 'doanhtu@yandex.com']
