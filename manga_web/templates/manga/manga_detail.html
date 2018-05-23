@@ -18,6 +18,13 @@
             <div class="media-content">
               <div class="content">
                 <p class="title is-3">{{manga.name}}</p>
+                <a href="{{ manga.source }}" class="button is-warning" rel="nofollow" target="_blank">
+                  <span class="icon">
+                    <i class="fas fa-box-open"></i>
+                  </span>
+                  <span>Source</span>
+                </a>
+
                 {% if manga.description %}
                   <p>{{manga.description|linebreaks}}</p>
                 {% endif %}
