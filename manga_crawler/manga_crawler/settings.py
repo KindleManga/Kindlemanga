@@ -13,7 +13,7 @@ import os
 import django
 
 # Django settings
-sys.path.append('/home/tu/Projects/Kindlemanga/manga_web')  # Path to Django project
+sys.path.append('/home/tu/Kindlemanga/manga_web')  # Path to Django project
 os.environ['DJANGO_SETTINGS_MODULE'] = 'main.settings'
 
 django.setup()
