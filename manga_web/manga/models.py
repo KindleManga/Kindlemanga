@@ -6,7 +6,7 @@ from unidecode import unidecode
 
 
 class Manga(models.Model):
-    name = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=500, null=False)
     source = models.URLField(max_length=500, null=False)
     description = models.TextField(null=True)
     total_chap = models.IntegerField(null=True)

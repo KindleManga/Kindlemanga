@@ -51,7 +51,7 @@ class MangaListView(ListView):
     model = Manga
     context_object_name = 'mangas'
     paginate_by = 8
-    ordering = 'name'
+    ordering = 'created_at'
 
 
 class MangaDetailView(DetailView):
