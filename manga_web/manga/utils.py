@@ -44,7 +44,19 @@ def url2filename(url, chapter_id=None, index=None):
     return "{}_{}_{}".format(chapter_id, index, basename)
 
 
+# def extract_images_url(url):
+#     """
+#     Extract image url for a chapter in HocVienTruyenTranh
+#     """
+#     r = s.get(url)
+#     tree = html.fromstring(r.text)
+#     return tree.xpath('//div[@class="manga-container"]/img/@src')
+
+
 def extract_images_url(url):
+    """
+    Extract image url for a chapter in BlogTruyen
+    """
     r = s.get(url)
     tree = html.fromstring(r.text)
-    return tree.xpath('//div[@class="manga-container"]/img/@src')
+    return tree.xpath('//*[@id="content"]/img/@src')
