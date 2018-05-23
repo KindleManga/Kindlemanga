@@ -5,6 +5,9 @@ from manga.models import Manga, Volume, Chapter
 logger = logging.getLogger(__name__)
 
 
+mc = lambda x: 'http://blogtruyen.com' + x
+
+
 class MangaCrawlerPipeline(object):
     def process_item(self, item, spider):
         if Manga.objects.filter(name=item['name'][0]):
@@ -30,7 +33,7 @@ class MangaCrawlerPipeline(object):
             vol = Volume(manga=manga, number=i)
             vol.save()
             Chapter.objects.bulk_create(
-                [Chapter(volume=vol, name=c[0], source=c[1]) for c in chaps]
+                [Chapter(volume=vol, name=c[0], source=mc(c[1])) for c in chaps]
             )
             logger.info('Volume added')
         return item

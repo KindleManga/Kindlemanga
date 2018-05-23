@@ -3,7 +3,7 @@ import re
 import scrapy
 
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst, Join, MapCompose
+from scrapy.loader.processors import Join, MapCompose
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
