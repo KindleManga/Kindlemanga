@@ -9,7 +9,7 @@
         <div class="columns">
           <div id="app" class="column is-10-mobile is-offset-1-mobile is-8-desktop is-offset-2-desktop">
             <input autocomplete="off" type="text" class="input is-primary" name="q" placeholder="Tên manga, từ khóa ..." v-model="search" @input="onChange">
-            <ul v-if="isOpen" class="autocomplete-results">
+            <ul v-show="isOpen" class="autocomplete-results">
               <li
                 v-for="(result, i) in results"
                 :key="i"
@@ -20,7 +20,6 @@
                 {% endverbatim %}
               </li>
             </ul>
-            <ul v-else></ul>
           </div>
         </div>
         <div class="columns">
@@ -72,7 +71,6 @@
       methods: {
         onChange() {
           if (this.search) {
-            this.$emit('input', this.search);
             searchTerm = this.search.toLowerCase()
             this.fetchKeywords(searchTerm);
             // Data is sync, we can search our flat array
@@ -83,7 +81,7 @@
         },
         fetchKeywords(term) {
           if (term) {
-            axios.get('https://kindlemanga.xyz/ajax/search/?q=' + term)
+            axios.get('http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/ajax/search/?q=' + term)
             .then((response) => {
               this.results = response.data.results;
             })
@@ -93,6 +91,7 @@
         setResult(result) {
           this.search = result.name;
           this.isOpen = false;
+          window.location.href = 'http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/manga/' + result.slug
         },
       },
       watch: {
