@@ -83,7 +83,7 @@
         },
         fetchKeywords(term) {
           if (term) {
-            axios.get('http://localhost:8000/ajax/search/?q=' + term)
+            axios.get('https://kindlemanga.xyz/ajax/search/?q=' + term)
             .then((response) => {
               this.results = response.data.results;
             })
