@@ -7,8 +7,20 @@
       <h2 class="subtitle">Tìm kiếm và tải Manga yêu thích của bạn về Kindle</h2>
       <form action="{% url "manga:search" %}" class="control">
         <div class="columns">
-          <div class="column is-10-mobile is-offset-1-mobile is-8-desktop is-offset-2-desktop">
-            <input type="text" class="input is-primary" name="q" placeholder="Tên manga, từ khóa ...">
+          <div id="app" class="column is-10-mobile is-offset-1-mobile is-8-desktop is-offset-2-desktop">
+            <input autocomplete="off" type="text" class="input is-primary" name="q" placeholder="Tên manga, từ khóa ..." v-model="search" @input="onChange">
+            <ul v-if="isOpen" class="autocomplete-results">
+              <li
+                v-for="(result, i) in results"
+                :key="i"
+                @click="setResult(result)"
+                class="autocomplete-result">
+                {% verbatim %}
+                  {{ result.name }}
+                {% endverbatim %}
+              </li>
+            </ul>
+            <ul v-else></ul>
           </div>
         </div>
         <div class="columns">
@@ -23,4 +35,75 @@
   </div>
 </section>
 
+{% endblock %}
+{% block extra_js %}
+  <style>
+    .autocomplete-results {
+      padding: 0;
+      margin: 0;
+      border: 1px solid #eeeeee;
+      height: 120px;
+      overflow: auto;
+    }
+
+    .autocomplete-result {
+      height: 30px;
+      list-style: none;
+      text-align: left;
+      padding: 4px 2px;
+      cursor: pointer;
+    }
+
+    .autocomplete-result:hover {
+      background-color: #4AAE9B;
+      color: white;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        search: '',
+        results: [],
+        isOpen: false,
+      },
+      methods: {
+        onChange() {
+          if (this.search) {
+            this.$emit('input', this.search);
+            searchTerm = this.search.toLowerCase()
+            this.fetchKeywords(searchTerm);
+            // Data is sync, we can search our flat array
+            this.isOpen = true;
+          } else {
+            this.isOpen = false;
+          }
+        },
+        fetchKeywords(term) {
+          if (term) {
+            axios.get('http://localhost:8000/ajax/search/?q=' + term)
+            .then((response) => {
+              this.results = response.data.results;
+            })
+            .catch( error => { console.log(error); });
+          }
+        },
+        setResult(result) {
+          this.search = result.name;
+          this.isOpen = false;
+        },
+      },
+      watch: {
+        // Once the items content changes, it means the parent component
+        // provided the needed data
+        results: (value, oldValue) => {
+          // we want to make sure we only do this when it's an async request
+          this.results = value;
+          this.isOpen = true;
+        }
+      }
+    })
+  </script>
 {% endblock %}
