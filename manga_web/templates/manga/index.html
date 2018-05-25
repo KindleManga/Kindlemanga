@@ -81,7 +81,7 @@
         },
         fetchKeywords(term) {
           if (term) {
-            axios.get('http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/ajax/search/?q=' + term)
+            axios.get('{{ request.scheme }}://{{ request.get_host }}/ajax/search/?q=' + term)
             .then((response) => {
               this.results = response.data.results;
             })
@@ -91,7 +91,7 @@
         setResult(result) {
           this.search = result.name;
           this.isOpen = false;
-          window.location.href = 'http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/manga/' + result.slug
+          window.location.href = '{{ request.scheme }}://{{ request.get_host }}/manga/' + result.slug
         },
       },
       watch: {
