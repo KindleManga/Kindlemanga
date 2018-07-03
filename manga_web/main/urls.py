@@ -15,9 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('manga.urls', namespace="manga")),
     path('contact/', include('contact_form.urls')),
+    path(
+        'robots.txt',
+        lambda x: HttpResponse(
+            """User-agent: GoogleBot
+Disallow: /volume/*
+
+User-agent: *
+Allow: /
+""",
+            content_type="text/plain"
+        ),
+        name="robots_file"
+    )
 ]
