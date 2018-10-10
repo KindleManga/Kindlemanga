@@ -9,7 +9,7 @@ attrs==17.4.0             # via automat, service-identity
 automat==0.6.0            # via twisted
 cffi==1.11.5              # via cryptography
 constantly==15.1.0        # via twisted
-cryptography==2.2.2       # via pyopenssl
+cryptography==2.3       # via pyopenssl
 cssselect==1.0.3          # via parsel, scrapy
 hyperlink==18.0.0         # via twisted
 idna==2.6                 # via cryptography, hyperlink
