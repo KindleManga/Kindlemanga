@@ -9,3 +9,5 @@ django-widget-tweaks
 django-recaptcha
 django-contact-form
 boto3
+python-dotenv
+get_fshare
