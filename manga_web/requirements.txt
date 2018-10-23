@@ -16,7 +16,7 @@ django-celery-results==1.0.1
 django-contact-form==1.5
 django-recaptcha==1.4.0
 django-widget-tweaks==1.4.2
-django==2.0.4
+django==2.0.8
 docutils==0.14            # via botocore
 get-fshare==2.2.1
 idna==2.7                 # via requests
