@@ -17,7 +17,6 @@ class Manga(models.Model):
 
     def __str__(self):
         return str(self.name)
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(unidecode(self.name))
@@ -34,6 +33,7 @@ class Volume(models.Model):
     manga = models.ForeignKey(Manga, on_delete=models.CASCADE)
     number = models.IntegerField(null=True)
     download_link = models.URLField(max_length=500, null=True)
+    fshare_link = models.URLField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

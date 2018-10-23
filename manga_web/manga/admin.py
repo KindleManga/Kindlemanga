@@ -6,7 +6,9 @@ class MangaAdmin(admin.ModelAdmin):
 
 
 class VolumeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'manga', 'number', 'download_link', 'fshare_link')
+    search_fields = ['id', 'manga__name']
+    raw_id_fields = ['manga', ]
 
 
 class ChapterAdmin(admin.ModelAdmin):

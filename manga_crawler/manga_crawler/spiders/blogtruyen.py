@@ -20,7 +20,7 @@ class BlogtruyenSpider(scrapy.Spider):
 
     def start_requests(self):
         for url in self.start_urls:
-            for i in range(1, self.page_numb):
+            for i in range(self.page_numb):
                 request = Request(url.format(i))
                 yield request
 
