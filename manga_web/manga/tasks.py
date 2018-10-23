@@ -24,6 +24,17 @@ VENV_PATH = settings.VENV_PATH
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 s3 = boto3.resource('s3')
 
+logger = logging.getLogger("Manga celery")
+logger.setLevel(logging.DEBUG)
+fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(fmt)
+
+logger.addHandler(handler)
+
+
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
     logging.debug('downloading %s', filename)
@@ -32,13 +43,6 @@ def download(chapter_id, index, path, url):
         with open(os.path.join(path, filename), 'wb') as f:
             for chunk in r:
                 f.write(chunk)
-
-
-def upload(path, file_name):
-    time.sleep(30)
-    with open(path, 'rb') as f:
-        obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
-        return obj
 
 
 def generate_key(vol):
@@ -109,17 +113,50 @@ def delete_corrupt_file(path):
     return path
 
 
+def upload(path, file_name):
+    time.sleep(30)
+    with open(path, 'rb') as f:
+        obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
+        return obj
+
+
+def fshare_upload(path):
+    from get_fshare import FSAPI
+
+    bot = FSAPI(settings.FSHARE_EMAIL, settings.FSHARE_PASSWORD)
+    bot.login()
+    try:
+        result = bot.upload(path, "/KindleManga")
+        return result
+    except Exception as e:
+        logger.error(e)
+
+
 @task(name="upload_and_save")
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    file_name = generate_key(v)
-    r = upload(path, file_name)
-    link = make_download_link(file_name)
-    v.download_link = link
+    r = fshare_upload(path)
+    logger.debug(path)
+    logger.debug(r)
+    link = r.get('url')
+    v.fshare_link = link
     v.save()
     shutil.rmtree(path.split('.mobi')[0])
     os.remove(path)
     return v.manga.name
+
+
+# @task(name="upload_and_save")
+# def upload_and_save(path, volume_id):
+#     v = Volume.objects.get(id=volume_id)
+#     file_name = generate_key(v)
+#     r = upload(path, file_name)
+#     link = make_download_link(file_name)
+#     v.download_link = link
+#     v.save()
+#     shutil.rmtree(path.split('.mobi')[0])
+#     os.remove(path)
+#     return v.manga.name
 
 
 @task(name="send_notification")
@@ -131,8 +168,9 @@ def send_notification(volume_id, email):
             email, v.manga.name, v.number, 'https://kindlemanga.xyz' + v.manga.get_absolute_url()
         ),
         'meatyminus@gmail.com',
-        [email, 'doanhtu@yandex.com']
+        [email, ]
     )
+    logger.debug("Send email to {} succeed".format(email))
 
 
 def make_volume(volume_id, email):

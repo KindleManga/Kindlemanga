@@ -12,11 +12,15 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 def get_env_variable(var_name):
     try:
-        return os.environ[var_name]
+        return os.getenv(var_name)
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
@@ -169,3 +173,7 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 MANAGERS = [('Tu', 'tu0703@gmail.com'), ]
 VENV_PATH = get_env_variable('VENV_PATH')
+
+
+FSHARE_EMAIL = get_env_variable("FSHARE_EMAIL")
+FSHARE_PASSWORD = get_env_variable("FSHARE_PASSWORD")
