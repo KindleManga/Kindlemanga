@@ -171,6 +171,11 @@ def send_notification(volume_id, email):
         [email, ]
     )
     logger.debug("Send email to {} succeed".format(email))
+    requests.post("https://api.pushover.net/1/messages.json", data = {
+        "token": os.getenv("PUSHOVER_APP_TOKEN"),
+        "user": os.getenv("PUSHOVER_USER_KEY"),
+        "message": "Convert manga {} - volume {} succeed. User email: {}".format(v.manga.name, v.number, email)
+    }
 
 
 def make_volume(volume_id, email):

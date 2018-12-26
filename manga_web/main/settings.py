@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 load_dotenv()
@@ -24,6 +26,11 @@ def get_env_variable(var_name):
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
+
+sentry_sdk.init(
+    dsn=get_env_variable("SENTRY_DSN"),
+    integrations=[DjangoIntegration()]
+)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
