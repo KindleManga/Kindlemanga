@@ -14,7 +14,7 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.django import DjangoIntegration, CeleryIntegration
 
 
 load_dotenv()
@@ -29,7 +29,7 @@ def get_env_variable(var_name):
 
 sentry_sdk.init(
     dsn=get_env_variable("SENTRY_DSN"),
-    integrations=[DjangoIntegration()]
+    integrations=[DjangoIntegration(), CeleryIntegration()]
 )
 
 
