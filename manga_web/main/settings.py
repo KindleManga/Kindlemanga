@@ -14,7 +14,8 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration, CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
 
 
 load_dotenv()
