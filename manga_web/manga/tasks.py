@@ -163,7 +163,7 @@ def upload_and_save(path, volume_id):
 def send_notification(volume_id, email):
     v = Volume.objects.get(id=volume_id)
     send_mail(
-        'Your manga volume has been converted successful',
+        '[Kindlemanga.xyz] {} - Volume {} has been converted'.format(v.manga.name, v.number),
         'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
             email, v.manga.name, v.number, 'https://kindlemanga.xyz' + v.manga.get_absolute_url()
         ),
