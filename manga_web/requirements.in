@@ -11,3 +11,5 @@ django-contact-form
 boto3
 python-dotenv
 get_fshare
+sentry-sdk==0.6.4
+django-celery-email
