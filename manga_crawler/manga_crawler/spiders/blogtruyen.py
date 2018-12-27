@@ -59,5 +59,6 @@ class BlogtruyenSpider(scrapy.Spider):
         chapters = zip(chapter_name, chapter_source)
 
         manga.add_value('chapters', chapters)
+        manga.add_value('web_source', 'blogtruyen')
 
         return manga.load_item()
