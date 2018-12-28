@@ -103,12 +103,14 @@ def generate_manga(path, profile='KV'):
 
 @task(name="delete_corrupt_file")
 def delete_corrupt_file(path):
+    time.sleep(30)
     for filename in os.listdir(path):
         try:
             img = Image.open(os.path.join(path, filename))
             img.verify()
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
+            logger.info("Removed corrupted image {}".format(os.path.join(path, filename)))
 
     return path
 

@@ -29,7 +29,7 @@ def url2filename(url, chapter_id=None, index=None):
     """
     urlpath = urlsplit(url).path
     basename = posixpath.basename(unquote(urlpath))
-    if (os.path.basename(basename) != basename or unquote(posixpath.basename(urlpath)) != basename):
+    if os.path.basename(basename) != basename or unquote(posixpath.basename(urlpath)) != basename:
         raise ValueError  # reject '%2f' or 'dir%5Cbasename.ext' on Windows
 
     if not any([basename.lower().endswith(i) for i in IMAGE_EXTS]):

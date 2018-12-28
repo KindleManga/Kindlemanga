@@ -41,7 +41,7 @@ class Manga(models.Model):
         super(Manga, self).save(*args, **kwargs)
 
     def as_dict(self):
-        return {'name': self.name, 'slug': self.slug, 'image': self.image_src}
+        return {'name': self.name, 'slug': self.slug, 'image': self.image_src, 'source': self.web_source}
 
     def get_absolute_url(self):
         return reverse('manga:detail', kwargs={'slug': self.slug})
@@ -56,7 +56,7 @@ class Volume(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} - Volume {}".format(self.manga.name, self.number)
+        return "{} - Volume {} - {}".format(self.manga.name, self.number, self.manga.web_source)
 
 
 class Chapter(models.Model):
