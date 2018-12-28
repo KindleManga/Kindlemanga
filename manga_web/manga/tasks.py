@@ -75,7 +75,7 @@ def extract_chapters(volume_id):
 @task(name="download_chapter")
 def download_chapter(path, chapter_id):
     c = Chapter.objects.get(id=chapter_id)
-    urls = extract_images_url(c.source)
+    urls = extract_images_url(c.source, c.web_source)
     for index, url in enumerate(urls):
         download(chapter_id, index, path, url)
 

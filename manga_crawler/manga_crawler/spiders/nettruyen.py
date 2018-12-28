@@ -29,20 +29,33 @@ class NettruyenSpider(CrawlSpider):
         manga.add_value('source', response.url)
         manga.add_xpath('image_src', '//*[@class="col-xs-4 col-image"]/img/@src')
         manga.add_xpath('description', '//*[@class="detail-content"]/p//text()', Join('\n'))
-        manga.add_value(
-            'total_chap',
-            manga.get_xpath(
-                '//title/text()',
-                MapCompose(lambda x: re.findall(r' Chapter \d+', x)),
-                MapCompose(lambda x: re.findall(r'\d+', x)),
-                MapCompose(int),
-                TakeFirst()
-            )
-        )
-        chapter_xpath = '//*[@id="nt_listchapter"]/nav/ul/li[not(ancestor::*[@class="row heading"])]/div[1]/a'
+        chapter_xpath = '//*[@id="nt_listchapter"]/nav/ul/li[not(contains (@class, "row heading"))]/div[1]/a'
         chapter_source = manga.get_xpath(chapter_xpath + '/@href')
         chapter_name = manga.get_xpath(chapter_xpath + '/text()')
         chapters = zip(chapter_name, chapter_source)
+
+        if 'Hoàn thành' in manga.get_xpath('//*[@class="status row"]/p[2]/text()'):
+            manga.add_value('full', True)
+            manga.add_value(
+                'total_chap',
+                manga.get_xpath(
+                    chapter_xpath + '/text()',
+                    MapCompose(lambda x: re.findall(r'\d+', x)),
+                    MapCompose(int)
+                )[0]
+            )
+        else:
+            manga.add_value('full', False)
+            manga.add_value(
+                'total_chap',
+                manga.get_xpath(
+                    '//title/text()',
+                    MapCompose(lambda x: re.findall(r' Chapter \d+', x)),
+                    MapCompose(lambda x: re.findall(r'\d+', x)),
+                    MapCompose(int),
+                    TakeFirst()
+                )
+            )
 
         manga.add_value('chapters', chapters)
         manga.add_value('web_source', 'nettruyen')

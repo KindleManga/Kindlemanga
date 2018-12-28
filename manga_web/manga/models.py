@@ -16,13 +16,13 @@ class Manga(models.Model):
         (MANGA_SEE_ONLINE, 'mangaseeonline')
     )
 
-    name = models.CharField(max_length=500, null=False)
-    web_source = models.CharField(max_length=100, choices=SOURCE_CHOICES)
-    source = models.URLField(max_length=500, null=False)
+    name = models.TextField(null=False)
+    web_source = models.CharField(max_length=200, choices=SOURCE_CHOICES)
+    source = models.TextField(null=False)
     description = models.TextField(null=True)
     total_chap = models.IntegerField(null=True)
-    image_src = models.URLField(max_length=500, null=True)
-    slug = models.SlugField()
+    image_src = models.TextField(null=True)
+    slug = models.SlugField(max_length=255)
     full = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,8 +50,8 @@ class Manga(models.Model):
 class Volume(models.Model):
     manga = models.ForeignKey(Manga, on_delete=models.CASCADE)
     number = models.IntegerField(null=True)
-    download_link = models.URLField(max_length=500, null=True)
-    fshare_link = models.URLField(max_length=500, null=True)
+    download_link = models.TextField(null=True)
+    fshare_link = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -61,8 +61,8 @@ class Volume(models.Model):
 
 class Chapter(models.Model):
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    source = models.URLField(max_length=500)
+    name = models.TextField()
+    source = models.TextField()
 
     def __str__(self):
         return "{} - Volume {} - {}".format(
@@ -70,3 +70,7 @@ class Chapter(models.Model):
             self.volume.number,
             self.name
         )
+
+    @property
+    def web_source(self):
+        return self.volume.manga.web_source

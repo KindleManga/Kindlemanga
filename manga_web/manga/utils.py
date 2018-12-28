@@ -53,10 +53,13 @@ def url2filename(url, chapter_id=None, index=None):
 #     return tree.xpath('//div[@class="manga-container"]/img/@src')
 
 
-def extract_images_url(url):
+def extract_images_url(url, source):
     """
-    Extract image url for a chapter in BlogTruyen
+    Extract image url for a chapter
     """
     r = s.get(url)
     tree = html.fromstring(r.text)
-    return tree.xpath('//*[@id="content"]/img/@src')
+    if source == 'blogtruyen':
+        return tree.xpath('//*[@id="content"]/img/@src')
+    elif source == 'nettruyen':
+        return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
