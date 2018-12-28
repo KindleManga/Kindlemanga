@@ -75,7 +75,7 @@ def extract_chapters(volume_id):
 @task(name="download_chapter")
 def download_chapter(path, chapter_id):
     c = Chapter.objects.get(id=chapter_id)
-    urls = extract_images_url(c.source)
+    urls = extract_images_url(c.source, c.web_source)
     for index, url in enumerate(urls):
         download(chapter_id, index, path, url)
 
@@ -103,12 +103,14 @@ def generate_manga(path, profile='KV'):
 
 @task(name="delete_corrupt_file")
 def delete_corrupt_file(path):
+    time.sleep(30)
     for filename in os.listdir(path):
         try:
             img = Image.open(os.path.join(path, filename))
             img.verify()
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
+            logger.info("Removed corrupted image {}".format(os.path.join(path, filename)))
 
     return path
 

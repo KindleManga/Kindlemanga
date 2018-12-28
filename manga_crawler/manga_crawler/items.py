@@ -15,3 +15,5 @@ class MangaCrawlerItem(scrapy.Item):
     image_src = scrapy.Field()
     chapters = scrapy.Field()
     description = scrapy.Field()
+    web_source = scrapy.Field()
+    full = scrapy.Field()

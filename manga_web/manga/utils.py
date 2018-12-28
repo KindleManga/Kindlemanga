@@ -29,7 +29,7 @@ def url2filename(url, chapter_id=None, index=None):
     """
     urlpath = urlsplit(url).path
     basename = posixpath.basename(unquote(urlpath))
-    if (os.path.basename(basename) != basename or unquote(posixpath.basename(urlpath)) != basename):
+    if os.path.basename(basename) != basename or unquote(posixpath.basename(urlpath)) != basename:
         raise ValueError  # reject '%2f' or 'dir%5Cbasename.ext' on Windows
 
     if not any([basename.lower().endswith(i) for i in IMAGE_EXTS]):
@@ -53,10 +53,13 @@ def url2filename(url, chapter_id=None, index=None):
 #     return tree.xpath('//div[@class="manga-container"]/img/@src')
 
 
-def extract_images_url(url):
+def extract_images_url(url, source):
     """
-    Extract image url for a chapter in BlogTruyen
+    Extract image url for a chapter
     """
     r = s.get(url)
     tree = html.fromstring(r.text)
-    return tree.xpath('//*[@id="content"]/img/@src')
+    if source == 'blogtruyen':
+        return tree.xpath('//*[@id="content"]/img/@src')
+    elif source == 'nettruyen':
+        return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
