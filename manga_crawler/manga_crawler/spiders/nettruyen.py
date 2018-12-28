@@ -50,7 +50,7 @@ class NettruyenSpider(CrawlSpider):
                 'total_chap',
                 manga.get_xpath(
                     '//title/text()',
-                    MapCompose(lambda x: re.findall(r' Chapter \d+', x)),
+                    MapCompose(lambda x: re.findall(r' Chapter \d+| Chap \d+', x)),
                     MapCompose(lambda x: re.findall(r'\d+', x)),
                     MapCompose(int),
                     TakeFirst()
