@@ -122,13 +122,17 @@ def upload(path, file_name):
         return obj
 
 
-def fshare_upload(path):
+def fshare_upload(path, volume):
     from get_fshare import FSAPI
+    from unidecode import unidecode
 
     bot = FSAPI(settings.FSHARE_EMAIL, settings.FSHARE_PASSWORD)
     bot.login()
     try:
-        result = bot.upload(path, "/KindleManga")
+        result = bot.upload(
+            path,
+            "/KindleManga/{}/{}".format(volume.manga.web_source, unidecode(volume.manga.name))
+        )
         return result
     except Exception as e:
         logger.error(e)
@@ -137,7 +141,7 @@ def fshare_upload(path):
 @task(name="upload_and_save")
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    r = fshare_upload(path)
+    r = fshare_upload(path, v)
     logger.debug(path)
     logger.debug(r)
     link = r.get('url')
@@ -169,7 +173,7 @@ def send_notification(volume_id, email):
         'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
             email, v.manga.name, v.number, 'https://kindlemanga.xyz' + v.manga.get_absolute_url()
         ),
-        'meatyminus@gmail.com',
+        os.getenv('GMAIL_EMAIL', 'kindlemanga.xyz@gmail.com'),
         [email, ]
     )
     logger.debug("Send email to {} succeed".format(email))

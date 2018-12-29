@@ -1,30 +1,111 @@
 {% extends "base.html" %}
 {% block title %}Page {{ page_obj.number }} - Danh sách manga{% endblock %}
+{% block extra_head %}
+  <style>
+  .gmd-2 {
+    -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  .box-ribbon {
+    position: relative;
+    background-color: white;
+  }
+
+  .ribbon {
+    width: 150px;
+    height: 95px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 5px solid #B94826;
+  }
+  .ribbon span {
+    position: absolute;
+    display: block;
+    width: 262px;
+    padding: 4px 0;
+    background-color: coral;
+    color: #fff;
+    font: 700 10px/1 'Lato', sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* top right*/
+  .ribbon-top-right {
+    top: -10px;
+    right: -10px;
+  }
+  .ribbon-top-right::before,
+  .ribbon-top-right::after {
+    border-top-color: transparent;
+    border-right-color: transparent;
+    margin-left: 55px;
+  }
+  .ribbon-top-right::before {
+    top: 0;
+    left: 0;
+  }
+  .ribbon-top-right::after {
+    bottom: 0;
+    right: 0;
+  }
+  .ribbon-top-right span {
+    left: -25px;
+    top: 30px;
+    transform: rotate(45deg);
+  }
+  </style>
+{% endblock %}
 {% block body %}
   <section class="section">
   <div class="container has-text-centered">
     <h1 class="title is-3">
-      <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Danh sách manga</span>
+      <span class="icon is-left has-text-danger is-size-4"><i class="fas fa-book"></i></span> <span style="padding-left: 5px;">Danh sách manga</span>
     </h1>
     <hr>
+    <div id="manga" class="columns is-multiline">
     {% for manga in mangas %}
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-128x128 is-1by1">
-              <img src="{{manga.image_src}}" alt="">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p class="title is-4"><a href="{% url "manga:detail" slug=manga.slug %}">{{manga.name}}</a></p>
-              {% if manga.description %}
-                <p>{{manga.description|truncatechars:420}}</p>
-              {% endif %}
+      <div class="column is-2 is-10-mobile is-offset-1-mobile">
+          <div class="box-ribbon">
+            <span class="image is-2by3">
+              <a href="{% url "manga:detail" slug=manga.slug %}">
+                <img class="gmd-2" src="{{ manga.image_src }}" style="border-radius: 10px;"/>
+              </a>
+            </span>
+            <div class="ribbon ribbon-top-right">
+              <span>{{ manga.web_source }}</span>
             </div>
           </div>
-        </article>
+          <article class="media" style="margin-top: 10px;">
+            <div class="media-content">
+              <div class="content">
+                <h6 class="title">
+                  <a href="{% url "manga:detail" slug=manga.slug %}" style="color: #363636;">{% if manga.full %}<span class="icon is-left has-text-success"><i class="fas fa-check"></i></span> {% else %}<span class="icon is-left has-text-black-bis"><i class="fas fa-book"></i></span> {% endif %}<span>{{ manga.name }}</span> {% if manga.full %}(Hoàn thành){% endif %}</a>
+                </h6>
+              </div>
+            </div>
+          </article>
+      </div>
     {% endfor %}
+    </div>
     </div>
   </section>
 {% include "manga/paginate.html" %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 {% endblock %}

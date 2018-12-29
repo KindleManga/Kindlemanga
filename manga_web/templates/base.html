@@ -7,8 +7,10 @@
     <meta charset="utf-8">
     <title>{% block title %}Home{% endblock %} | Kindle Manga</title>
     <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <!-- Twitter Card data -->
     <meta name="twitter:card" value="summary">
+
 
     <!-- Open Graph data -->
     <meta property="og:title" content="{% block meta_title %}{% endblock %}" />
@@ -75,9 +77,15 @@
     </div>
     {% block body %}
     {% endblock %}
+    <footer class="footer" style="background: white;">
+    <div class="content has-text-centered">
+        <p>
+          This website is free and open source. Please <a href="http://kindlemanga.xyz/contact/">contact me</a> if you have any problems
+        </p>
+      </div>
+    </footer>
     {% block extra_js %}
     {% endblock %}
-    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function () {
 

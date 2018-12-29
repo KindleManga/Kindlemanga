@@ -18,7 +18,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'main.settings'
 
 django.setup()
 
-BOT_NAME = 'manga_crawler'
+BOT_NAME = 'kindlemanga.xyz crawler'
 
 SPIDER_MODULES = ['manga_crawler.spiders']
 NEWSPIDER_MODULE = 'manga_crawler.spiders'

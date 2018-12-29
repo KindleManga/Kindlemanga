@@ -39,17 +39,16 @@
           <div class="card">
             <div class="card-content">
               <div class="content">
-                <span class="title is-5">Tập {{vol.number}}</span>
-                <br>
+                <h5 class="has-text-weight-semibold">Tập {{vol.number}} <span class="icon is-left {% if vol.fshare_link %}has-text-success{% else %}has-text-info{% endif %}"><i class="fas fa-tag"></i></span> {{ vol.first_chapter.name }} -> {{ vol.last_chapter.name }}</h5>
                 {% if vol.fshare_link %}
-                <a class="button is-primary" href="{{vol.fshare_link}}" target="_blank">
+                <a class="button is-success" href="{{vol.fshare_link}}" target="_blank">
                   <span class="icon">
                     <i class="fas fa-toggle-on"></i>
                   </span>
                   <span>Tải về</span>
                 </a>
                 {% else %}
-                <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}">
+                <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}" target="_blank">
                   <span class="icon">
                     <i class="fas fa-toggle-off"></i>
                   </span>

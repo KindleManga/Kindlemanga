@@ -31,14 +31,8 @@ class MangaCrawlerPipeline(object):
         for i, chaps in k:
             vol = Volume(manga=manga, number=i)
             vol.save()
-            if item['web_source'][0] == 'blogtruyen':
-                mc = lambda x: 'http://blogtruyen.com' + x
-                Chapter.objects.bulk_create(
-                    [Chapter(volume=vol, name=c[0], source=mc(c[1])) for c in chaps]
-                )
-            else:
-                Chapter.objects.bulk_create(
-                    [Chapter(volume=vol, name=c[0], source=c[1]) for c in chaps]
-                )
-            logger.info('Volume added')
+            Chapter.objects.bulk_create(
+                [Chapter(volume=vol, name=c[0], source=c[1]) for c in chaps]
+            )
+            logger.debug('Volume added')
         return item
