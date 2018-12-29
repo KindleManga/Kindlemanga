@@ -63,3 +63,5 @@ def extract_images_url(url, source):
         return tree.xpath('//*[@id="content"]/img/@src')
     elif source == 'nettruyen':
         return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
+    elif source == 'image-container-manga':
+        return tree.xpath('//*[@class="image-container-manga"]/div/img/@src')

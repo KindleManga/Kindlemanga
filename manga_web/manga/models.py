@@ -56,7 +56,15 @@ class Volume(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} - Volume {} - {}".format(self.manga.name, self.number, self.manga.web_source)
+        return "{} - Volume {} - {}".format(self.manga.name, self.number, self.manga.web_source.upper())
+
+    @property
+    def first_chapter(self):
+        return self.chapter_set.first()
+
+    @property
+    def last_chapter(self):
+        return self.chapter_set.last()
 
 
 class Chapter(models.Model):

@@ -54,11 +54,17 @@ class BlogtruyenSpider(scrapy.Spider):
             )
         )
 
-        chapter_source = manga.get_xpath('//*[@id="list-chapters"]/p/span/a/@href')
+        get_chapter_source = manga.get_xpath('//*[@id="list-chapters"]/p/span/a/@href', MapCompose(mc))
+        chapter_source = [chap for chap in get_chapter_source if 'mediafire' not in chap]
         chapter_name = manga.get_xpath('//*[@id="list-chapters"]/p/span/a/text()')
         chapters = zip(chapter_name, chapter_source)
 
         manga.add_value('chapters', chapters)
         manga.add_value('web_source', 'blogtruyen')
+
+        if 'Đã hoàn thành' in manga.get_xpath('//*[@class="description"]//text()'):
+            manga.add_value('full', True)
+        else:
+            manga.add_value('full', False)
 
         return manga.load_item()

@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import Manga, Chapter, Volume
 
+
 class MangaAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'web_source', 'total_chap', 'full']
 
 
 class VolumeAdmin(admin.ModelAdmin):
@@ -12,7 +13,8 @@ class VolumeAdmin(admin.ModelAdmin):
 
 
 class ChapterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name', 'source')
+    raw_id_fields = ['volume', ]
 
 
 admin.site.register(Manga, MangaAdmin)
