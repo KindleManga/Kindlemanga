@@ -179,7 +179,7 @@ def send_notification(volume_id, email):
     )
     logger.debug("Send email to {} succeed".format(email))
 
-    if settings.PUSHOVER_ENABLE:
+    if os.getenv('PUSHOVER_ENABLE'):
         requests.post("https://api.pushover.net/1/messages.json", data = {
             "token": os.getenv("PUSHOVER_APP_TOKEN"),
             "user": os.getenv("PUSHOVER_USER_KEY"),
