@@ -9,8 +9,7 @@ billiard==3.5.0.3         # via celery
 boto3==1.7.4
 botocore==1.10.4          # via boto3, s3transfer
 celery==4.1.0
-certifi==2018.10.15       # via requests, sentry-sdk
-chardet==3.0.4            # via requests
+certifi==2018.10.15       # via sentry-sdk
 django-appconf==1.0.2     # via django-celery-email
 django-celery-beat==1.1.1
 django-celery-email==2.0.1
@@ -18,22 +17,26 @@ django-celery-results==1.0.1
 django-contact-form==1.5
 django-recaptcha==1.4.0
 django-widget-tweaks==1.4.2
-django==2.0.8
+django==2.1.7
 docutils==0.14            # via botocore
-get-fshare==2.2.1
-idna==2.7                 # via requests
+get-fshare==2.3.1
 jmespath==0.9.3           # via boto3, botocore
+kindlecomicconverter==5.4.5
 kombu==4.1.0              # via celery
-lxml==4.2.5               # via get-fshare
+pillow==5.4.1             # via kindlecomicconverter
+psutil==5.5.0             # via kindlecomicconverter
 psycopg2-binary==2.7.4
+pyqt5-sip==4.19.14        # via pyqt5
+pyqt5==5.12               # via kindlecomicconverter
 python-dateutil==2.6.1    # via botocore
 python-dotenv==0.9.1
+python-slugify==2.0.1     # via kindlecomicconverter
 pytz==2018.4              # via celery, django
+raven==6.10.0             # via kindlecomicconverter
 redis==2.10.6
-requests==2.20.0          # via get-fshare
 s3transfer==0.1.13        # via boto3
 sentry-sdk==0.6.4
 six==1.11.0               # via python-dateutil
 unidecode==1.0.22
-urllib3==1.24             # via requests, sentry-sdk
+urllib3==1.24             # via sentry-sdk
 vine==1.1.4               # via amqp

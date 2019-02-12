@@ -2,14 +2,12 @@
 Generate *Kindle* friendly manga. Good for your eyes and your feelings.  
 
 # Requirements  
-Download [Kindlegen](https://www.amazon.com/gp/feature.html?docId=1000234621),  
+Download [Kindlegen](https://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211),  
 then extract it with `tar xzf`, then `sudo cp kindlegen /usr/local/bin` and you are good to go.  
 
-Fill your secret data to `.env` file, with format from `.env.example`
+Fill your secret data to `.env` file, with format from `.env.example`  
 
-# Tests  
-`pip install pytest`  
-Then `pytest`
+Then run `celery -A main worker -l debug` in `manga_web`
 
 # Kindlemanga 1.0 - Bring manga to you Kindle.  
 
