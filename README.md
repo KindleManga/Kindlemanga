@@ -1,5 +1,11 @@
 # Kindlemanga
 Generate *Kindle* friendly manga. Good for your eyes and your feelings.  
+**This project is not maintain anymore.**
+
+You can download converted Manga here:  
+- https://www.fshare.vn/folder/MFX82B5GMID1
+- https://www.fshare.vn/folder/9IK2AYSPYDO2
+
 
 # Requirements  
 Download [Kindlegen](https://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211),  
