@@ -23,7 +23,7 @@ get-fshare==2.3.1
 jmespath==0.9.3           # via boto3, botocore
 kindlecomicconverter==5.4.5
 kombu==4.1.0              # via celery
-pillow==5.4.1             # via kindlecomicconverter
+pillow==6.2.0             # via kindlecomicconverter
 psutil==5.5.0             # via kindlecomicconverter
 psycopg2-binary==2.7.4
 pyqt5-sip==4.19.14        # via pyqt5
