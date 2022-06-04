@@ -21,7 +21,7 @@ from django.http import HttpResponse
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('manga.urls', namespace="manga")),
-    path('contact/', include('contact_form.urls')),
+    path('contact/', include('django_contact_form.urls')),
     path(
         'robots.txt',
         lambda x: HttpResponse(

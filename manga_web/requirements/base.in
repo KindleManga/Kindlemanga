@@ -1,0 +1,16 @@
+django
+celery
+redis
+django-celery-beat
+django-celery-results
+django-celery-email
+unidecode
+django-widget-tweaks
+django-recaptcha
+django-contact-form
+boto3
+django-environ
+requests
+lxml
+KindleComicConverter
+whitenoise

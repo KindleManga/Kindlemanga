@@ -21,7 +21,8 @@ def search_ajax(request):
     if request.method == 'GET':
         keywords = request.GET.get('q')
         qs = Manga.objects.filter(
-            reduce(lambda x, y: x | y, [Q(name__unaccent__icontains=word) for word in keywords.split()])
+            reduce(lambda x, y: x | y, [
+                   Q(name__unaccent__icontains=word) for word in keywords.split()])
         )[:10]
         data = {'results': [i.as_dict() for i in qs]}
         return JsonResponse(data)
@@ -42,7 +43,8 @@ class MangaSearchView(ListView):
         keywords = self.request.GET.get('q')
         if keywords:
             qs = Manga.objects.filter(
-                reduce(lambda x, y: x | y, [Q(name__unaccent__icontains=word) for word in keywords.split()])
+                reduce(lambda x, y: x | y, [
+                       Q(name__unaccent__icontains=word) for word in keywords.split()])
             )
             return qs
 
@@ -90,3 +92,7 @@ class FAQView(TemplateView):
 
 class ThanksView(TemplateView):
     template_name = "manga/thanks.html"
+
+
+class ContactView(TemplateView):
+    template_name = "manga/contact.html"

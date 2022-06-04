@@ -11,27 +11,12 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
-from dotenv import load_dotenv
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
+import environ
 
-
-load_dotenv()
-
-
-def get_env_variable(var_name):
-    try:
-        return os.getenv(var_name)
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-
-sentry_sdk.init(
-    dsn=get_env_variable("SENTRY_DSN"),
-    integrations=[DjangoIntegration(), CeleryIntegration()]
-)
+env = environ.Env()
+ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_z1230912093SS^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -58,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.postgres',
     'django_celery_beat',
     'django_celery_results',
     'widget_tweaks',
@@ -69,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,15 +88,12 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_env_variable('DATABASE_NAME'),
-        'USER': get_env_variable('DATABASE_USER'),
-        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': "django.db.backends.sqlite3",
+        'NAME': f"{BASE_DIR}/db.sqlite3",
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -150,38 +132,40 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static"),
-# ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 # REDIS related settings
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
-REDIS_VHOST = '0'
+REDIS_DB = '0'
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_VHOST)
-CELERY_RESULT_BACKEND = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_VHOST)
+CELERY_BROKER_URL = 'redis://{}:{}/{}'.format(
+    REDIS_HOST, REDIS_PORT, REDIS_DB)
+CELERY_RESULT_BACKEND = 'redis://{}:{}/{}'.format(
+    REDIS_HOST, REDIS_PORT, REDIS_DB)
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
 BUCKET_NAME = 'kindle-manga'
-RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
-NOCAPTCHA = True
+
+# Recaptcha v3
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBKEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVKEY')
+RECAPTCHA_REQUIRED_SCORE = 0.85
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = get_env_variable('GMAIL_EMAIL')
-EMAIL_HOST_PASSWORD = get_env_variable('GMAIL_PASSWORD')
+EMAIL_HOST_USER = env('GMAIL_EMAIL')
+EMAIL_HOST_PASSWORD = env('GMAIL_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 MANAGERS = [('Tu', 'tu0703@gmail.com'), ]
-VENV_PATH = get_env_variable('VENV_PATH')
 
-
-FSHARE_EMAIL = get_env_variable("FSHARE_EMAIL")
-FSHARE_PASSWORD = get_env_variable("FSHARE_PASSWORD")
+CONTABO_STORAGE_URL = "https://sin1.contabostorage.com/"
+BUCKET_NAME = "kindle-manga"

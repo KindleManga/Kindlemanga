@@ -1,15 +1,15 @@
-from __future__ import absolute_import, unicode_literals
 import os
 import logging
 import shlex
 import shutil
 import subprocess
 import time
+import boto3
 
 from django.conf import settings
 from django.core.mail import send_mail
 from celery import group, chain
-from celery.decorators import task
+from main.celery import app
 from PIL import Image
 import boto3
 import requests
@@ -19,11 +19,10 @@ from .models import Volume, Chapter
 
 
 BUCKET_NAME = settings.BUCKET_NAME
-VENV_PATH = settings.VENV_PATH
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
-# s3 = boto3.resource('s3')
+s3 = boto3.resource('s3')
 
 logger = logging.getLogger("Manga celery")
 logger.setLevel(logging.DEBUG)
@@ -34,6 +33,8 @@ handler.setLevel(logging.DEBUG)
 handler.setFormatter(fmt)
 
 logger.addHandler(handler)
+
+s3_client = boto3.client('s3', endpoint_url=settings.CONTABO_STORAGE_URL)
 
 
 def download(chapter_id, index, path, url):
@@ -51,7 +52,7 @@ def generate_key(vol):
 
 
 def make_download_link(file_name):
-    bucket_location = boto3.client('s3').get_bucket_location(Bucket=BUCKET_NAME)
+    bucket_location = s3_client.get_bucket_location(Bucket=BUCKET_NAME)
     url = "https://s3-{0}.amazonaws.com/{1}/{2}".format(
         bucket_location['LocationConstraint'],
         BUCKET_NAME,
@@ -73,7 +74,7 @@ def extract_chapters(volume_id):
     return chapters
 
 
-@task(name="download_chapter")
+@app.task(name="download_chapter")
 def download_chapter(path, chapter_id):
     c = Chapter.objects.get(id=chapter_id)
     urls = extract_images_url(c.source, c.web_source)
@@ -81,7 +82,7 @@ def download_chapter(path, chapter_id):
         download(chapter_id, index, path, url)
 
 
-@task(name="download_volume")
+@app.task(name="download_volume")
 def download_volume(volume_id):
     path = make_volume_dir(volume_id)
     chapters = extract_chapters(volume_id)
@@ -89,11 +90,11 @@ def download_volume(volume_id):
     return path
 
 
-@task(name="generate_manga")
+@app.task(name="generate_manga")
 def generate_manga(path, profile='KV'):
     time.sleep(120)
     args = shlex.split('{0}/kcc-c2e -m -q -p {1} -f MOBI {2}'.format(
-        VENV_PATH,
+        settings.BASE_DIR,
         profile,
         shlex.quote(path)
     ))
@@ -102,7 +103,7 @@ def generate_manga(path, profile='KV'):
     return "{}.mobi".format(path)
 
 
-@task(name="delete_corrupt_file")
+@ app.task(name="delete_corrupt_file")
 def delete_corrupt_file(path):
     time.sleep(30)
     for filename in os.listdir(path):
@@ -111,66 +112,39 @@ def delete_corrupt_file(path):
             img.verify()
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
-            logger.info("Removed corrupted image {}".format(os.path.join(path, filename)))
+            logger.info("Removed corrupted image {}".format(
+                os.path.join(path, filename)))
 
     return path
 
 
-# def upload(path, file_name):
-#     time.sleep(30)
-#     with open(path, 'rb') as f:
-#         obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
-#         return obj
+def upload(path, file_name):
+    time.sleep(30)
+    with open(path, 'rb') as f:
+        obj = s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=f)
+        return obj
 
 
-def fshare_upload(path, volume):
-    from get_fshare import FSAPI
-    from unidecode import unidecode
-
-    bot = FSAPI(settings.FSHARE_EMAIL, settings.FSHARE_PASSWORD)
-    bot.login()
-    try:
-        result = bot.upload(
-            path,
-            "/KindleManga/{}/{}".format(volume.manga.web_source, unidecode(volume.manga.name))
-        )
-        return result
-    except Exception as e:
-        logger.error(e)
-
-
-@task(name="upload_and_save")
+@ app.task(name="upload_and_save")
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    r = fshare_upload(path, v)
+    r = upload(path, v)
     logger.debug(path)
     logger.debug(r)
     link = r.get('url')
-    v.fshare_link = link
+    v.download_link = link
     v.save()
     shutil.rmtree(path.split('.mobi')[0])
     os.remove(path)
     return v.manga.name
 
 
-# @task(name="upload_and_save")
-# def upload_and_save(path, volume_id):
-#     v = Volume.objects.get(id=volume_id)
-#     file_name = generate_key(v)
-#     r = upload(path, file_name)
-#     link = make_download_link(file_name)
-#     v.download_link = link
-#     v.save()
-#     shutil.rmtree(path.split('.mobi')[0])
-#     os.remove(path)
-#     return v.manga.name
-
-
-@task(name="send_notification")
+@ app.task(name="send_notification")
 def send_notification(volume_id, email):
     v = Volume.objects.get(id=volume_id)
     send_mail(
-        '[Kindlemanga.xyz] {} - Volume {} has been converted'.format(v.manga.name, v.number),
+        '[Kindlemanga.xyz] {} - Volume {} has been converted'.format(
+            v.manga.name, v.number),
         'Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}'.format(
             email, v.manga.name, v.number, 'https://kindlemanga.xyz' + v.manga.get_absolute_url()
         ),
@@ -180,7 +154,7 @@ def send_notification(volume_id, email):
     logger.debug("Send email to {} succeed".format(email))
 
     if os.getenv('PUSHOVER_ENABLE'):
-        requests.post("https://api.pushover.net/1/messages.json", data = {
+        requests.post("https://api.pushover.net/1/messages.json", data={
             "token": os.getenv("PUSHOVER_APP_TOKEN"),
             "user": os.getenv("PUSHOVER_USER_KEY"),
             "message": "Convert manga {} - volume {} succeed. User email: {}".format(
@@ -195,6 +169,6 @@ def make_volume(volume_id, email):
         delete_corrupt_file.s(),
         generate_manga.s(),
         upload_and_save.s(volume_id),
-        send_notification.si(volume_id, email)
+        send_notification.s(volume_id, email)
     )()
     return res
