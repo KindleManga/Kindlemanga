@@ -137,16 +137,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-# REDIS related settings
-REDIS_HOST = 'localhost'
-REDIS_PORT = '6379'
-REDIS_DB = '0'
-
 # Celery settings
-CELERY_BROKER_URL = 'redis://{}:{}/{}'.format(
-    REDIS_HOST, REDIS_PORT, REDIS_DB)
-CELERY_RESULT_BACKEND = 'redis://{}:{}/{}'.format(
-    REDIS_HOST, REDIS_PORT, REDIS_DB)
+CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

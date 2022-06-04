@@ -60,6 +60,10 @@ COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+COPY ./compose/production/django/entrypoint /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
 COPY ./compose/local/django/celery/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
@@ -76,4 +80,4 @@ RUN chmod +x /start-flower
 COPY ./manga_web ${APP_HOME}
 COPY ./kindlegen /user/local/bin/kindlegen
 
-# ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint"]
