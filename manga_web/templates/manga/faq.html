@@ -1,56 +1,84 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <section class="section">
   <div class="container has-text-centered">
     <h1 class="title">F.A.Q - Những câu hỏi thường gặp</h1>
   </div>
 </section>
 <section class="section">
-<div class="container">
-  <div class="columns">
-    <div class="column is-6">
-      <div class="content">
-        <ul>
-          <li>Một vol(tập) có bao nhiêu chap(chương)?
-            <article class="message is-success">
-              <div class="message-body">
-                <p>Theo câu trả lời ở <a href="https://www.reddit.com/r/manga/comments/2iq8vz/is_there_a_set_amount_of_chapters_per_volume/" target="_blank">bài viết này</a> thì mình đã chia mỗi volume gồm 12 chapter. Còn lẻ bao nhiêu chap thì sẽ cho vào vol cuối.</p>
-              </div>
-            </article>
-          </li>
-          <li>Bạn không tìm thấy truyện của mình? Vui lòng để lại link truyện ở đây:
-            <article class="message is-success">
-              <div class="message-body">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScSFwyk3gxqTnKPWYBcOWlJU4mpelVcwM79K0uKRk1fk6esGA/viewform?embedded=true" width="500" height="500" frameborder="0" marginheight="0" marginwidth="0">Đang tải...</iframe>
-              </div>
-            </article>
-          </li>
-          <li>Bạn không thấy email thông báo sau 20 phút?
-            <article class="message is-success">
-              <div class="message-body">
-                Bạn vui lòng vào lại trang truyện bạn vừa yêu cầu hoặc kiểm tra ở mục spam của email. <br>
-                Nếu vẫn chưa thấy truyện trên trang web, bạn vui lòng feedback lại cho chúng tôi ở đây:<br>
-                <a href="{% url 'contact_form' %}">Feedback</a>
-              </div>
-            </article>
-          </li>
-          <li>Truyện bị thiếu trang/lỗi?
-            <article class="message is-success">
-              <div class="message-body">
-                Vui lòng truy cập vào link gốc của truyện, vì rất có thể truyện đó đã bị die các link ảnh nên chúng tôi không thể convert được.
-              </div>
-            </article>
-          </li>
-        </ul>
+  <div class="container">
+    <div class="columns">
+      <div class="column is-6">
+        <div class="content">
+          <ul>
+            <li>
+              Một vol(tập) có bao nhiêu chap(chương)?
+              <article class="message is-success">
+                <div class="message-body">
+                  <p>
+                    Theo câu trả lời ở
+                    <a
+                      href="https://www.reddit.com/r/manga/comments/2iq8vz/is_there_a_set_amount_of_chapters_per_volume/"
+                      target="_blank"
+                      >bài viết này</a
+                    >
+                    thì mình đã chia mỗi volume gồm 12 chapter. Còn lẻ bao nhiêu
+                    chap thì sẽ cho vào vol cuối.
+                  </p>
+                </div>
+              </article>
+            </li>
+            <li>
+              Bạn không tìm thấy truyện của mình? Vui lòng để lại link truyện ở
+              đây:
+              <article class="message is-success">
+                <div class="message-body">
+                  <iframe
+                    src="https://docs.google.com/forms/d/e/1FAIpQLScSFwyk3gxqTnKPWYBcOWlJU4mpelVcwM79K0uKRk1fk6esGA/viewform?embedded=true"
+                    width="500"
+                    height="500"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    >Đang tải...</iframe
+                  >
+                </div>
+              </article>
+            </li>
+            <li>
+              Bạn không thấy email thông báo sau 20 phút?
+              <article class="message is-success">
+                <div class="message-body">
+                  Bạn vui lòng vào lại trang truyện bạn vừa yêu cầu hoặc kiểm
+                  tra ở mục spam của email. <br />
+                  Nếu vẫn chưa thấy truyện trên trang web, bạn vui lòng feedback
+                  lại cho chúng tôi ở đây:<br />
+                  <a href="{% url 'django_contact_form' %}">Feedback</a>
+                </div>
+              </article>
+            </li>
+            <li>
+              Truyện bị thiếu trang/lỗi?
+              <article class="message is-success">
+                <div class="message-body">
+                  Vui lòng truy cập vào link gốc của truyện, vì rất có thể
+                  truyện đó đã bị die các link ảnh nên chúng tôi không thể
+                  convert được.
+                </div>
+              </article>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="column has-text-centered">
+        <figure class="image">
+          <img
+            src="https://cdn.dribbble.com/users/1003768/screenshots/3407204/faq.jpg"
+            alt=""
+          />
+        </figure>
+        <em>Image source: https://dribbble.com/shots/3407204-DA-FAQ</em>
       </div>
     </div>
-    <div class="column has-text-centered">
-      <figure class="image">
-        <img src="https://cdn.dribbble.com/users/1003768/screenshots/3407204/faq.jpg" alt="">
-      </figure>
-      <em>Image source: https://dribbble.com/shots/3407204-DA-FAQ</em>
-    </div>
   </div>
-</div>
-  </section>
+</section>
 {% endblock %}

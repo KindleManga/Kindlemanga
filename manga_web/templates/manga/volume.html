@@ -1,64 +1,68 @@
-{% extends "base.html" %}
-{% load widget_tweaks %}
-{% block title %}Yêu cầu {{volume.manga.name}} - Tập {{volume.number}}{% endblock %}
-{% block body %}
+{% extends "base.html" %} {% load widget_tweaks %} {% block title %}Yêu cầu
+{{volume.manga.name}} - Tập {{volume.number}}{% endblock %} {% block body %}
 <section class="section">
   <div class="container">
-    <h1 class="title">
-      Yêu cầu {{volume.manga.name}} - Tập {{volume.number}}
-    </h1>
+    <h1 class="title">Yêu cầu {{volume.manga.name}} - Tập {{volume.number}}</h1>
     <div class="content">
       <p>Tập truyện bạn mong muốn chưa có bản cho Kindle?</p>
-      <p>Hãy điền email của bạn vào form dưới đây và bấm Submit để nhận được thông báo khi chúng tôi convert xong.</p>
-      <p>Để tránh server quá tải, xin vui lòng KHÔNG tạo quá 5 request liên tiếp trong vòng 1 tiếng.</p>
-      <p>Sau khi convert, truyện sẽ được upload lên Mediafire và những người khác không cần phải yêu cầu convert lại nữa.</p>
-      <p>Nếu truyện bị lỗi hay link download bị lỗi, xin vui lòng liên hệ ở <a href="{% url 'contact_form' %}">đây</a>.</p>
-      <p>Nếu không thấy email trong vòng 15 phút, hãy cứ quay lại kiểm tra trên website. Rất có thể truyện của bạn đã được convert xong nhưng hệ thống mail của chúng tôi bị lỗi.</p>
+      <p>
+        Hãy điền email của bạn vào form dưới đây và bấm Submit để nhận được
+        thông báo khi chúng tôi convert xong.
+      </p>
+      <p>
+        Để tránh server quá tải, xin vui lòng KHÔNG tạo quá 5 request liên tiếp
+        trong vòng 1 tiếng.
+      </p>
+      <p>
+        Sau khi convert, truyện sẽ được upload lên Mediafire và những người khác
+        không cần phải yêu cầu convert lại nữa.
+      </p>
+      <p>
+        Nếu truyện bị lỗi hay link download bị lỗi, xin vui lòng liên hệ ở
+        <a href="{% url 'django_contact_form' %}">đây</a>.
+      </p>
+      <p>
+        Nếu không thấy email trong vòng 15 phút, hãy cứ quay lại kiểm tra trên
+        website. Rất có thể truyện của bạn đã được convert xong nhưng hệ thống
+        mail của chúng tôi bị lỗi.
+      </p>
     </div>
     <div class="columns">
       <div class="column is-8">
         <form method="post" class="control">
-          {% csrf_token %}
-          {% for hidden_field in form.hidden_fields %}
-            {{ hidden_field }}
-          {% endfor %}
-
-          {% if form.non_field_errors %}
-            <div class="notification is-warning" role="alert">
-              {% for error in form.non_field_errors %}
-                {{ error }}
-              {% endfor %}
-            </div>
+          {% csrf_token %} {% for hidden_field in form.hidden_fields %} {{
+          hidden_field }} {% endfor %} {% if form.non_field_errors %}
+          <div class="notification is-warning" role="alert">
+            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+          </div>
           {% endif %}
           <div class="field">
             <div class="control has-icons-left">
-            {% if form.is_bound %}
-                {% if form.email.errors %}
-                  {% render_field form.email class="input is-danger" %}
-                  {% for error in form.email.errors %}
-                  <p class="help is-danger">{{ error }}</p>
-                  {% endfor %}
-                {% else %}
-                  {% render_field form.email class="input is-success" %}
-                {% endif %}
-            {% else %}
-                {% render_field form.email class="input is-flat required email is-primary" placeholder="Địa chỉ email của bạn" %}
-            {% endif %}
-            <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+              {% if form.is_bound %} {% if form.email.errors %} {% render_field
+              form.email class="input is-danger" %} {% for error in
+              form.email.errors %}
+              <p class="help is-danger">{{ error }}</p>
+              {% endfor %} {% else %} {% render_field form.email class="input
+              is-success" %} {% endif %} {% else %} {% render_field form.email
+              class="input is-flat required email is-primary" placeholder="Địa
+              chỉ email của bạn" %} {% endif %}
+              <span class="icon is-small is-left"
+                ><i class="fas fa-envelope"></i
+              ></span>
             </div>
 
             {% if form.email.help_text %}
-                <p class="help">{{ field.help_text }}</p>
+            <p class="help">{{ field.help_text }}</p>
             {% endif %}
           </div>
 
-          <div class="field">
-            {% render_field form.captcha %}
-          </div>
+          <div class="field">{% render_field form.captcha %}</div>
 
           <div class="field">
             <div class="control">
-              <button class="button is-primary is-outlined" type="submit">Submit</button>
+              <button class="button is-primary is-outlined" type="submit">
+                Submit
+              </button>
             </div>
           </div>
         </form>

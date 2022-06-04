@@ -103,3 +103,4 @@ ENV/
 wsgi.py
 
 staticfiles/
+*.sqlite3
