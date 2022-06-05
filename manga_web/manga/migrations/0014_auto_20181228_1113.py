@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('manga', '0013_auto_20181228_1111'),
+        ("manga", "0013_auto_20181228_1111"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='chapter',
-            name='name',
+            model_name="chapter",
+            name="name",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='chapter',
-            name='source',
+            model_name="chapter",
+            name="source",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='volume',
-            name='download_link',
+            model_name="volume",
+            name="download_link",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='volume',
-            name='fshare_link',
+            model_name="volume",
+            name="fshare_link",
             field=models.TextField(null=True),
         ),
     ]

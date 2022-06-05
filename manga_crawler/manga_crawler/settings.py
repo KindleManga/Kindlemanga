@@ -8,22 +8,25 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-import sys
 import os
+import sys
+
 import django
 
 # Django settings
-sys.path.append('/Users/tu/Projects/Kindlemanga/manga_web')  # Path to Django project
-os.environ['DJANGO_SETTINGS_MODULE'] = 'main.settings'
+sys.path.append("/app")
+os.environ["DJANGO_SETTINGS_MODULE"] = "main.settings"
 
 django.setup()
 
-BOT_NAME = 'kindlemanga.xyz crawler'
+BOT_NAME = "kindlemanga.xyz crawler"
 
-SPIDER_MODULES = ['manga_crawler.spiders']
-NEWSPIDER_MODULE = 'manga_crawler.spiders'
+SPIDER_MODULES = ["manga_crawler.spiders"]
+NEWSPIDER_MODULE = "manga_crawler.spiders"
 
-ITEM_PIPELINES = {'manga_crawler.pipelines.MangaCrawlerPipeline': 900, }
+ITEM_PIPELINES = {
+    "manga_crawler.pipelines.MangaCrawlerPipeline": 900,
+}
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"
 
@@ -42,4 +45,4 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 #  Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = False
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = "INFO"

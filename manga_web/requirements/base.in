@@ -15,3 +15,5 @@ lxml
 KindleComicConverter
 whitenoise
 watchgod
+scrapy
+feedparser

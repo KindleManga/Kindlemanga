@@ -76,8 +76,11 @@ COPY ./compose/local/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
+COPY ./kindlegen /usr/local/bin
+RUN chmod +x /usr/local/bin/kindlegen
+
+COPY ./manga_crawler /crawler
 # copy application code to WORKDIR
 COPY ./manga_web ${APP_HOME}
-COPY ./kindlegen /user/local/bin/kindlegen
 
 ENTRYPOINT ["/entrypoint"]

@@ -6,13 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('manga', '0012_auto_20181228_1108'),
+        ("manga", "0012_auto_20181228_1108"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='manga',
-            name='web_source',
-            field=models.CharField(choices=[('blogtruyen', 'blogtruyen'), ('nettruyen', 'nettruyen'), ('mangaseeonline', 'mangaseeonline')], max_length=200),
+            model_name="manga",
+            name="web_source",
+            field=models.CharField(
+                choices=[
+                    ("blogtruyen", "blogtruyen"),
+                    ("nettruyen", "nettruyen"),
+                    ("mangaseeonline", "mangaseeonline"),
+                ],
+                max_length=200,
+            ),
         ),
     ]

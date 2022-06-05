@@ -19,6 +19,7 @@ services:
       - redis
     volumes:
       - ./manga_web:/app:z
+      - ./manga_crawler:/crawler:z
       - sqlite:/app/kindle_manga.db:z
       - ~/.aws/:/root/.aws:ro
     env_file:
@@ -58,3 +59,9 @@ services:
     container_name: manga_redis_local
     expose:
       - 6379
+
+  splash:
+    image: scrapinghub/splash
+    container_name: manga_splash_local
+    expose:
+      - 8050

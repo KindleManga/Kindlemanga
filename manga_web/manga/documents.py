@@ -1,14 +1,12 @@
 from django_elasticsearch_dsl import DocType, Index
+
 from .models import Manga
 
 # Name of the Elasticsearch index
-manga = Index('mangas')
+manga = Index("mangas")
 
 # See Elasticsearch Indices API reference for available settings
-manga.settings(
-    number_of_shards=1,
-    number_of_replicas=0
-)
+manga.settings(number_of_shards=1, number_of_replicas=0)
 
 
 @manga.doc_type
@@ -18,6 +16,6 @@ class MangaDocument(DocType):
 
         # The fields of the model you want to be indexed in Elasticsearch
         fields = [
-            'name',
-            'web_source',
+            "name",
+            "web_source",
         ]

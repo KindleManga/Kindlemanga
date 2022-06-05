@@ -1,5 +1,5 @@
-from django import forms
 from captcha.fields import ReCaptchaField
+from django import forms
 
 from .models import Manga, Volume
 from .tasks import make_volume, send_notification

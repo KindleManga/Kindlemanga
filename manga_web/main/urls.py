@@ -14,16 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
 from django.http import HttpResponse
-
+from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('manga.urls', namespace="manga")),
-    path('contact/', include('django_contact_form.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("manga.urls", namespace="manga")),
+    path("contact/", include("django_contact_form.urls")),
     path(
-        'robots.txt',
+        "robots.txt",
         lambda x: HttpResponse(
             """User-agent: GoogleBot
 Disallow: /volume/*
@@ -31,8 +30,8 @@ Disallow: /volume/*
 User-agent: *
 Allow: /
 """,
-            content_type="text/plain"
+            content_type="text/plain",
         ),
-        name="robots_file"
-    )
+        name="robots_file",
+    ),
 ]

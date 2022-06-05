@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('manga', '0010_auto_20181228_1104'),
+        ("manga", "0010_auto_20181228_1104"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='manga',
-            name='image_src',
+            model_name="manga",
+            name="image_src",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='manga',
-            name='source',
+            model_name="manga",
+            name="source",
             field=models.TextField(),
         ),
     ]
