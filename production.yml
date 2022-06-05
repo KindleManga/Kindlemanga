@@ -19,6 +19,7 @@ services:
       - redis
     volumes:
       - ./manga_web:/app:z
+      - ./manga_crawler:/crawler:z
       - sqlite:/app/kindle_manga.db:z
       - ~/.aws/:/root/.aws:ro
     env_file:
