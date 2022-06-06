@@ -23,7 +23,7 @@ def search_ajax(request):
         qs = Manga.objects.filter(
             reduce(
                 lambda x, y: x | y,
-                [Q(name__unaccent__icontains=word)
+                [Q(name__icontains=word)
                  for word in keywords.split()],
             )
         )[:10]
