@@ -184,4 +184,4 @@ CACHEOPS = {
     'auth.permission': {'ops': 'all'},
     'manga.*': {'ops': 'all'},
 }
-CACHEOPS_ENABLED = False
+CACHEOPS_ENABLED = not DEBUG
