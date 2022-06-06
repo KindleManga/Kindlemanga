@@ -1,5 +1,6 @@
 from functools import reduce
 
+from django.shortcuts import render
 from django.db.models import Q
 from django.conf import settings
 from django.http import JsonResponse
@@ -29,15 +30,18 @@ class HomeView(FormView):
 def search_ajax(request):
     if request.method == "GET":
         keywords = request.GET.get("q")
-        qs = Manga.objects.filter(
-            reduce(
-                lambda x, y: x | y,
-                [Q(name__icontains=word)
-                 for word in keywords.split()],
-            )
-        )[:10]
-        data = {"results": [i.as_dict() for i in qs]}
-        return JsonResponse(data)
+        if not keywords:
+            data = {"results": []}
+        else:
+            qs = Manga.objects.filter(
+                reduce(
+                    lambda x, y: x | y,
+                    [Q(name__icontains=word)
+                     for word in keywords.split()],
+                )
+            )[:10]
+            data = {"results": [i.as_dict() for i in qs]}
+        return render(request, "manga/live_search.html", data)
 
 
 class MangaSearchView(ListView):
@@ -61,7 +65,7 @@ class MangaSearchView(ListView):
             qs = Manga.objects.filter(
                 reduce(
                     lambda x, y: x | y,
-                    [Q(name__unaccent__icontains=word)
+                    [Q(name__icontains=word)
                      for word in keywords.split()],
                 )
             )

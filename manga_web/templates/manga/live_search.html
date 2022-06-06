@@ -1,0 +1,7 @@
+            <ul class="autocomplete-results">
+              {% for res in results %}
+              <li class="autocomplete-result" data-id="{{res.id}}" hx-trigger="click" hx-get="{{ request.scheme }}://{{ request.get_host }}/manga/{{res.slug}}" hx-target="#body" hx-swap="innerHTML" >
+                  {{ res.name }} [{{ res.source }}]
+              </li>
+              {% endfor %}
+            </ul>

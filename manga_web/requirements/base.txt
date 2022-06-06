@@ -68,12 +68,17 @@ django==4.0.5
     # via
     #   -r manga_web/requirements/base.in
     #   django-appconf
+    #   django-cacheops
     #   django-celery-beat
     #   django-celery-email
     #   django-contact-form
+    #   django-extensions
+    #   django-htmx
     #   django-recaptcha
 django-appconf==1.0.5
     # via django-celery-email
+django-cacheops==6.1
+    # via -r manga_web/requirements/base.in
 django-celery-beat==2.3.0
     # via -r manga_web/requirements/base.in
 django-celery-email==3.0.0
@@ -83,6 +88,10 @@ django-celery-results==2.3.1
 django-contact-form==2.0.1
     # via -r manga_web/requirements/base.in
 django-environ==0.8.1
+    # via -r manga_web/requirements/base.in
+django-extensions==3.1.5
+    # via -r manga_web/requirements/base.in
+django-htmx==1.12.0
     # via -r manga_web/requirements/base.in
 django-recaptcha==3.0.0
     # via -r manga_web/requirements/base.in
@@ -94,6 +103,8 @@ feedparser==6.0.10
     # via -r manga_web/requirements/base.in
 filelock==3.7.1
     # via tldextract
+funcy==1.17
+    # via django-cacheops
 hyperlink==21.0.0
     # via twisted
 idna==3.3
@@ -175,7 +186,9 @@ queuelib==1.6.2
 raven==6.10.0
     # via kindlecomicconverter
 redis==4.3.3
-    # via -r manga_web/requirements/base.in
+    # via
+    #   -r manga_web/requirements/base.in
+    #   django-cacheops
 requests==2.27.1
     # via
     #   -r manga_web/requirements/base.in
@@ -195,6 +208,7 @@ six==1.16.0
     # via
     #   automat
     #   click-repl
+    #   django-cacheops
     #   parsel
     #   protego
     #   python-dateutil

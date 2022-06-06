@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "manga",
     "captcha",
     "djcelery_email",
+    "django_htmx",
+    "cacheops",
 ]
 
 MIDDLEWARE = [
@@ -58,10 +60,16 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+
 
 ROOT_URLCONF = "main.urls"
 
@@ -139,7 +147,7 @@ STATICFILES_DIRS = [
 ]
 
 # Celery settings
-CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env("REDIS_URL")
+CACHEOPS_REDIS = CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -164,3 +172,16 @@ MANAGERS = [
 
 CONTABO_STORAGE_URL = "https://sin1.contabostorage.com/"
 BUCKET_NAME = "kindle-manga"
+
+
+# Cacheops
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*60*24,
+}
+CACHEOPS = {
+    'auth.user': {'ops': 'get', 'timeout': 60*15},
+    'auth.*': {'ops': ('fetch', 'get')},
+    'auth.permission': {'ops': 'all'},
+    'manga.*': {'ops': 'all'},
+}
+CACHEOPS_ENABLED = False

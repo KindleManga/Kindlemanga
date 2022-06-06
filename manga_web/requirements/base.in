@@ -17,3 +17,6 @@ whitenoise
 watchgod
 scrapy
 feedparser
+django-htmx
+django-extensions
+django-cacheops
