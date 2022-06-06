@@ -42,7 +42,8 @@ def search_ajax(request):
                      for word in keywords.split()],
                 )
             )[:10]
-            data = {"results": [i.as_dict() for i in qs]}
+            data = {"results": [i.as_dict() for i in qs],
+                    "scheme": "http" if settings.DEBUG else "https"}
         return render(request, "manga/live_search.html", data)
 
 
