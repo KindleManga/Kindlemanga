@@ -33,31 +33,8 @@
             </div>
           </div>
         </div>
-        <div class="column">
-          {% for vol in volume_list %}
-          <div class="card">
-            <div class="card-content">
-              <div class="content">
-                <h5 class="has-text-weight-semibold">Tập {{vol.number}} <span class="icon is-left {% if vol.file %}has-text-success{% else %}has-text-info{% endif %}"><i class="fas fa-tag"></i></span> Chap {{ vol.chapters.first.number }} -> {{ vol.chapters.last.number }}</h5>
-                {% if vol.file %}
-                <a class="button is-success" href="{{vol.file}}" target="_blank">
-                  <span class="icon">
-                    <i class="fas fa-toggle-on"></i>
-                  </span>
-                  <span>Tải về</span>
-                </a>
-                {% else %}
-                <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}" hx-get="{% url 'manga:volume' pk=vol.pk %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true">
-                  <span class="icon">
-                    <i class="fas fa-toggle-off"></i>
-                  </span>
-                  <span>Yêu cầu</span>
-                </a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-          {% endfor %}
+        <div class="column" hx-trigger="load" hx-get="{% url 'manga:volume-list' slug=manga.slug %}" hx-target="#volumes">
+          <div id="volumes"></div>
         </div>
       </div>
     </div>

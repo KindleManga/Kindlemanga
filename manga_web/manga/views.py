@@ -1,9 +1,10 @@
 from functools import reduce
+from django.db.models import prefetch_related_objects
+from django.core.paginator import Paginator
 
 from django.shortcuts import render
 from django.db.models import Q
 from django.conf import settings
-from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import TemplateView
@@ -81,15 +82,18 @@ class MangaListView(ContextSchemeMixin, ListView):
 
 class MangaDetailView(DetailView):
     model = Manga
-    queryset = Manga.objects.all().prefetch_related("volumes", "volumes__chapters")
+    queryset = Manga.objects.select_related().all()
     context_object_name = "manga"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        manga = self.get_object()
-        context["volume_list"] = manga.volumes.prefetch_related(
-            "chapters").all().order_by("number")
-        return context
+
+class VolumeListView(ContextSchemeMixin, ListView):
+    model = Volume
+    context_object_name = "volumes"
+    queryset = Volume.objects.prefetch_related("chapters").all()
+    ordering = "number"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(manga__slug=self.kwargs["slug"])
 
 
 class VolumeView(FormView):
