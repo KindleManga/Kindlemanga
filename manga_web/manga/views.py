@@ -49,7 +49,7 @@ def search_ajax(request):
 
 class MangaSearchView(ContextSchemeMixin, ListView):
     model = Manga
-    paginate_by = 10
+    paginate_by = 6
     context_object_name = "mangas"
     template_name = "manga/search_result.html"
 
