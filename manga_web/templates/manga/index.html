@@ -84,7 +84,7 @@
         },
         fetchKeywords(term) {
           if (term) {
-            axios.get('{{ request.scheme }}://{{ request.get_host }}/ajax/search/?q=' + term)
+            axios.get('{{ scheme }}://{{ request.get_host }}/ajax/search/?q=' + term)
             .then((response) => {
               this.results = response.data.results;
             })
@@ -94,7 +94,7 @@
         setResult(result) {
           this.search = result.name;
           this.isOpen = false;
-          window.location.href = '{{ request.scheme }}://{{ request.get_host }}/manga/' + result.slug
+          window.location.href = '{{ scheme }}://{{ request.get_host }}/manga/' + result.slug
         },
       },
       watch: {

@@ -17,6 +17,14 @@ class HomeView(FormView):
     form_class = SearchForm
     success_url = reverse_lazy()
 
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        if settings.DEBUG:
+            context['scheme'] = "http"
+        else:
+            context['scheme'] = "https"
+        return context
+
 
 def search_ajax(request):
     if request.method == "GET":
@@ -41,9 +49,9 @@ class MangaSearchView(ListView):
     def get_context_data(self, **kwargs):
         context = super(MangaSearchView, self).get_context_data(**kwargs)
         if settings.DEBUG:
-            self.request.scheme = "http"
+            context['scheme'] = "http"
         else:
-            self.request.scheme = "https"
+            context['scheme'] = "https"
         context["query"] = self.request.GET.get("q")
         return context
 
