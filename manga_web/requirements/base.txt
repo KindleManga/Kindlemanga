@@ -33,6 +33,7 @@ celery==5.2.7
     #   django-celery-beat
     #   django-celery-email
     #   django-celery-results
+    #   flower
 certifi==2022.5.18.1
     # via requests
 cffi==1.15.0
@@ -103,8 +104,12 @@ feedparser==6.0.10
     # via -r manga_web/requirements/base.in
 filelock==3.7.1
     # via tldextract
+flower==1.0.0
+    # via -r manga_web/requirements/base.in
 funcy==1.17
     # via django-cacheops
+humanize==4.1.0
+    # via flower
 hyperlink==21.0.0
     # via twisted
 idna==3.3
@@ -143,6 +148,8 @@ parsel==1.6.0
     #   scrapy
 pillow==9.1.1
     # via kindlecomicconverter
+prometheus-client==0.14.1
+    # via flower
 prompt-toolkit==3.0.29
     # via click-repl
 protego==0.2.1
@@ -181,6 +188,7 @@ pytz==2022.1
     # via
     #   celery
     #   django-timezone-field
+    #   flower
 queuelib==1.6.2
     # via scrapy
 raven==6.10.0
@@ -223,6 +231,8 @@ text-unidecode==1.3
     # via python-slugify
 tldextract==3.3.0
     # via scrapy
+tornado==6.1
+    # via flower
 twisted==22.4.0
     # via scrapy
 typing-extensions==4.2.0

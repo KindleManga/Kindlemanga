@@ -20,3 +20,4 @@ feedparser
 django-htmx
 django-extensions
 django-cacheops
+flower
