@@ -2,30 +2,23 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from unidecode import unidecode
+from django_extensions.db.models import TimeStampedModel
 
 
-class Manga(models.Model):
-    BLOG_TRUYEN = "blogtruyen"
-    NET_TRUYEN = "nettruyen"
-    MANGA_SEE_ONLINE = "mangaseeonline"
-
-    SOURCE_CHOICES = (
-        (BLOG_TRUYEN, "blogtruyen"),
-        (NET_TRUYEN, "nettruyen"),
-        (MANGA_SEE_ONLINE, "mangaseeonline"),
-    )
+class Manga(TimeStampedModel):
+    class Source(models.TextChoices):
+        VLOGTRUYEN = "vlogtruyen"
+        MANGASEEONLINE = "mangaseeonline"
 
     name = models.TextField(null=False)
     unicode_name = models.TextField(null=True)
-    web_source = models.CharField(max_length=200, choices=SOURCE_CHOICES)
+    web_source = models.CharField(max_length=200, choices=Source.choices)
     source = models.TextField(null=False)
     description = models.TextField(null=True)
     total_chap = models.IntegerField(null=True)
     image_src = models.TextField(null=True)
     slug = models.SlugField(max_length=255)
     full = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.name)
@@ -66,13 +59,11 @@ def manga_directory_path(instance, filename):
     return f"{instance.manga.name}/volume_{instance.author.id}/{filename}"
 
 
-class Volume(models.Model):
+class Volume(TimeStampedModel):
     manga = models.ForeignKey(
         Manga, on_delete=models.CASCADE, related_name="volumes")
     number = models.IntegerField(null=True)
     file = models.FileField(upload_to=manga_directory_path, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "{} - Volume {} - {}".format(
@@ -88,7 +79,7 @@ class Volume(models.Model):
         return self.chapters.last()
 
 
-class Chapter(models.Model):
+class Chapter(TimeStampedModel):
     volume = models.ForeignKey(
         Volume, on_delete=models.CASCADE, related_name="chapters")
     number = models.IntegerField(null=True)

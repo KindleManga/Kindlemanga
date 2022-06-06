@@ -13,18 +13,20 @@ from .forms import CreateVolumeForm, SearchForm
 from .models import Manga, Volume
 
 
-class HomeView(FormView):
-    template_name = "manga/index.html"
-    form_class = SearchForm
-    success_url = reverse_lazy()
-
+class ContextSchemeMixin:
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if settings.DEBUG:
             context['scheme'] = "http"
         else:
             context['scheme'] = "https"
         return context
+
+
+class HomeView(ContextSchemeMixin, FormView):
+    template_name = "manga/index.html"
+    form_class = SearchForm
+    success_url = reverse_lazy()
 
 
 def search_ajax(request):
@@ -44,7 +46,7 @@ def search_ajax(request):
         return render(request, "manga/live_search.html", data)
 
 
-class MangaSearchView(ListView):
+class MangaSearchView(ContextSchemeMixin, ListView):
     model = Manga
     paginate_by = 10
     context_object_name = "mangas"
@@ -52,10 +54,6 @@ class MangaSearchView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MangaSearchView, self).get_context_data(**kwargs)
-        if settings.DEBUG:
-            context['scheme'] = "http"
-        else:
-            context['scheme'] = "https"
         context["query"] = self.request.GET.get("q")
         return context
 
@@ -72,7 +70,7 @@ class MangaSearchView(ListView):
             return qs
 
 
-class MangaListView(ListView):
+class MangaListView(ContextSchemeMixin, ListView):
     model = Manga
     context_object_name = "mangas"
     paginate_by = 12

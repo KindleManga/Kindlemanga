@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "djcelery_email",
     "django_htmx",
     "cacheops",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
