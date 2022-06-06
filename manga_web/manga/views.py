@@ -111,6 +111,7 @@ class VolumeView(FormView):
     def form_valid(self, form):
         volume_id = self.kwargs["pk"]
         email = form.cleaned_data["email"]
+        print(volume_id, email)
         form.create_volume(volume_id, email)
         return super().form_valid(form)
 

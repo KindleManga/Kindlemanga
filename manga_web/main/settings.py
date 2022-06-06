@@ -159,23 +159,34 @@ CELERY_TIMEZONE = TIME_ZONE
 
 BUCKET_NAME = "kindle-manga"
 
-# Recaptcha v3
-RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBKEY")
-RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
-RECAPTCHA_REQUIRED_SCORE = 0.85
+# Recaptcha v2
+if DEBUG:
+    RECAPTCHA_PUBLIC_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    RECAPTCHA_PRIVATE_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+    SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+else:
+    RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBKEY")
+    RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = env("GMAIL_EMAIL")
 EMAIL_HOST_PASSWORD = env("GMAIL_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 MANAGERS = [
     ("Tu", "tu0703@gmail.com"),
 ]
 
-CONTABO_STORAGE_URL = "https://sin1.contabostorage.com/"
-BUCKET_NAME = "kindle-manga"
+# Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "kindle-manga"
 
 
 # Cacheops
@@ -189,3 +200,5 @@ CACHEOPS = {
     'manga.*': {'ops': 'all'},
 }
 CACHEOPS_ENABLED = not DEBUG
+
+SPLASH_URL = "http://splash:8050/render.html"

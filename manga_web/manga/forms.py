@@ -1,5 +1,5 @@
 from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV3
+from captcha.widgets import ReCaptchaV3, ReCaptchaV2Invisible
 from django import forms
 
 from .models import Manga, Volume
@@ -8,10 +8,10 @@ from .tasks import make_volume, send_notification
 
 class CreateVolumeForm(forms.Form):
     email = forms.EmailField()
-    captcha = ReCaptchaField(widget=ReCaptchaV3)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Invisible)
 
     def create_volume(self, volume_id, email):
-        r = make_volume(volume_id, email)
+        r = make_volume.delay(volume_id, email)
         return r
 
 

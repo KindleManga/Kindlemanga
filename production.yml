@@ -59,3 +59,9 @@ services:
     container_name: manga_redis_production
     expose:
       - 6379
+
+  splash:
+    image: scrapinghub/splash
+    container_name: manga_splash_local
+    expose:
+      - 8050

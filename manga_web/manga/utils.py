@@ -9,6 +9,7 @@ try:
 except ImportError:
     from urllib.parse import urlsplit, unquote
 
+from django.conf import settings
 import requests
 from lxml import html
 
@@ -60,11 +61,8 @@ def extract_images_url(url, source):
     """
     Extract image url for a chapter
     """
-    r = s.get(url)
-    tree = html.fromstring(r.text)
-    if source == "blogtruyen":
-        return tree.xpath('//*[@id="content"]/img/@src')
-    elif source == "nettruyen":
-        return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
-    elif source == "image-container-manga":
-        return tree.xpath('//*[@class="image-container-manga"]/div/img/@src')
+    if source == "mangaseeonline":
+        r = s.get(settings.SPLASH_URL, params={
+                  'url': url.replace("-page-1", ""), 'wait': 0.5})
+        tree = html.fromstring(r.text)
+        return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')

@@ -60,8 +60,8 @@ services:
     expose:
       - 6379
 
-  # splash:
-  #   image: scrapinghub/splash
-  #   container_name: manga_splash_local
-  #   expose:
-  #     - 8050
+  splash:
+    image: scrapinghub/splash
+    container_name: manga_splash_local
+    ports:
+      - "8050:8050"

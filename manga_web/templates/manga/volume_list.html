@@ -4,7 +4,7 @@
               <div class="content">
                 <h5 class="has-text-weight-semibold">Tập {{vol.number}} <span class="icon is-left {% if vol.file %}has-text-success{% else %}has-text-info{% endif %}"><i class="fas fa-tag"></i></span> Chap {{ vol.chapters.first.number }} -> {{ vol.chapters.last.number }}</h5>
                 {% if vol.file %}
-                <a class="button is-success" href="{{vol.file}}" target="_blank">
+                <a class="button is-success" href="{{vol.file.url}}" target="_blank">
                   <span class="icon">
                     <i class="fas fa-toggle-on"></i>
                   </span>

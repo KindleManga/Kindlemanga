@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from unidecode import unidecode
+from django.utils.text import slugify
 from django_extensions.db.models import TimeStampedModel
 
 
@@ -55,8 +56,7 @@ class Manga(TimeStampedModel):
 
 
 def manga_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return f"{instance.manga.name}/volume_{instance.author.id}/{filename}"
+    return f"{instance.manga.id}/{instance.id}/{filename}"
 
 
 class Volume(TimeStampedModel):
