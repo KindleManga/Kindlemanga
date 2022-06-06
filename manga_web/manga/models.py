@@ -66,17 +66,7 @@ class Volume(TimeStampedModel):
     file = models.FileField(upload_to=manga_directory_path, null=True)
 
     def __str__(self):
-        return "{} - Volume {} - {}".format(
-            self.manga.name, self.number, self.manga.web_source.upper()
-        )
-
-    @property
-    def first_chapter(self):
-        return self.chapters.first()
-
-    @property
-    def last_chapter(self):
-        return self.chapters.last()
+        return f"<Volume {self.number}>"
 
 
 class Chapter(TimeStampedModel):
@@ -87,10 +77,4 @@ class Chapter(TimeStampedModel):
     source = models.TextField()
 
     def __str__(self):
-        return "{} - Volume {} - {}".format(
-            self.volume.manga.name, self.volume.number, self.name
-        )
-
-    @property
-    def web_source(self):
-        return self.volume.manga.web_source
+        return f"<Chapter {self.name}>"

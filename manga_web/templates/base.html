@@ -27,7 +27,7 @@
     <div class="container">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="{% url "manga:home" %}">
+          <a class="navbar-item" href="{% url "manga:home" %}" hx-get="{% url 'manga:home' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
             <h1 class="title is-3">Kindle Manga</h1>
           </a>
 
@@ -40,17 +40,17 @@
         <div class="navbar-menu" id="navMenu">
           <div class="navbar-end">
             <!-- navbar items -->
-            <a class="navbar-item" href="{% url "manga:home" %}" hx-get="{% url 'manga:home' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML">
+            <a class="navbar-item" href="{% url "manga:home" %}" hx-get="{% url 'manga:home' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-primary"><i class="fas fa-home"></i></span> <span>Home</span>
             </a>
 
-            <a class="navbar-item" href="{% url 'manga:list' %}" hx-get="{% url 'manga:list' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML">
+            <a class="navbar-item" href="{% url 'manga:list' %}" hx-get="{% url 'manga:list' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Manga List</span>
             </a>
-            <a class="navbar-item" href="{% url 'manga:faq' %}" hx-get="{% url 'manga:faq' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML">
+            <a class="navbar-item" href="{% url 'manga:faq' %}" hx-get="{% url 'manga:faq' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-success"><i class="fas fa-question"></i></span> <span>F.A.Q</span>
             </a>
-            <a class="navbar-item" href="{% url 'django_contact_form' %}" hx-get="{% url 'django_contact_form' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML">
+            <a class="navbar-item" href="{% url 'django_contact_form' %}" hx-get="{% url 'django_contact_form' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-link"><i class="fas fa-envelope"></i></span> <span>Contact</span>
             </a>
             <div class="navbar-item">
@@ -80,14 +80,14 @@
     <div id="body" hx-swap-oob="true">
     {% block body %}
     {% endblock %}
-    </div>
     <footer class="footer" style="background: white;">
     <div class="content has-text-centered">
         <p>
-          This website is free and open source. Please <a href="http://kindlemanga.xyz/contact/">contact me</a> if you have any problems
+          This website is free and open source. Please <a href="{% url 'django_contact_form' %}">contact me</a> if you have any problems
         </p>
       </div>
     </footer>
+    </div>
     {% block extra_js %}
     {% endblock %}
     <script type="text/javascript">

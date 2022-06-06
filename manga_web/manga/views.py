@@ -74,21 +74,21 @@ class MangaSearchView(ContextSchemeMixin, ListView):
 class MangaListView(ContextSchemeMixin, ListView):
     model = Manga
     context_object_name = "mangas"
+    queryset = Manga.objects.all().prefetch_related("volumes", "volumes__chapters")
     paginate_by = 12
     ordering = "created"
-
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related("volumes", "volumes__chapters")
 
 
 class MangaDetailView(DetailView):
     model = Manga
+    queryset = Manga.objects.all().prefetch_related("volumes", "volumes__chapters")
     context_object_name = "manga"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         manga = self.get_object()
-        context["volume_list"] = manga.volumes.all().order_by("number")
+        context["volume_list"] = manga.volumes.prefetch_related(
+            "chapters").all().order_by("number")
         return context
 
 

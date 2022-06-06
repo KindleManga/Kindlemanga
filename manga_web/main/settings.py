@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from pathlib import Path
-
+import socket
 import environ
-from django.core.exceptions import ImproperlyConfigured
 
 env = environ.Env()
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -68,6 +67,10 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
     INSTALLED_APPS += ["debug_toolbar"]
     MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
