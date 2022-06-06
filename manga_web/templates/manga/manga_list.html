@@ -24,7 +24,9 @@
             <div class="media-content">
               <div class="content">
                 <h6 class="title">
-                  <a href="{% url "manga:detail" slug=manga.slug %}" style="color: #363636;">{% if manga.full %}<span class="icon is-left has-text-success"><i class="fas fa-check"></i></span> {% else %}<span class="icon is-left has-text-black-bis"><i class="fas fa-book"></i></span> {% endif %}<span>{{ manga.name }}</span> {% if manga.full %}(Hoàn thành){% endif %}</a>
+                  <a href="{% url "manga:detail" slug=manga.slug %}" style="color: #363636;"
+                  hx-get="{% url "manga:detail" slug=manga.slug %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true"
+                  >{% if manga.full %}<span class="icon is-left has-text-success"><i class="fas fa-check"></i></span> {% else %}<span class="icon is-left has-text-black-bis"><i class="fas fa-book"></i></span> {% endif %}<span>{{ manga.name }}</span> {% if manga.full %}(Hoàn thành){% endif %}</a>
                 </h6>
               </div>
             </div>
