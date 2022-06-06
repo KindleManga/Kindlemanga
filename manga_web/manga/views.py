@@ -1,6 +1,7 @@
 from functools import reduce
 
 from django.db.models import Q
+from django.conf import settings
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
@@ -39,6 +40,10 @@ class MangaSearchView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MangaSearchView, self).get_context_data(**kwargs)
+        if settings.DEBUG:
+            self.request.scheme = "http"
+        else:
+            self.request.scheme = "https"
         context["query"] = self.request.GET.get("q")
         return context
 
