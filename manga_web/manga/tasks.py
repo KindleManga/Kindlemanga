@@ -37,7 +37,11 @@ def download(chapter_id, index, path, url):
     logging.debug("downloading %s", filename)
     if not url.startswith("http"):
         url = "http:" + url
-    r = requests.get(url, stream=True)
+    try:
+        r = requests.get(url, stream=True)
+    except Exception as e:
+        print(f"Failed to download {url}")
+        return
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
             for chunk in r:
