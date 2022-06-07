@@ -11,12 +11,21 @@
                   <span>Tải về</span>
                 </a>
                 {% else %}
-                <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}" hx-get="{% url 'manga:volume' pk=vol.pk %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true">
-                  <span class="icon">
-                    <i class="fas fa-toggle-off"></i>
-                  </span>
-                  <span>Yêu cầu</span>
-                </a>
+                  {% if vol.converting %}
+                  <a class="button is-warning is-disable">
+                    <span class="icon">
+                      <i class="fas fa-seedling"></i>
+                    </span>
+                    <span>Converting</span>
+                  </a>
+                  {% else %}
+                  <a class="button is-info" href="{% url 'manga:volume' pk=vol.pk %}" hx-get="{% url 'manga:volume' pk=vol.pk %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true">
+                    <span class="icon">
+                      <i class="fas fa-toggle-off"></i>
+                    </span>
+                    <span>Yêu cầu</span>
+                  </a>
+                  {% endif %}
                 {% endif %}
               </div>
             </div>

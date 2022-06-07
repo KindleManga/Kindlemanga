@@ -64,9 +64,13 @@ class Volume(TimeStampedModel):
         Manga, on_delete=models.CASCADE, related_name="volumes")
     number = models.IntegerField(null=True)
     file = models.FileField(upload_to=manga_directory_path, null=True)
+    converting = models.BooleanField(default=False)
 
     def __str__(self):
         return f"<Volume {self.number}>"
+
+    def title(self):
+        return f"{self.manga.name} - Volume {self.number}"
 
 
 class Chapter(TimeStampedModel):

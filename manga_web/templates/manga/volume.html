@@ -6,8 +6,7 @@
     <div class="content">
       <p><em>Tập truyện bạn mong muốn chưa có bản cho Kindle?</em></p>
       <p>
-        Hãy điền email của bạn vào form dưới đây và bấm Submit để nhận được
-        thông báo khi chúng tôi convert xong.
+        Yêu cầu tại đây và chờ 10-15 phút để bạn có thể tải về bản cho Kindle.
       </p>
       <p>
         Để tránh server quá tải, xin vui lòng KHÔNG tạo quá 5 request liên tiếp
@@ -22,9 +21,6 @@
         <a href="{% url 'django_contact_form' %}">đây</a>.
       </p>
       <p>
-        Nếu không thấy email trong vòng 15 phút, hãy cứ quay lại kiểm tra trên
-        website. Rất có thể truyện của bạn đã được convert xong nhưng hệ thống
-        mail của chúng tôi bị lỗi.
       </p>
     </div>
     <div class="columns">
@@ -39,29 +35,6 @@
             {% for error in form.non_field_errors %} {{ error }} {% endfor %}
           </div>
           {% endif %}
-          <div class="field">
-            <div class="control has-icons-left">
-              {% if form.is_bound %} 
-                {% if form.email.errors %} 
-                  {% render_field form.email class="input is-danger" %} 
-                  {% for error in form.email.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                  {% endfor %}
-                {% else %} 
-                  {% render_field form.email class="input is-success" %} 
-                {% endif %} 
-              {% else %} 
-                {% render_field form.email class="input is-flat required email is-primary" placeholder="Địa chỉ email của bạn" %} 
-              {% endif %}
-              <span class="icon is-small is-left"
-                ><i class="fas fa-envelope"></i
-              ></span>
-            </div>
-
-            {% if form.email.help_text %}
-            <p class="help">{{ field.help_text }}</p>
-            {% endif %}
-          </div>
 
           <div class="field">{% render_field form.captcha %}</div>
 

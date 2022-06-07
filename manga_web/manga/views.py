@@ -1,6 +1,4 @@
 from functools import reduce
-from django.db.models import prefetch_related_objects
-from django.core.paginator import Paginator
 
 from django.shortcuts import render
 from django.db.models import Q
@@ -110,10 +108,12 @@ class VolumeView(FormView):
 
     def form_valid(self, form):
         volume_id = self.kwargs["pk"]
-        email = form.cleaned_data["email"]
-        print(volume_id, email)
-        form.create_volume(volume_id, email)
-        return super().form_valid(form)
+        form.create_volume(volume_id)
+        context = {
+            "volume": Volume.objects.get(pk=volume_id),
+            "manga": Manga.objects.get(volumes__pk=volume_id),
+        }
+        return render(self.request, "manga/thanks.html", context)
 
 
 class FAQView(TemplateView):

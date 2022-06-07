@@ -109,3 +109,4 @@ staticfiles/
 .env
 .envs/*
 !.envs/.local/
+.envs/.local/.django

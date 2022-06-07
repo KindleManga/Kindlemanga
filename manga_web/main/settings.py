@@ -27,7 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "_z1230912093SS^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+"
+SECRET_KEY = env(
+    "SECRET_KEY", default="_z1230912093SS^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
@@ -168,15 +169,15 @@ else:
     RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBKEY")
     RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = env("GMAIL_EMAIL")
-EMAIL_HOST_PASSWORD = env("GMAIL_PASSWORD")
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
     EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_HOST_USER = env("GMAIL_EMAIL")
+    EMAIL_HOST_PASSWORD = env("GMAIL_PASSWORD")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
 MANAGERS = [
     ("Tu", "tu0703@gmail.com"),
 ]
@@ -186,10 +187,7 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-if DEBUG:
-    AWS_STORAGE_BUCKET_NAME = "kindle-manga-dev"
-else:
-    AWS_STORAGE_BUCKET_NAME = "kindle-manga"
+AWS_STORAGE_BUCKET_NAME = "kindle-manga"
 
 
 # Cacheops

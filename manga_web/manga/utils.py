@@ -63,6 +63,6 @@ def extract_images_url(url, source):
     """
     if source == "mangaseeonline":
         r = s.get(settings.SPLASH_URL, params={
-                  'url': url.replace("-page-1", ""), 'wait': 0.5})
+                  'url': url.replace("-page-1", ""), 'wait': 1})
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')

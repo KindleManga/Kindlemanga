@@ -33,6 +33,9 @@ logger.addHandler(handler)
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
     logging.debug("downloading %s", filename)
+    if not url.startswith("http"):
+        print("Not http url")
+        return
     r = requests.get(url, stream=True)
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
@@ -76,11 +79,10 @@ def download_volume(volume_id):
     return path
 
 
-def generate_manga(path, profile="KV"):
+def generate_manga(path, volume_id, profile="KPW"):
+    vol = Volume.objects.get(id=volume_id)
     args = shlex.split(
-        "kcc-c2e -m -q -p {1} -f MOBI {2}".format(
-            settings.BASE_DIR, profile, shlex.quote(path)
-        )
+        f"kcc-c2e -m -q -p {profile} -f MOBI -t {shlex.quote(vol.title())} {shlex.quote(path)}"
     )
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
@@ -104,7 +106,6 @@ def delete_corrupt_file(path):
 
 
 def upload_and_save(path, volume_id):
-    print(path)
     v = Volume.objects.get(id=volume_id)
     with open(path, 'rb') as f:
         v.file.save(f"volume_{v.number}.mobi", File(f))
@@ -114,42 +115,18 @@ def upload_and_save(path, volume_id):
     return v.manga.name
 
 
-def send_notification(volume_id, email):
-    v = Volume.objects.get(id=volume_id)
-    send_mail(
-        "[Kindlemanga.xyz] {} - Volume {} has been converted".format(
-            v.manga.name, v.number
-        ),
-        "Hello {0}, your manga: {1} - Volume {2} has been converted successful. Please check it at {3}".format(
-            email,
-            v.manga.name,
-            v.number,
-            "https://kindlemanga.xyz" + v.manga.get_absolute_url(),
-        ),
-        os.getenv("GMAIL_EMAIL", "kindlemanga.xyz@gmail.com"),
-        [
-            email,
-        ],
-    )
-    logger.debug("Send email to {} succeed".format(email))
-
-    if os.getenv("PUSHOVER_ENABLE"):
-        requests.post(
-            "https://api.pushover.net/1/messages.json",
-            data={
-                "token": os.getenv("PUSHOVER_APP_TOKEN"),
-                "user": os.getenv("PUSHOVER_USER_KEY"),
-                "message": "Convert manga {} - volume {} succeed. User email: {}".format(
-                    v.manga.name, v.number, email
-                ),
-            },
-        )
-
-
 @app.task(name="make_volume")
-def make_volume(volume_id, email):
-    print("Start make volume {}".format(volume_id))
-    path = download_volume(volume_id)
-    generated_path = generate_manga(path)
-    res = upload_and_save(generated_path, volume_id)
-    return res
+def make_volume(volume_id):
+    vol = Volume.objects.get(id=volume_id)
+    vol.converting = True
+    vol.save()
+    print(f"Start converting {vol.manga.name} volume {vol.number}")
+    try:
+        path = download_volume(volume_id)
+        generated_path = generate_manga(path, volume_id)
+        res = upload_and_save(generated_path, volume_id)
+        return res
+    except Exception as e:
+        vol.converting = False
+        vol.save()
+        return False
