@@ -44,11 +44,14 @@ class MangaCrawlerPipeline(object):
             )
             logger.debug("Volume added")
 
-        thumbnail = image_to_bytesio(item['image_src'][0])
-        manga.thumbnail.save(
-            f"{slugify(manga.name)}.jpg", files.File(thumbnail))
-        logger.info(
-            "Manga {} added. Source: {}".format(
-                item["name"][0], item["web_source"][0])
-        )
+        try:
+            thumbnail = image_to_bytesio(item['image_src'][0])
+            manga.thumbnail.save(
+                f"{slugify(manga.name)}.jpg", files.File(thumbnail))
+            logger.info(
+                "Manga {} added. Source: {}".format(
+                    item["name"][0], item["web_source"][0])
+            )
+        except Exception as e:
+            print("Can not download thumbnail")
         return item

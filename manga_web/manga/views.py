@@ -88,7 +88,7 @@ class VolumeListView(ContextSchemeMixin, ListView):
     model = Volume
     context_object_name = "volumes"
     queryset = Volume.objects.prefetch_related("chapters").all()
-    ordering = "number"
+    ordering = "id"
 
     def get_queryset(self):
         return super().get_queryset().filter(manga__slug=self.kwargs["slug"])
