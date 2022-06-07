@@ -7,6 +7,7 @@ import subprocess
 import requests
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils.text import slugify
 from django.core.files.base import File
 from main.celery import app
 from PIL import Image
@@ -107,8 +108,9 @@ def delete_corrupt_file(path):
 
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
+    file_name = f"{slugify(v.manga.name).replace('-', '_')}_vol_{v.number}.mobi"
     with open(path, 'rb') as f:
-        v.file.save(f"volume_{v.number}.mobi", File(f))
+        v.file.save(file_name, File(f))
         v.save()
     shutil.rmtree(path.split(".mobi")[0])
     os.remove(path)
