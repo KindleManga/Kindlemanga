@@ -34,6 +34,7 @@ SECRET_KEY = env(
 DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://kindlemanga.xyz", "http://localhost:8000"]
 
 # Application definition
 
