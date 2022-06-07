@@ -23,7 +23,7 @@
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
     {% block extra_head %}{% endblock %}
   </head>
-  <body>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="container">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
