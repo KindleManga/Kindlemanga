@@ -78,6 +78,7 @@ class NettruyenSpider(CrawlSpider):
                     MapCompose(lambda x: re.findall(
                         r" Chapter \d+| Chap \d+", x)),
                     MapCompose(lambda x: re.findall(r"\d+", x)),
+                    MapCompose(float),
                     MapCompose(int),
                     TakeFirst(),
                 ),

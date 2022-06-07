@@ -67,6 +67,7 @@ class Truyen3QSpider(CrawlSpider):
             manga.get_xpath(
                 '//*[@id="list-chapter-dt"]/nav/ul/li[1]/div[1]/a/text()',
                 MapCompose(lambda x: re.findall(r"(\d+(?:\.\d+)?)", x)),
+                MapCompose(float),
                 MapCompose(int),
                 TakeFirst(),
             ),
