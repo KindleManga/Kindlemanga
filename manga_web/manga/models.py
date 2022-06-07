@@ -26,7 +26,7 @@ class Manga(TimeStampedModel):
     def __str__(self):
         return str(self.name)
 
-    def souce_color(self):
+    def source_color(self):
         if self.web_source == "doctruyen3q":
             return "#7858A6"
         elif self.web_source == "nettruyen":

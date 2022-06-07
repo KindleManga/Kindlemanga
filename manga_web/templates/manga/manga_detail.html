@@ -2,6 +2,7 @@
 {% block meta_title %}{{ manga.unicode_name }} - {{ manga.total_chap }} chapters{% endblock %}
 {% block meta_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block meta_description %}{{ manga.description }}{% endblock %}
+{% block meta_image %} {% if manga.thumbnail %} {{ manga.thumbnail.url }} {% else %} {{manga.image_src}} {% endif %}{% endblock %}
 {% block title %}{{ manga.unicode_name }}{% endblock %}
 {% block extra_head %}
 <style>
