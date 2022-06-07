@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-watchgod celery.__main__.main --args -A main.celery worker -l INFO
+watchgod celery.__main__.main --args -A main.celery worker -l INFO -c 4
