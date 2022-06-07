@@ -25,16 +25,7 @@
     </div>
     <div class="columns">
       <div class="column is-8">
-        <form method="post" class="control">
-          {% for hidden_field in form.hidden_fields %} 
-          {{ hidden_field }} 
-          {% endfor %} 
-          {% if form.non_field_errors %}
-          <div class="notification is-warning" role="alert">
-            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
-          </div>
-          {% endif %}
-
+        <form hx-post="{% url 'manga:volume' pk=volume.pk %}" class="control" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
           <div class="field">{% render_field form.captcha %}</div>
 
           <div class="field">
