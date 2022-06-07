@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 class MangaCrawlerPipeline(object):
     def process_item(self, item, spider):
-        print(item)
+        if not item:
+            return
         if Manga.objects.filter(
             name=item["name"][0], source=item["source"][0]
         ).exists():
