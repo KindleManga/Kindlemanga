@@ -39,13 +39,13 @@ class Truyen3QSpider(CrawlSpider):
 
     def parse_item(self, response):
         """
-        @url https://doctruyen3q.info/truyen-tranh/co-gai-be-nho-cua-toi/3546
+        @url https://doctruyen3q.info/truyen-tranh/dao-hai-tac/77
         @scrapes name source image_src total_chap description chapters web_source full unicode_name
         """
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
         category = manga.get_xpath("//*[@class='category row']/p[2]//text()")
         categories = re.sub(r'\s+', '', "".join(category))
-        if any(i in categories.lower() for i in ["18+", "smut", "yaoi", "ntr", "yuri", 'adult']):
+        if any(i in unidecode(categories).lower() for i in ["18+", "smut", "yaoi", "ntr", "yuri", 'adult', 'dammy']):
             return
         manga.add_xpath("unicode_name", '//h1[@class="title-manga"]/text()')
         manga.add_value("name", unidecode(
