@@ -26,7 +26,6 @@
     <div class="columns">
       <div class="column is-8">
         <form method="post" class="control">
-          {% csrf_token %} 
           {% for hidden_field in form.hidden_fields %} 
           {{ hidden_field }} 
           {% endfor %} 
