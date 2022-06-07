@@ -8,10 +8,12 @@ from django_extensions.db.models import TimeStampedModel
 
 class Manga(TimeStampedModel):
     class Source(models.TextChoices):
-        VLOGTRUYEN = "vlogtruyen"
+        DOCTRUYEN3Q = "doctruyen3q"
+        NETTRUYEN = "nettruyen"
         MANGASEEONLINE = "mangaseeonline"
 
     name = models.TextField(null=False)
+    thumbnail = models.ImageField(null=True, upload_to="manga/thumbnail")
     unicode_name = models.TextField(null=True)
     web_source = models.CharField(max_length=200, choices=Source.choices)
     source = models.TextField(null=False)
@@ -23,6 +25,14 @@ class Manga(TimeStampedModel):
 
     def __str__(self):
         return str(self.name)
+
+    def souce_color(self):
+        if self.web_source == "doctruyen3q":
+            return "#7858A6"
+        elif self.web_source == "nettruyen":
+            return "black"
+        elif self.web_source == "mangaseeonline":
+            return "coral"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -62,7 +72,7 @@ def manga_directory_path(instance, filename):
 class Volume(TimeStampedModel):
     manga = models.ForeignKey(
         Manga, on_delete=models.CASCADE, related_name="volumes")
-    number = models.IntegerField(null=True)
+    number = models.CharField(null=True, max_length=10)
     file = models.FileField(upload_to=manga_directory_path, null=True)
     converting = models.BooleanField(default=False)
 
@@ -76,7 +86,7 @@ class Volume(TimeStampedModel):
 class Chapter(TimeStampedModel):
     volume = models.ForeignKey(
         Volume, on_delete=models.CASCADE, related_name="chapters")
-    number = models.IntegerField(null=True)
+    number = models.CharField(null=True, max_length=10)
     name = models.TextField()
     source = models.TextField()
 

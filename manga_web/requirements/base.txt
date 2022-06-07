@@ -52,6 +52,8 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.2.0
     # via celery
+cloudscraper==1.2.60
+    # via -r manga_web/requirements/base.in
 constantly==15.1.0
     # via twisted
 cryptography==37.0.2
@@ -174,7 +176,9 @@ pydispatcher==2.0.5
 pyopenssl==22.0.0
     # via scrapy
 pyparsing==3.0.9
-    # via packaging
+    # via
+    #   cloudscraper
+    #   packaging
 pyqt5==5.15.6
     # via
     #   -r manga_web/requirements/base.in
@@ -211,10 +215,14 @@ redis==4.3.3
 requests==2.27.1
     # via
     #   -r manga_web/requirements/base.in
+    #   cloudscraper
     #   requests-file
+    #   requests-toolbelt
     #   tldextract
 requests-file==1.5.1
     # via tldextract
+requests-toolbelt==0.9.1
+    # via cloudscraper
 s3transfer==0.6.0
     # via boto3
 scrapy==2.6.1

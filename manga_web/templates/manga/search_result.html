@@ -11,12 +11,12 @@
         <article class="media">
           <div class="media-left">
             <figure class="image is-128x128 is-1by1">
-              <img src="{{manga.image_src}}" alt="">
+              <img {% if manga.thumbnail %} src="{{ manga.thumbnail.url }}" {% else %} src="{{manga.image_src}}" {% endif %} alt="">
             </figure>
           </div>
           <div class="media-content">
             <div class="content">
-              <p class="title is-4"><a href="{% url "manga:detail" slug=manga.slug %}">{{manga.name}}</a></p>
+              <p class="title is-4"><a href="{% url "manga:detail" slug=manga.slug %}">{{manga.unicode_name}}</a></p>
               {% if manga.description %}
                 <p>{{manga.description|truncatechars:420}}</p>
               {% endif %}

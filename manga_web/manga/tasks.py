@@ -3,6 +3,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import traceback
 
 import requests
 from django.conf import settings
@@ -35,13 +36,19 @@ def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
     logging.debug("downloading %s", filename)
     if not url.startswith("http"):
-        print("Not http url")
-        return
+        url = "http:" + url
     r = requests.get(url, stream=True)
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
             for chunk in r:
                 f.write(chunk)
+    else:
+        r = requests.get(settings.SPLASH_URL, params={
+                         'url': url, 'wait': 1}, stream=True)
+        if r.status_code == 200:
+            with open(os.path.join(path, filename), "wb") as f:
+                for chunk in r:
+                    f.write(chunk)
 
 
 def generate_key(vol):
@@ -63,6 +70,7 @@ def extract_chapters(volume_id):
 
 def download_chapter(path, chapter_id):
     c = Chapter.objects.get(id=chapter_id)
+    print(f"Downloading {c.name}")
     urls = extract_images_url(c.source, c.volume.manga.web_source)
     if len(urls) <= 2:
         raise ValueError("Not enough images")
@@ -129,6 +137,7 @@ def make_volume(volume_id):
         res = upload_and_save(generated_path, volume_id)
         return res
     except Exception as e:
+        traceback.print_exc()
         vol.converting = False
         vol.save()
         return False

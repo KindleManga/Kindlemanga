@@ -10,10 +10,12 @@
     <div id="manga" class="columns is-multiline">
     {% for manga in mangas %}
       <div class="column is-2 is-10-mobile is-offset-1-mobile">
-          <div class="box-ribbon">
+          <div class="box-ribbon" style="background-color: {{manga.source_color}};">
             <span class="image is-2by3">
-              <a href="{% url "manga:detail" slug=manga.slug %}">
-                <img class="gmd-2" src="{{ manga.image_src }}" style="border-radius: 10px;"/>
+              <a href="{% url "manga:detail" slug=manga.slug %}"
+              hx-get="{% url "manga:detail" slug=manga.slug %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true"
+              >
+                <img class="gmd-2" {% if manga.thumbnail %} src="{{ manga.thumbnail.url }}" {% else %} src="{{manga.image_src}}" {% endif %} style="border-radius: 10px;"/>
               </a>
             </span>
             <div class="ribbon ribbon-top-right">
@@ -26,7 +28,7 @@
                 <h6 class="title">
                   <a href="{% url "manga:detail" slug=manga.slug %}" style="color: #363636;"
                   hx-get="{% url "manga:detail" slug=manga.slug %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true"
-                  >{% if manga.full %}<span class="icon is-left has-text-success"><i class="fas fa-check"></i></span> {% else %}<span class="icon is-left has-text-black-bis"><i class="fas fa-book"></i></span> {% endif %}<span>{{ manga.name }}</span> {% if manga.full %}(Hoàn thành){% endif %}</a>
+                  >{% if manga.full %}<span class="icon is-left has-text-success"><i class="fas fa-check"></i></span> {% else %}<span class="icon is-left has-text-black-bis"><i class="fas fa-book"></i></span> {% endif %}<span>{{ manga.unicode_name }}</span> {% if manga.full %}(Hoàn thành){% endif %}</a>
                 </h6>
               </div>
             </div>

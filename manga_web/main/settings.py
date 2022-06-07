@@ -161,14 +161,9 @@ CELERY_TIMEZONE = TIME_ZONE
 
 BUCKET_NAME = "kindle-manga"
 
-# Recaptcha v2
-if DEBUG:
-    RECAPTCHA_PUBLIC_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-    RECAPTCHA_PRIVATE_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
-    SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
-else:
-    RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBKEY")
-    RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
+# Recaptcha v3
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBKEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -204,3 +199,5 @@ CACHEOPS = {
 CACHEOPS_ENABLED = not DEBUG
 
 SPLASH_URL = "http://splash:8050/render.html"
+
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"

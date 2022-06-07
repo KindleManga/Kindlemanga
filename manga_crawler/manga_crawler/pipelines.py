@@ -1,13 +1,18 @@
 import re
 import logging
 
+from django.core import files
+from django.utils.text import slugify
+
 from manga.models import Chapter, Manga, Volume
+from manga.utils import image_to_bytesio
 
 logger = logging.getLogger(__name__)
 
 
 class MangaCrawlerPipeline(object):
     def process_item(self, item, spider):
+        print(item)
         if Manga.objects.filter(
             name=item["name"][0], source=item["source"][0]
         ).exists():
@@ -25,10 +30,6 @@ class MangaCrawlerPipeline(object):
             full=item["full"][0],
         )
         manga.save()
-        logger.info(
-            "Manga {} added. Source: {}".format(
-                item["name"][0], item["web_source"][0])
-        )
 
         chapters = item["chapters"][::-1]
         k = enumerate(
@@ -42,4 +43,12 @@ class MangaCrawlerPipeline(object):
                          volume=vol, name=c[0], source=c[1]) for c in chaps]
             )
             logger.debug("Volume added")
+
+        thumbnail = image_to_bytesio(item['image_src'][0])
+        manga.thumbnail.save(
+            f"{slugify(manga.name)}.jpg", files.File(thumbnail))
+        logger.info(
+            "Manga {} added. Source: {}".format(
+                item["name"][0], item["web_source"][0])
+        )
         return item

@@ -1,4 +1,5 @@
 import logging
+import io
 import os
 import posixpath
 
@@ -66,3 +67,24 @@ def extract_images_url(url, source):
                   'url': url.replace("-page-1", ""), 'wait': 1})
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
+    if source == "nettruyen":
+        r = s.get(settings.SPLASH_URL, params={
+                  'url': url.replace("-page-1", ""), 'wait': 1})
+        tree = html.fromstring(r.text)
+        return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
+    if source == "doctruyen3q":
+        r = s.get(url)
+        tree = html.fromstring(r.text)
+        return tree.xpath('//*[@class="list-image-detail"]/div[position()>1]/img/@src')
+
+
+def image_to_bytesio(url):
+    """
+    Return bytesio of image
+    """
+    if not url.startswith("http"):
+        url = "http:" + url
+    resp = requests.get(url)
+    if resp.status_code != requests.codes.ok:
+        raise(Exception("Error getting image"))
+    return io.BytesIO(resp.content)

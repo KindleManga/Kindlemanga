@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block meta_title %}{{ manga.name }} - {{ manga.total_chap }} chapters{% endblock %}
+{% block meta_title %}{{ manga.unicode_name }} - {{ manga.total_chap }} chapters{% endblock %}
 {% block meta_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block meta_description %}{{ manga.description }}{% endblock %}
-{% block title %}{{ manga.name }}{% endblock %}
+{% block title %}{{ manga.unicode_name }}{% endblock %}
 {% block extra_head %}
 <style>
   .htmx-settling img {
@@ -24,14 +24,14 @@
           <div class="columns">
             <div class="column is-4 is-offset-4">
               <figure class="image">
-            <img src="{{manga.image_src}}" alt="">
+            <img {% if manga.thumbnail %} src="{{ manga.thumbnail.url }}" {% else %} src="{{manga.image_src}}" {% endif %} alt="">
           </figure>
             </div>
           </div>
           <div class="media">
             <div class="media-content">
               <div class="content">
-                <p class="title is-3">{{manga.name}}</p>
+                <p class="title is-3">{{manga.unicode_name}}</p>
                 <a href="{{ manga.source }}" class="button is-warning" rel="nofollow" target="_blank">
                   <span class="icon">
                     <i class="fas fa-box-open"></i>

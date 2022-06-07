@@ -1,32 +1,56 @@
 # -*- coding: utf-8 -*-
 import re
-
-import scrapy
+from unidecode import unidecode
 from manga_crawler.items import MangaCrawlerItem
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import Join, MapCompose, TakeFirst
+from scrapy_splash import SplashRequest
+from itemloaders.processors import Join, MapCompose, TakeFirst
 from scrapy.spiders import CrawlSpider, Rule
 
 
 class NettruyenSpider(CrawlSpider):
     name = "nettruyen"
-    allowed_domains = ["www.nettruyen.com"]
-    start_urls = ["http://www.nettruyen.com/tim-truyen?status=-1&sort=10"]
+    allowed_domains = ["www.nettruyenco.com"]
+    start_urls = [
+        "http://splash:8050/render.html?&url=http://www.nettruyenco.com/tim-truyen/manga-112"]
 
     rules = (
-        Rule(LinkExtractor(restrict_xpaths='//*[@class="next-page"]')),
+        Rule(LinkExtractor(
+            restrict_xpaths='//*[@class="next-page"]'), process_request="splash_request"),
         Rule(
             LinkExtractor(restrict_xpaths='//*[@class="jtip"]'),
-            callback="parse_item",
+            process_request="splash_request",
         ),
     )
 
+    def splash_request(self, request, *args, **kwargs):
+        if "?page=" in request.url:
+            return SplashRequest(
+                request.url,
+                endpoint='render.html',
+                args={'wait': 1},
+            )
+        else:
+            return SplashRequest(
+                request.url,
+                callback=self.parse_item,
+                endpoint='render.html',
+                args={'wait': 1},
+            )
+
     def parse_item(self, response):
+        """
+        @url http://splash:8050/render.html?&url=http://www.nettruyenco.com/truyen-tranh/boyfriend-17550&wait=1
+        @scrapes name source image_src total_chap description chapters web_source full
+        """
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
-        manga.add_xpath("name", '//h1[@class="title-detail"]/text()')
+        manga.add_xpath("unicode_name", '//h1[@class="title-detail"]/text()')
+        manga.add_value("name", unidecode(
+            manga.get_output_value("unicode_name")[0]))
         manga.add_value("source", response.url)
-        manga.add_xpath("image_src", '//*[@class="col-xs-4 col-image"]/img/@src')
+        manga.add_xpath(
+            "image_src", '//*[@class="col-xs-4 col-image"]/img/@src')
         manga.add_xpath(
             "description", '//*[@class="detail-content"]/p//text()', Join("\n")
         )
@@ -51,7 +75,8 @@ class NettruyenSpider(CrawlSpider):
                 "total_chap",
                 manga.get_xpath(
                     "//title/text()",
-                    MapCompose(lambda x: re.findall(r" Chapter \d+| Chap \d+", x)),
+                    MapCompose(lambda x: re.findall(
+                        r" Chapter \d+| Chap \d+", x)),
                     MapCompose(lambda x: re.findall(r"\d+", x)),
                     MapCompose(int),
                     TakeFirst(),
@@ -60,5 +85,6 @@ class NettruyenSpider(CrawlSpider):
 
         manga.add_value("chapters", chapters)
         manga.add_value("web_source", "nettruyen")
+        print(manga.load_item())
 
         return manga.load_item()
