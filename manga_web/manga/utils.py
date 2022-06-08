@@ -75,7 +75,7 @@ def extract_images_url(url, source):
     if source == "doctruyen3q":
         r = s.get(url)
         tree = html.fromstring(r.text)
-        return tree.xpath('//*[@class="list-image-detail"]/div[position()>1]/img/@src')
+        return tree.xpath('//*[contains(@id, "page_")]/img/@src')
 
 
 def image_to_bytesio(url):
