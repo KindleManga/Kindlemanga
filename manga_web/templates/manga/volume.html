@@ -30,7 +30,7 @@
 
           <div class="field">
             <div class="control">
-              <button {% if volume.converting %}disabled{% endif %} class="button is-primary is-outlined" type="submit">
+              <button {% if volume.file %}disabled{% endif %} {% if volume.converting %}disabled{% endif %} class="button is-primary is-outlined" type="submit">
                 Submit
               </button>
             </div>
