@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
@@ -36,7 +36,7 @@ def search_ajax(request):
         else:
             qs = Manga.objects.filter(
                 reduce(
-                    lambda x, y: x | y,
+                    lambda x, y: x & y,
                     [Q(name__icontains=word)
                      for word in keywords.split()],
                 )
@@ -114,6 +114,14 @@ class VolumeView(FormView):
             "manga": Manga.objects.get(volumes__pk=volume_id),
         }
         return render(self.request, "manga/thanks.html", context)
+
+
+class RecentView(ContextSchemeMixin, View):
+    def get(self, request):
+        context = {
+            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")
+        }
+        return render(request, "manga/recent.html", context)
 
 
 class FAQView(TemplateView):
