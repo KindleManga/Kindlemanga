@@ -146,6 +146,7 @@ def make_volume(volume_id):
         return res
     except Exception as e:
         traceback.print_exc()
+    finally:
         vol.converting = False
         vol.save()
         return False
