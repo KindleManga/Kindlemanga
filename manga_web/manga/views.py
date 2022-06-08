@@ -75,7 +75,7 @@ class MangaListView(ContextSchemeMixin, ListView):
     context_object_name = "mangas"
     queryset = Manga.objects.all().prefetch_related("volumes", "volumes__chapters")
     paginate_by = 12
-    ordering = "created"
+    ordering = "name"
 
 
 class MangaDetailView(DetailView):

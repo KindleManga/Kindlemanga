@@ -99,7 +99,11 @@ def generate_manga(path, volume_id, profile="KPW"):
     )
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
-    print(f"Make {path} successful")
+    file_path = f"{path}.mobi"
+    if os.path.getsize(file_path) >> 20 < 4:
+        raise ValueError("Converted file size is too small")
+
+    print(f"Make {file_path} successful")
     return "{}.mobi".format(path)
 
 

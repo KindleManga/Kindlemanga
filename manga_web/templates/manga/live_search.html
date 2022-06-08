@@ -1,7 +1,7 @@
             <ul class="autocomplete-results">
               {% for res in results %}
               <li class="autocomplete-result" data-id="{{res.id}}" hx-trigger="click" hx-get="{{ scheme }}://{{ request.get_host }}/manga/{{res.slug}}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
-                  {{ res.name }} [{{ res.source }}]
+                  {{ res.unicode_name }} [{{ res.source }}]
               </li>
               {% endfor %}
             </ul>
