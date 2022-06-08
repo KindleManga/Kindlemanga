@@ -56,7 +56,7 @@ def download(chapter_id, index, path, url):
 
 
 def generate_key(vol):
-    return "{0} - Volume {1}.epub".format(vol.manga.name, vol.number)
+    return "{0} - Volume {1}.mobi".format(vol.manga.name, vol.number)
 
 
 def make_volume_dir(volume_id):
