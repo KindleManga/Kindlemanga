@@ -139,6 +139,9 @@ def upload_and_save(path, volume_id):
 @app.task(name="make_volume")
 def make_volume(volume_id):
     vol = Volume.objects.get(id=volume_id)
+    if vol.converting:
+        print(f"{vol.manga.name} volume {vol.number} is converting")
+        return
     vol.converting = True
     vol.save()
     print(f"Start converting {vol.manga.name} volume {vol.number}")
