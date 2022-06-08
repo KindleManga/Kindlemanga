@@ -135,18 +135,16 @@ def upload_and_save(path, volume_id):
 
 @app.task(name="make_volume")
 def make_volume(volume_id):
+    Volume.objects.filter(id=volume_id).update(converting=True)
     vol = Volume.objects.get(id=volume_id)
-    vol.converting = True
-    vol.save()
     print(f"Start converting {vol.manga.name} volume {vol.number}")
     try:
         path = download_volume(volume_id)
         generated_path = generate_manga(path, volume_id)
         res = upload_and_save(generated_path, volume_id)
+        Volume.objects.filter(id=volume_id).update(converting=False)
         return res
     except Exception as e:
         traceback.print_exc()
-    finally:
-        vol.converting = False
-        vol.save()
+        Volume.objects.filter(id=volume_id).update(converting=False)
         return False
