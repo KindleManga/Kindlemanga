@@ -112,6 +112,9 @@ def delete_corrupt_file(path):
         try:
             img = Image.open(os.path.join(path, filename))
             img.verify()
+            width, height = img.size
+            if height < 500:
+                os.remove(os.path.join(path, filename))
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
             logger.info(
