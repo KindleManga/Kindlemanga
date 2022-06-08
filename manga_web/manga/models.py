@@ -55,10 +55,12 @@ class Manga(TimeStampedModel):
 
     def as_dict(self):
         return {
+            "unicode_name": self.unicode_name,
             "name": self.name,
             "slug": self.slug,
             "image": self.image_src,
             "source": self.web_source,
+            "full": self.full,
         }
 
     def get_absolute_url(self):
