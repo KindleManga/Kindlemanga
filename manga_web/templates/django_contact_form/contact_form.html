@@ -8,6 +8,7 @@
       <div class="column is-10">
         <form method="post" class="control">
           {% csrf_token %}
+          <div class="field">{% render_field form.captcha %}</div>
           {% for hidden_field in form.hidden_fields %}
             {{ hidden_field }}
           {% endfor %}
