@@ -62,7 +62,7 @@ class MangaSearchView(ContextSchemeMixin, ListView):
         if keywords:
             qs = Manga.objects.filter(
                 reduce(
-                    lambda x, y: x | y,
+                    lambda x, y: x & y,
                     [Q(name__icontains=word)
                      for word in keywords.split()],
                 )

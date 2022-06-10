@@ -90,6 +90,7 @@
   text-align: left;
   padding: 4px 2px;
   cursor: pointer;
+  display: block;
 }
 
 .autocomplete-result:hover {
