@@ -34,7 +34,7 @@ logger.addHandler(handler)
 
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
-    logging.debug("downloading %s", filename)
+    print("downloading %s", filename)
     if not url.startswith("http"):
         url = "http:" + url
     try:

@@ -63,7 +63,7 @@ class TruyenKinhDienSpider(CrawlSpider):
         chapter_xpath = '//*[@class="comic-archive-list-wrap"]/div/span/a'
         chapter_source = manga.get_xpath(chapter_xpath + "/@href")
         chapter_name = manga.get_xpath(chapter_xpath + "/text()")
-        chapters = zip(chapter_name, chapter_source)
+        chapters = zip(reversed(chapter_name), reversed(chapter_source))
 
         if "Full" in manga.get_xpath('//*[@class="tag-groups-label"]//text()'):
             manga.add_value("full", True)
@@ -85,48 +85,3 @@ class TruyenKinhDienSpider(CrawlSpider):
         print(manga.load_item())
 
         return manga.load_item()
-
-
-"""
-function wait_for_element(splash, css, maxwait)
-  -- Wait until a selector matches an element
-  -- in the page. Return an error if waited more
-  -- than maxwait seconds.
-  if maxwait == nil then
-      maxwait = 10
-  end
-  return splash:wait_for_resume(string.format([[
-    function main(splash) {
-      var selector = '%s';
-      var maxwait = %s;
-      var end = Date.now() + maxwait*1000;
-
-      function check() {
-        if(document.querySelector(selector)) {
-          splash.resume('Element found');
-        } else if(Date.now() >= end) {
-          var err = 'Timeout waiting for element';
-          splash.error(err + " " + selector);
-        } else {
-          setTimeout(check, 200);
-        }
-      }
-      check();
-    }
-  ]], css, maxwait))
-end
-
-function main(splash, args)
-  splash:go("https://truyenkinhdien.com/comic/truyen-tranh-biet-doi-linh-cuu-hoa-enen-no-shouboutai-chap-2")
-  wait_for_element(splash, ".sgdg-grid-img")
-  while splash:select('.sgdg-more-button') do
-    local scroll_to = splash:jsfunc("window.scrollTo")
-    local get_body_height = splash:jsfunc(
-      "function() {return document.body.scrollHeight;}"
-    )
-    scroll_to(0, get_body_height())
-    splash:wait(3)
-  end
-  return {png=splash:png(), html=splash:html()}
-end
-"""

@@ -42,20 +42,59 @@ def url2filename(url, chapter_id=None, index=None):
             try:
                 new_url = unquote(url)
                 image_url = new_url.split("url=")[-1]
-                return "{}_{}_{}".format(chapter_id, index, url2filename(image_url))
+                if image_url != url:
+                    return "{}_{}_{}.jpg".format('{:0>10}'.format(chapter_id), '{:0>6}'.format(index), url2filename(image_url))
+                else:
+                    return "{}_{}.jpg".format('{:0>10}'.format(chapter_id), '{:0>6}'.format(index))
             except IndexError:
                 logger.error("No image url found in url")
         logger.error("This file name is not image")
     return "{}_{}_{}".format(chapter_id, index, basename)
 
 
-# def extract_images_url(url):
-#     """
-#     Extract image url for a chapter in HocVienTruyenTranh
-#     """
-#     r = s.get(url)
-#     tree = html.fromstring(r.text)
-#     return tree.xpath('//div[@class="manga-container"]/img/@src')
+lua_script = r"""
+function wait_for_element(splash, css, maxwait)
+  -- Wait until a selector matches an element
+  -- in the page. Return an error if waited more
+  -- than maxwait seconds.
+  if maxwait == nil then
+      maxwait = 10
+  end
+  return splash:wait_for_resume(string.format([[
+    function main(splash) {
+      var selector = '%s';
+      var maxwait = %s;
+      var end = Date.now() + maxwait*1000;
+
+      function check() {
+        if(document.querySelector(selector)) {
+          splash.resume('Element found');
+        } else if(Date.now() >= end) {
+          var err = 'Timeout waiting for element';
+          splash.error(err + " " + selector);
+        } else {
+          setTimeout(check, 200);
+        }
+      }
+      check();
+    }
+  ]], css, maxwait))
+end
+
+function main(splash, args)
+  splash:go(args.url)
+  wait_for_element(splash, ".sgdg-grid-img")
+  while splash:select('.sgdg-more-button') do
+    local scroll_to = splash:jsfunc("window.scrollTo")
+    local get_body_height = splash:jsfunc(
+      "function() {return document.body.scrollHeight;}"
+    )
+    scroll_to(0, get_body_height())
+    splash:wait(3)
+  end
+  return {html=splash:html()}
+end
+"""
 
 
 def extract_images_url(url, source):
@@ -76,6 +115,12 @@ def extract_images_url(url, source):
         r = s.get(url)
         tree = html.fromstring(r.text)
         return tree.xpath('//*[contains(@id, "page_")]/img/@src')
+    if source == "truyenkinhdien":
+        r = s.get(settings.SPLASH_URL.replace("render.html", "execute"), params={
+            "url": url,
+            "lua_source": lua_script, "wait": 1})
+        tree = html.fromstring(r.json()['html'])
+        return tree.xpath('//*[@class="sgdg-gallery"]/a[not(contains(@style,"display:none"))]/img/@src')
 
 
 def image_to_bytesio(url):
