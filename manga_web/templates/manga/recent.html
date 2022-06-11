@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block body %}
+        <div class="section">
+          <div class="columns has-text-centered">
+            <div class="column is-10-mobile is-offset-1-mobile is-4-desktop is-offset-2-desktop">
+              <h1 class="title is-3">Recent converted</h1>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Cover</th>
+                    <th>Name</th>
+                    <th>Vol</th>
+                    <th>Download</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for vol in volumes %}
+                  <tr>
+                    <td><img {% if vol.manga.thumbnail %} src="{{ vol.manga.thumbnail.url }}" {% else %} src="{{ vol.manga.image_src }}" {% endif %} alt="{{ vol.manga.unicode_name }}" width="100"></td>
+                    <td>{{ vol.manga.unicode_name }}</td>
+                    <td>{{ vol.number }}</td>
+                    <td><a href="{{ vol.file.url }}" class="button is-primary">Download</a></td>
+                    <td>{{ vol.modified | date:"d/m/Y" }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% include "manga/paginate.html"%}
+            </div>
+          </div>
+        </div>
+{% endblock %}

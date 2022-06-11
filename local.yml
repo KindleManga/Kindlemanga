@@ -25,7 +25,7 @@ services:
     env_file:
       - ./.envs/.local/.django
     ports:
-      - "8000:8000"
+      - "8080:8000"
     command: /start
 
   celeryworker:
@@ -51,7 +51,7 @@ services:
     image: manga_local_flower
     container_name: manga_local_flower
     ports:
-      - "5555:5555"
+      - "5557:5555"
     command: /start-flower
 
   redis:

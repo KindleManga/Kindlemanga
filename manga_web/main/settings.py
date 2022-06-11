@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 import socket
 import environ
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "cacheops",
     "django_extensions",
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -203,3 +205,5 @@ SPLASH_URL = "http://splash:8050/render.html"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"
 
 SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
+
+CACHE_MIDDLEWARE_SECONDS = timedelta(days=30)

@@ -10,6 +10,7 @@ from django.views.generic.edit import FormView
 
 from .forms import CreateVolumeForm, SearchForm
 from .models import Manga, Volume
+from .filters import MangaFilter
 
 
 class ContextSchemeMixin:
@@ -117,6 +118,8 @@ class VolumeView(FormView):
 
 
 class RecentView(ContextSchemeMixin, View):
+    paginate_by = 12
+
     def get(self, request):
         context = {
             "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")

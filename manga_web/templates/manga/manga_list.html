@@ -2,14 +2,14 @@
 {% block title %}Danh sách manga trang {{ page_obj.number }}{% endblock %}
 {% block body %}
   <section class="section">
-  <div class="container has-text-centered">
-    <h1 class="title is-3">
+  <div class="container">
+    <h1 class="title is-3 has-text-centered">
       <span class="icon is-left has-text-danger is-size-4"><i class="fas fa-book"></i></span> <span style="padding-left: 5px;">Danh sách manga</span>
     </h1>
     <hr>
-    <div id="manga" class="columns is-multiline">
+    <div id="manga" class="columns is-multiline is-mobile">
     {% for manga in mangas %}
-      <div class="column is-2 is-10-mobile is-offset-1-mobile">
+      <div class="column is-2-desktop is-4-mobile">
           <div class="box-ribbon">
             <span class="image is-2by3">
               <a href="{% url "manga:detail" slug=manga.slug %}"

@@ -28,3 +28,5 @@ python-slugify>=1.2.1,<3.0.0
 raven>=6.0.0
 django-storages
 cloudscraper
+django-filter
+ipython

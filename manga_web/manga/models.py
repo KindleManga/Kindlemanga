@@ -33,6 +33,8 @@ class Manga(TimeStampedModel):
             return "black"
         elif self.web_source == "mangaseeonline":
             return "coral"
+        elif self.web_source == "truyenkinhdien":
+            return "green"
 
     def save(self, *args, **kwargs):
         if not self.slug:

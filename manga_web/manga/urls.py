@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 from .views import (FAQView, HomeView, MangaDetailView, MangaListView, VolumeListView,
-                    MangaSearchView, ThanksView, VolumeView, search_ajax)
+                    MangaSearchView, ThanksView, VolumeView, search_ajax, RecentView)
 
 app_name = "manga"
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path("manga/<slug:slug>/volumes/",
          VolumeListView.as_view(), name="volume-list"),
     path("volume/<int:pk>/", VolumeView.as_view(), name="volume"),
+    path("recent/", RecentView.as_view(), name="recent"),
 ]
