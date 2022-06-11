@@ -17,28 +17,15 @@ class TruyenKinhDienSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(
-            restrict_xpaths='//*[@class="next page-number"]')),
+            restrict_xpaths='//*[@class="page-numbers nav-pagination links text-center"]/li'),
+        ),
         Rule(
             LinkExtractor(
-                restrict_xpaths='//*[@class="woocommerce-LoopProduct-link woocommerce-loop-product__link"]'),
+                restrict_xpaths='//*[@class="title-wrapper"]',
+            ),
             callback="parse_item",
         ),
     )
-
-    def splash_request(self, request, *args, **kwargs):
-        if "?page=" in request.url:
-            return SplashRequest(
-                request.url,
-                endpoint='render.html',
-                args={'wait': 1},
-            )
-        else:
-            return SplashRequest(
-                request.url,
-                callback=self.parse_item,
-                endpoint='render.html',
-                args={'wait': 1},
-            )
 
     def parse_item(self, response):
         """
@@ -82,6 +69,6 @@ class TruyenKinhDienSpider(CrawlSpider):
         )
 
         manga.add_value("chapters", chapters)
-        print(manga.load_item())
+        print(manga.get_output_value("unicode_name"))
 
         return manga.load_item()
