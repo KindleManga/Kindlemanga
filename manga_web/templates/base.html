@@ -54,6 +54,9 @@
             <a class="navbar-item" href="{% url 'manga:list' %}" hx-get="{% url 'manga:list' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Manga List</span>
             </a>
+            <a class="navbar-item" href="{% url 'manga:recent' %}" hx-get="{% url 'manga:recent' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
+              <span class="icon is-left has-text-danger"><i class="fas fa-mug-hot"></i></span> <span>Recent</span>
+            </a>
             <a class="navbar-item" href="{% url 'manga:faq' %}" hx-get="{% url 'manga:faq' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-success"><i class="fas fa-question"></i></span> <span>F.A.Q</span>
             </a>

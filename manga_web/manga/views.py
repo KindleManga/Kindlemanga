@@ -1,3 +1,4 @@
+import random
 from functools import reduce
 
 from django.shortcuts import render
@@ -118,11 +119,10 @@ class VolumeView(FormView):
 
 
 class RecentView(ContextSchemeMixin, View):
-    paginate_by = 12
-
     def get(self, request):
         context = {
-            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")
+            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")[:50],
+            "mangas": Manga.objects.filter(id__in=random.sample(range(1, Manga.objects.count()), 10))
         }
         return render(request, "manga/recent.html", context)
 
