@@ -18,14 +18,31 @@ class TruyenKinhDienSpider(CrawlSpider):
     rules = (
         Rule(LinkExtractor(
             restrict_xpaths='//*[@class="page-numbers nav-pagination links text-center"]/li'),
+            process_request="splash_request"
         ),
         Rule(
             LinkExtractor(
                 restrict_xpaths='//*[@class="title-wrapper"]',
             ),
+            process_request="splash_request",
             callback="parse_item",
         ),
     )
+
+    def splash_request(self, request, *args, **kwargs):
+        if "?page=" in request.url:
+            return SplashRequest(
+                request.url,
+                endpoint='render.html',
+                args={'wait': 1},
+            )
+        else:
+            return SplashRequest(
+                request.url,
+                callback=self.parse_item,
+                endpoint='render.html',
+                args={'wait': 1},
+            )
 
     def parse_item(self, response):
         """
