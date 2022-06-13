@@ -121,7 +121,7 @@ class VolumeView(FormView):
 class RecentView(ContextSchemeMixin, View):
     def get(self, request):
         context = {
-            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")[:50],
+            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")[:10],
             "mangas": Manga.objects.filter(id__in=random.sample(range(1, Manga.objects.count()), 10))
         }
         return render(request, "manga/recent.html", context)

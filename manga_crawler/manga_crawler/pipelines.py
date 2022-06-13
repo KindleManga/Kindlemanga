@@ -11,6 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 class MangaCrawlerPipeline(object):
+    def chap_number(self, chap_name):
+        if "Chapter " in chap_name or "Chap " in chap_name:
+            chap_numb = re.findall(r"Chapter \d+|Chap \d+", chap_name)
+            numb = chap_numb[0].replace("Chapter ", "").replace("Chap ", "")
+            return numb
+        else:
+            numbs = re.findall(r"(\d+(?:\.\d+)?)", chap_name)
+            return numbs[-1]
+
     def process_item(self, item, spider):
         if not item:
             return
@@ -40,7 +49,7 @@ class MangaCrawlerPipeline(object):
             vol = Volume(manga=manga, number=i)
             vol.save()
             Chapter.objects.bulk_create(
-                [Chapter(number=re.findall(r"\d+", c[0])[0],
+                [Chapter(number=self.chap_number(c[0]),
                          volume=vol, name=c[0], source=c[1]) for c in chaps]
             )
             logger.debug("Volume added")
