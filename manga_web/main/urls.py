@@ -19,7 +19,15 @@ from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
 from django_contact_form.views import ContactFormView
+from django.contrib.sitemaps import GenericSitemap
+from django.contrib.sitemaps.views import sitemap
 from manga.forms import CustomContactForm
+from manga.models import Manga
+
+info_dict = {
+    'queryset': Manga.objects.all(),
+    'date_field': 'created',
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -48,6 +56,11 @@ Allow: /
             content_type="text/plain",
         ),
         name="robots_file",
+    ),
+    path(
+        'sitemap.xml', sitemap,
+        {'sitemaps': {'manga': GenericSitemap(info_dict, priority=0.6)}},
+        name='django.contrib.sitemaps.views.sitemap'
     ),
 ]
 
