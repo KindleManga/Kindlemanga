@@ -149,7 +149,9 @@ def make_volume(volume_id):
         path = download_volume(volume_id)
         generated_path = generate_manga(path, volume_id)
         res = upload_and_save(generated_path, volume_id)
-        Volume.objects.filter(id=volume_id).update(converting=False)
+        vol = Volume.objects.get(id=volume_id)
+        vol.converting = False
+        vol.save()
         return res
     except Exception as e:
         traceback.print_exc()
