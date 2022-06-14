@@ -1,8 +1,8 @@
 import random
 from functools import reduce
 
+from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import render
-from django.db.models import Q
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, View
@@ -122,7 +122,13 @@ class RecentView(ContextSchemeMixin, View):
     def get(self, request):
         context = {
             "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")[:10],
-            "mangas": Manga.objects.filter(id__in=random.sample(range(1, Manga.objects.count()), 10))
+            # "mangas": Manga.objects.filter(id__in=random.sample(range(1, Manga.objects.count()), 10)),
+            "mangas": Manga.objects.filter(
+                ~Exists(
+                    Volume.objects.filter(
+                        file__in=["", None], manga_id=OuterRef("pk"))
+                )
+            ).order_by("-total_chap")
         }
         return render(request, "manga/recent.html", context)
 

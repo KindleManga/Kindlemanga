@@ -16,7 +16,9 @@
           </div>
           <div class="media-content">
             <div class="content">
-              <p class="title is-4"><a href="{% url "manga:detail" slug=manga.slug %}">{{manga.unicode_name}}</a></p>
+              <p class="title is-4"><a href="{% url "manga:detail" slug=manga.slug %}"
+                hx-get="{% url "manga:detail" slug=manga.slug %}" hx-trigger="click" hx-target="#body" hx-swap="innerhtml" hx-push-url="true"
+                >{{manga.unicode_name}}</a></p>
               {% if manga.description %}
                 <p>{{manga.description|truncatechars:420}}</p>
               {% endif %}

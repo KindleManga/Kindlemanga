@@ -11,7 +11,6 @@
                     <th>Name</th>
                     <th>Vol</th>
                     <th>Download</th>
-                    <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -29,14 +28,13 @@
                     </td>
                     <td>{{ vol.number }}</td>
                     <td><a href="{{ vol.file.url }}" class="button is-primary">Download</a></td>
-                    <td>{{ vol.modified | date:"d/m/Y" }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
               </table>
             </div>
             <div class="column is-10-mobile is-offset-1-mobile is-4-desktop">
-              <h1 class="title has-text-centered is-3">Random Manga</h1>
+              <h1 class="title has-text-centered is-3">Full converted</h1>
               <table class="table is-fullwidth">
                 <thead>
                   <tr>
