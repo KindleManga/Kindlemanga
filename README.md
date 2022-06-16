@@ -8,6 +8,7 @@ Visit [kindlemanga.xyz](https://kindlemanga.xyz)
 
 ![](static/images/home.png)
 ![](static/images/manga_list.png)
+![](static/images/converting.png)
 ![](static/images/faq.png)
 
 # Dev guide
