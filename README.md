@@ -1,4 +1,4 @@
-# Kindlemanga 1.0 - Bring manga to you Kindle.
+# Kindlemanga 2.0 - Bring manga to you Kindle.
 
 Generate _Kindle_ friendly manga. Good for your eyes and your feelings.
 
@@ -8,8 +8,8 @@ Visit [kindlemanga.xyz](https://kindlemanga.xyz)
 
 ![](static/images/home.png)
 ![](static/images/manga_list.png)
-![](static/images/converting.png)
 ![](static/images/faq.png)
+![](static/images/converting.png)
 
 # Dev guide
 
