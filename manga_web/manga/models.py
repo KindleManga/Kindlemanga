@@ -11,6 +11,7 @@ class Manga(TimeStampedModel):
         DOCTRUYEN3Q = "doctruyen3q"
         NETTRUYEN = "nettruyen"
         MANGASEEONLINE = "mangaseeonline"
+        TRUYENKINHDIEN = "truyenkinhdien"
 
     name = models.TextField(null=False)
     thumbnail = models.ImageField(null=True, upload_to="manga/thumbnail")
