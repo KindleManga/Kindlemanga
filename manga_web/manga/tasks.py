@@ -77,7 +77,7 @@ def download_chapter(path, chapter_id):
     print(f"Downloading {c.name}")
     urls = extract_images_url(c.source, c.volume.manga.web_source)
     if len(urls) <= 2:
-        raise ValueError("Not enough images")
+        return
     for index, url in enumerate(urls):
         download(chapter_id, index, path, url)
 
