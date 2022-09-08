@@ -25,18 +25,18 @@ from manga.forms import CustomContactForm
 from manga.models import Manga
 
 info_dict = {
-    'queryset': Manga.objects.all(),
-    'date_field': 'created',
+    "queryset": Manga.objects.all(),
+    "date_field": "created",
 }
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("manga.urls", namespace="manga")),
-    path('contact/',
-         ContactFormView.as_view(
-             form_class=CustomContactForm
-         ),
-         name='django_contact_form'),
+    path(
+        "contact/",
+        ContactFormView.as_view(form_class=CustomContactForm),
+        name="django_contact_form",
+    ),
     path(
         "sent/",
         TemplateView.as_view(
@@ -58,9 +58,10 @@ Allow: /
         name="robots_file",
     ),
     path(
-        'sitemap.xml', sitemap,
-        {'sitemaps': {'manga': GenericSitemap(info_dict, priority=0.6)}},
-        name='django.contrib.sitemaps.views.sitemap'
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": {"manga": GenericSitemap(info_dict, priority=0.6)}},
+        name="django.contrib.sitemaps.views.sitemap",
     ),
 ]
 
@@ -68,5 +69,4 @@ Allow: /
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns

@@ -39,8 +39,7 @@ class Manga(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            slug = slugify("{} {}".format(
-                unidecode(self.name), self.web_source))
+            slug = slugify("{} {}".format(unidecode(self.name), self.web_source))
             if Manga.objects.filter(slug=slug).exists():
                 import random
                 import string
@@ -75,8 +74,7 @@ def manga_directory_path(instance, filename):
 
 
 class Volume(TimeStampedModel):
-    manga = models.ForeignKey(
-        Manga, on_delete=models.CASCADE, related_name="volumes")
+    manga = models.ForeignKey(Manga, on_delete=models.CASCADE, related_name="volumes")
     number = models.CharField(null=True, max_length=10)
     file = models.FileField(upload_to=manga_directory_path, null=True)
     converting = models.BooleanField(default=False)
@@ -90,7 +88,8 @@ class Volume(TimeStampedModel):
 
 class Chapter(TimeStampedModel):
     volume = models.ForeignKey(
-        Volume, on_delete=models.CASCADE, related_name="chapters")
+        Volume, on_delete=models.CASCADE, related_name="chapters"
+    )
     number = models.CharField(null=True, max_length=10)
     name = models.TextField()
     source = models.TextField()

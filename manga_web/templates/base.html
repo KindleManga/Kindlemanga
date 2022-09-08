@@ -51,8 +51,11 @@
               <span class="icon is-left has-text-primary"><i class="fas fa-home"></i></span> <span>Home</span>
             </a>
 
-            <a class="navbar-item" href="{% url 'manga:list' %}" hx-get="{% url 'manga:list' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
-              <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>Manga List</span>
+            <a class="navbar-item" href="{% url 'manga:list' %}?lang=en" hx-get="{% url 'manga:list' %}?lang=en" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
+              <span class="icon is-left has-text-danger"><i class="fas fa-book"></i></span> <span>English</span>
+            </a>
+            <a class="navbar-item" href="{% url 'manga:list' %}?lang=vn" hx-get="{% url 'manga:list' %}?lang=vn" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
+              <span class="icon is-left has-text-success"><i class="fas fa-book"></i></span> <span>Vietnam</span>
             </a>
             <a class="navbar-item" href="{% url 'manga:recent' %}" hx-get="{% url 'manga:recent' %}" hx-trigger="click" hx-target="#body" hx-swap="innerHTML" hx-push-url="true">
               <span class="icon is-left has-text-danger"><i class="fas fa-mug-hot"></i></span> <span>Recent</span>

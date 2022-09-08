@@ -43,9 +43,15 @@ def url2filename(url, chapter_id=None, index=None):
                 new_url = unquote(url)
                 image_url = new_url.split("url=")[-1]
                 if image_url != url:
-                    return "{}_{}_{}.jpg".format('{:0>10}'.format(chapter_id), '{:0>6}'.format(index), url2filename(image_url))
+                    return "{}_{}_{}.jpg".format(
+                        "{:0>10}".format(chapter_id),
+                        "{:0>6}".format(index),
+                        url2filename(image_url),
+                    )
                 else:
-                    return "{}_{}.jpg".format('{:0>10}'.format(chapter_id), '{:0>6}'.format(index))
+                    return "{}_{}.jpg".format(
+                        "{:0>10}".format(chapter_id), "{:0>6}".format(index)
+                    )
             except IndexError:
                 logger.error("No image url found in url")
         logger.error("This file name is not image")
@@ -102,13 +108,15 @@ def extract_images_url(url, source):
     Extract image url for a chapter
     """
     if source == "mangaseeonline":
-        r = s.get(settings.SPLASH_URL, params={
-                  'url': url.replace("-page-1", ""), 'wait': 1})
+        r = s.get(
+            settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
+        )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
     if source == "nettruyen":
-        r = s.get(settings.SPLASH_URL, params={
-                  'url': url.replace("-page-1", ""), 'wait': 1})
+        r = s.get(
+            settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
+        )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
     if source == "doctruyen3q":
@@ -116,11 +124,14 @@ def extract_images_url(url, source):
         tree = html.fromstring(r.text)
         return tree.xpath('//*[contains(@id, "page_")]/img/@src')
     if source == "truyenkinhdien":
-        r = s.get(settings.SPLASH_URL.replace("render.html", "execute"), params={
-            "url": url,
-            "lua_source": lua_script, "wait": 1})
-        tree = html.fromstring(r.json()['html'])
-        return tree.xpath('//*[@class="sgdg-gallery"]/a[not(contains(@style,"display:none"))]/img/@src')
+        r = s.get(
+            settings.SPLASH_URL.replace("render.html", "execute"),
+            params={"url": url, "lua_source": lua_script, "wait": 1},
+        )
+        tree = html.fromstring(r.json()["html"])
+        return tree.xpath(
+            '//*[@class="sgdg-gallery"]/a[not(contains(@style,"display:none"))]/img/@src'
+        )
 
 
 def image_to_bytesio(url):
@@ -131,5 +142,5 @@ def image_to_bytesio(url):
         url = "http:" + url
     resp = requests.get(url)
     if resp.status_code != requests.codes.ok:
-        raise(Exception("Error getting image"))
+        raise (Exception("Error getting image"))
     return io.BytesIO(resp.content)

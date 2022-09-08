@@ -16,9 +16,11 @@ class TruyenKinhDienSpider(CrawlSpider):
     start_urls = ["https://truyenkinhdien.com/danh-muc/truyen-tranh"]
 
     rules = (
-        Rule(LinkExtractor(
-            restrict_xpaths='//*[@class="page-numbers nav-pagination links text-center"]/li'),
-            process_request="splash_request"
+        Rule(
+            LinkExtractor(
+                restrict_xpaths='//*[@class="page-numbers nav-pagination links text-center"]/li'
+            ),
+            process_request="splash_request",
         ),
         Rule(
             LinkExtractor(
@@ -33,15 +35,15 @@ class TruyenKinhDienSpider(CrawlSpider):
         if "?page=" in request.url:
             return SplashRequest(
                 request.url,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
         else:
             return SplashRequest(
                 request.url,
                 callback=self.parse_item,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
 
     def parse_item(self, response):
@@ -52,18 +54,14 @@ class TruyenKinhDienSpider(CrawlSpider):
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
         manga.add_value("web_source", "truyenkinhdien")
         manga.add_xpath(
-            "unicode_name", '//h1[@class="product-title product_title entry-title"]/text()',
-            MapCompose(lambda x: x.strip())
+            "unicode_name",
+            '//h1[@class="product-title product_title entry-title"]/text()',
+            MapCompose(lambda x: x.strip()),
         )
-        manga.add_value("name", unidecode(
-            manga.get_output_value("unicode_name")[0]))
+        manga.add_value("name", unidecode(manga.get_output_value("unicode_name")[0]))
         manga.add_value("source", response.url)
-        manga.add_xpath(
-            "image_src", '//*[@class="wp-post-image skip-lazy"]/@src')
-        manga.add_xpath(
-            "description", '//*[@id="tab-description"]/p//text()',
-            Join("")
-        )
+        manga.add_xpath("image_src", '//*[@class="wp-post-image skip-lazy"]/@src')
+        manga.add_xpath("description", '//*[@id="tab-description"]/p//text()', Join(""))
         chapter_xpath = '//*[@class="comic-archive-list-wrap"]/div/span/a'
         chapter_source = manga.get_xpath(chapter_xpath + "/@href")
         chapter_name = manga.get_xpath(chapter_xpath + "/text()")

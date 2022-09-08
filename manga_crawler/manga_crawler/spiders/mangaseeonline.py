@@ -29,8 +29,9 @@ class MangaseeonlineSpider(CrawlSpider):
     def start_requests(self):
         for item in self.data:
             request = scrapy.Request(
-                f"{BASE_URL}/manga/{item['i']}", callback=self.parse_item)
-            request.meta['item'] = item
+                f"{BASE_URL}/manga/{item['i']}", callback=self.parse_item
+            )
+            request.meta["item"] = item
             yield request
 
     def parse_item(self, response):
@@ -42,8 +43,7 @@ class MangaseeonlineSpider(CrawlSpider):
         manga.add_xpath(
             "unicode_name", "//div[@class='container MainContainer']//li[1]/h1/text()"
         )
-        manga.add_value("name", unidecode(
-            manga.get_output_value("unicode_name")[0]))
+        manga.add_value("name", unidecode(manga.get_output_value("unicode_name")[0]))
         manga.add_value("source", response.url)
         manga.add_xpath("image_src", '//meta[@property="og:image"]/@content')
         manga.add_xpath(
@@ -64,11 +64,10 @@ class MangaseeonlineSpider(CrawlSpider):
 
         manga.add_value(
             "total_chap",
-            re.findall(r"\d+", feed['entries'][0]['title'])[0],
+            re.findall(r"\d+", feed["entries"][0]["title"])[0],
         )
 
-        chapters = [(i['title'], i['link'])
-                    for i in feed['entries']]
+        chapters = [(i["title"], i["link"]) for i in feed["entries"]]
         manga.add_value("chapters", chapters)
         manga.add_value("web_source", "mangaseeonline")
 

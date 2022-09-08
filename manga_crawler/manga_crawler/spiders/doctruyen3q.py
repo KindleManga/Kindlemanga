@@ -10,12 +10,11 @@ from scrapy.spiders import CrawlSpider, Rule
 
 class Truyen3QSpider(CrawlSpider):
     name = "3q"
-    allowed_domains = ["doctruyen3q.info"]
-    start_urls = ["https://doctruyen3q.info/tim-truyen/manga"]
+    allowed_domains = ["doctruyen3qpro.com"]
+    start_urls = ["https://doctruyen3qpro.com/tim-truyen/manga"]
 
     rules = (
-        Rule(LinkExtractor(
-            restrict_xpaths='//*[@rel="next"]')),
+        Rule(LinkExtractor(restrict_xpaths='//*[@rel="next"]')),
         Rule(
             LinkExtractor(restrict_xpaths='//*[@class="title-manga"]'),
             callback="parse_item",
@@ -26,36 +25,35 @@ class Truyen3QSpider(CrawlSpider):
         if "?page=" in request.url:
             return SplashRequest(
                 request.url,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
         else:
             return SplashRequest(
                 request.url,
                 callback=self.parse_item,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
 
     def parse_item(self, response):
         """
-        @url https://doctruyen3q.info/truyen-tranh/dao-hai-tac/77
+        @url https://doctruyen3qpro.com/truyen-tranh/dao-hai-tac/77
         @scrapes name source image_src total_chap description chapters web_source full unicode_name
         """
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
         category = manga.get_xpath("//*[@class='category row']/p[2]//text()")
-        categories = re.sub(r'\s+', '', "".join(category))
-        if any(i in unidecode(categories).lower() for i in ["18+", "smut", "yaoi", "ntr", "yuri", 'adult', 'dammy']):
+        categories = re.sub(r"\s+", "", "".join(category))
+        if any(
+            i in unidecode(categories).lower()
+            for i in ["18+", "smut", "yaoi", "ntr", "yuri", "adult", "dammy"]
+        ):
             return
         manga.add_xpath("unicode_name", '//h1[@class="title-manga"]/text()')
-        manga.add_value("name", unidecode(
-            manga.get_output_value("unicode_name")[0]))
+        manga.add_value("name", unidecode(manga.get_output_value("unicode_name")[0]))
         manga.add_value("source", response.url)
-        manga.add_xpath(
-            "image_src", '//*[@class="image-comic"]/@src')
-        manga.add_xpath(
-            "description", '//*[@class="detail-summary"]/text()'
-        )
+        manga.add_xpath("image_src", '//*[@class="image-comic"]/@src')
+        manga.add_xpath("description", '//*[@class="detail-summary"]/text()')
         chapter_xpath = '//*[@id="list-chapter-dt"]/nav/ul/li/div[1]/a'
         chapter_source = manga.get_xpath(chapter_xpath + "/@href")
         chapter_name = manga.get_xpath(chapter_xpath + "/text()")
