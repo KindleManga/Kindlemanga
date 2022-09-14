@@ -109,18 +109,22 @@ def extract_images_url(url, source):
     """
     if source == "mangaseeonline":
         r = s.get(
-            settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
+            settings.SPLASH_URL, params={
+                "url": url.replace("-page-1", ""), "wait": 1}
         )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
     if source == "nettruyen":
         r = s.get(
-            settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
+            settings.SPLASH_URL, params={
+                "url": url.replace("-page-1", ""), "wait": 1}
         )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
     if source == "doctruyen3q":
-        r = s.get(url)
+        r = s.get(
+            settings.SPLASH_URL, params={"url": url, "wait": 1}
+        )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[contains(@id, "page_")]/img/@src')
     if source == "truyenkinhdien":
