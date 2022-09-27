@@ -43,24 +43,31 @@ class MangaCrawlerPipeline(object):
 
         chapters = item["chapters"][::-1]
         k = enumerate(
-            [chapters[x: x + 10] for x in range(0, len(chapters), 10)], start=1
+            [chapters[x : x + 10] for x in range(0, len(chapters), 10)], start=1
         )
         for i, chaps in k:
             vol = Volume(manga=manga, number=i)
             vol.save()
             Chapter.objects.bulk_create(
-                [Chapter(number=self.chap_number(c[0]),
-                         volume=vol, name=c[0], source=c[1]) for c in chaps]
+                [
+                    Chapter(
+                        number=self.chap_number(c[0]),
+                        volume=vol,
+                        name=c[0],
+                        source=c[1],
+                    )
+                    for c in chaps
+                ]
             )
             logger.debug("Volume added")
 
         try:
-            thumbnail = image_to_bytesio(item['image_src'][0])
-            manga.thumbnail.save(
-                f"{slugify(manga.name)}.jpg", files.File(thumbnail))
+            thumbnail = image_to_bytesio(item["image_src"][0])
+            manga.thumbnail.save(f"{slugify(manga.name)}.jpg", files.File(thumbnail))
             logger.info(
                 "Manga {} added. Source: {}".format(
-                    item["name"][0], item["web_source"][0])
+                    item["name"][0], item["web_source"][0]
+                )
             )
         except Exception as e:
             print("Can not download thumbnail")

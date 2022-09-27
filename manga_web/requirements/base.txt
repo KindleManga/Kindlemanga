@@ -120,7 +120,7 @@ feedparser==6.0.10
     # via -r base.in
 filelock==3.7.1
     # via tldextract
-flower==1.0.0
+flower==1.2.0
     # via -r base.in
 funcy==1.17
     # via django-cacheops

@@ -11,16 +11,15 @@ from django.views.generic.edit import FormView
 
 from .forms import CreateVolumeForm, SearchForm
 from .models import Manga, Volume
-from .filters import MangaFilter
 
 
 class ContextSchemeMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if settings.DEBUG:
-            context['scheme'] = "http"
+            context["scheme"] = "http"
         else:
-            context['scheme'] = "https"
+            context["scheme"] = "https"
         return context
 
 
@@ -39,12 +38,13 @@ def search_ajax(request):
             qs = Manga.objects.filter(
                 reduce(
                     lambda x, y: x & y,
-                    [Q(name__icontains=word)
-                     for word in keywords.split()],
+                    [Q(name__icontains=word) for word in keywords.split()],
                 )
             )[:10]
-            data = {"results": [i.as_dict() for i in qs],
-                    "scheme": "http" if settings.DEBUG else "https"}
+            data = {
+                "results": [i.as_dict() for i in qs],
+                "scheme": "http" if settings.DEBUG else "https",
+            }
         return render(request, "manga/live_search.html", data)
 
 
@@ -65,8 +65,7 @@ class MangaSearchView(ContextSchemeMixin, ListView):
             qs = Manga.objects.filter(
                 reduce(
                     lambda x, y: x & y,
-                    [Q(name__icontains=word)
-                     for word in keywords.split()],
+                    [Q(name__icontains=word) for word in keywords.split()],
                 )
             )
             return qs
@@ -78,6 +77,19 @@ class MangaListView(ContextSchemeMixin, ListView):
     queryset = Manga.objects.all().prefetch_related("volumes", "volumes__chapters")
     paginate_by = 12
     ordering = "name"
+    template_name = "manga/manga_list.html"
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        lang = self.request.GET.get("lang")
+        if lang == "vn":
+            qs = qs.filter(
+                web_source__in=[Manga.Source.DOCTRUYEN3Q, Manga.Source.TRUYENKINHDIEN]
+            )
+        elif lang == "en":
+            qs = qs.filter(web_source__in=[Manga.Source.MANGASEEONLINE])
+
+        return qs
 
 
 class MangaDetailView(DetailView):
@@ -121,14 +133,15 @@ class VolumeView(FormView):
 class RecentView(ContextSchemeMixin, View):
     def get(self, request):
         context = {
-            "volumes": Volume.objects.exclude(file__in=["", None]).order_by("-modified")[:10],
+            "volumes": Volume.objects.exclude(file__in=["", None]).order_by(
+                "-modified"
+            )[:10],
             # "mangas": Manga.objects.filter(id__in=random.sample(range(1, Manga.objects.count()), 10)),
             "mangas": Manga.objects.filter(
                 ~Exists(
-                    Volume.objects.filter(
-                        file__in=["", None], manga_id=OuterRef("pk"))
+                    Volume.objects.filter(file__in=["", None], manga_id=OuterRef("pk"))
                 )
-            ).order_by("-total_chap")
+            ).order_by("-total_chap"),
         }
         return render(request, "manga/recent.html", context)
 

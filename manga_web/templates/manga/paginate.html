@@ -1,26 +1,27 @@
+{% load url_replace %}
 <div class="container">
   {% if is_paginated %}
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
           {% if page_obj.has_previous %}
-          <a href="?{% if query %}q={{query}}&{% endif %}page={{ page_obj.previous_page_number }}" class="pagination-previous"
-          hx-trigger="click" hx-get="?{% if query %}q={{query}}&{% endif %}page={{ page_obj.previous_page_number }}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
+          <a href="?{% url_replace page=page_obj.previous_page_number %}" class="pagination-previous"
+          hx-trigger="click" hx-get="?{% url_replace page=page_obj.previous_page_number %}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
           >Previous</a>
           {% else %}
           <a class="pagination-previous" disabled>Previous</a>
           {% endif %}
           {% if page_obj.has_next %}
-          <a href="?{% if query %}q={{query}}&{% endif %}page={{ page_obj.next_page_number }}" class="pagination-next"
-          hx-trigger="click" hx-get="?{% if query %}q={{query}}&{% endif %}page={{ page_obj.next_page_number }}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
+          <a href="?{% url_replace page=page_obj.next_page_number%}" class="pagination-next"
+          hx-trigger="click" hx-get="?{% url_replace page=page_obj.next_page_number%}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
           >Next page</a>
           {% else %}
           <a class="pagination-next" disabled>Next page</a>
           {% endif %}
           <ul class="pagination-list">
             {% if page_obj.number > 2 %}
-              <li><a href="?{% if query %}q={{query}}&{% endif %}page=1" class="pagination-link"
-                    hx-trigger="click" hx-get="?{% if query %}q={{query}}&{% endif %}page=1" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
+              <li><a href="?{% url_replace page=1 %}" class="pagination-link"
+                    hx-trigger="click" hx-get="?{% url_replace page=1 %}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
                 >1</a></li>
               <li><span class="pagination-ellipsis">&hellip;</span></li>
             {% endif %}
@@ -33,16 +34,16 @@
               </li>
               {% elif i > page_obj.number|add:'-2' and i < page_obj.number|add:'2' %}
               <li>
-                <a href="?{% if query %}q={{query}}&{% endif %}page={{ i }}" class="pagination-link"
-                  hx-trigger="click" hx-get="?{% if query %}q={{query}}&{% endif %}page={{ i }}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
+                <a href="?{% url_replace page=i %}" class="pagination-link"
+                  hx-trigger="click" hx-get="?{% url_replace page=i %}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
                 >{{ i }}</a>
               </li>
               {% endif %}
             {% endfor %}
             {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
               <li><span class="pagination-ellipsis">&hellip;</span></li>
-              <li><a href="?{% if query %}q={{query}}&{% endif %}page={{page_obj.paginator.num_pages}}" class="pagination-link"
-                  hx-trigger="click" hx-get="?{% if query %}q={{query}}&{% endif %}page={{page_obj.paginator.num_pages}}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
+              <li><a href="?{% url_replace page=page_obj.paginator.num_pages %}" class="pagination-link"
+                  hx-trigger="click" hx-get="?{% url_replace page=page_obj.paginator.num_pages %}" hx-target="#body" hx-swap="innerHTML" hx-push-url="true"
                 >{{ page_obj.paginator.num_pages }}</a></li>
             {% endif %}
           </ul>

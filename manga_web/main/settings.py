@@ -29,7 +29,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env(
-    "SECRET_KEY", default="_z1230912093SS^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+")
+    "SECRET_KEY",
+    default="_z1230912093SS^cp@kn963@bi(er_(&8+qi@zn6&lz57x2u9scg3#xa8kg&p+",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
@@ -56,7 +58,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "cacheops",
     "django_extensions",
-    'django_filters',
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -182,7 +184,7 @@ MANAGERS = [
 ]
 
 # Storage
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
@@ -191,13 +193,13 @@ AWS_STORAGE_BUCKET_NAME = "kindle-manga"
 
 # Cacheops
 CACHEOPS_DEFAULTS = {
-    'timeout': 60*60*24,
+    "timeout": 60 * 60 * 24,
 }
 CACHEOPS = {
-    'auth.user': {'ops': 'get', 'timeout': 60*15},
-    'auth.*': {'ops': ('fetch', 'get')},
-    'auth.permission': {'ops': 'all'},
-    'manga.*': {'ops': 'all'},
+    "auth.user": {"ops": "get", "timeout": 60 * 15},
+    "auth.*": {"ops": ("fetch", "get")},
+    "auth.permission": {"ops": "all"},
+    "manga.*": {"ops": "all"},
 }
 CACHEOPS_ENABLED = not DEBUG
 

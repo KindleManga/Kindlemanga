@@ -11,10 +11,12 @@ from django.core.mail import send_mail
 from django.utils.text import slugify
 from django.core.files.base import File
 from main.celery import app
-from PIL import Image
+from PIL import Image, ImageFile
 
 from .models import Chapter, Volume
 from .utils import extract_images_url, url2filename
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 BUCKET_NAME = settings.BUCKET_NAME
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
@@ -47,8 +49,9 @@ def download(chapter_id, index, path, url):
             for chunk in r:
                 f.write(chunk)
     else:
-        r = requests.get(settings.SPLASH_URL, params={
-                         'url': url, 'wait': 1}, stream=True)
+        r = requests.get(
+            settings.SPLASH_URL, params={"url": url, "wait": 1}, stream=True
+        )
         if r.status_code == 200:
             with open(os.path.join(path, filename), "wb") as f:
                 for chunk in r:
@@ -77,7 +80,7 @@ def download_chapter(path, chapter_id):
     print(f"Downloading {c.name}")
     urls = extract_images_url(c.source, c.volume.manga.web_source)
     if len(urls) <= 2:
-        raise ValueError("Not enough images")
+        return
     for index, url in enumerate(urls):
         download(chapter_id, index, path, url)
 
@@ -118,8 +121,7 @@ def delete_corrupt_file(path):
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
             logger.info(
-                "Removed corrupted image {}".format(
-                    os.path.join(path, filename))
+                "Removed corrupted image {}".format(os.path.join(path, filename))
             )
 
     return path
@@ -128,7 +130,7 @@ def delete_corrupt_file(path):
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
     file_name = f"{slugify(v.manga.name).replace('-', '_')}_vol_{v.number}.mobi"
-    with open(path, 'rb') as f:
+    with open(path, "rb") as f:
         v.file.save(file_name, File(f))
         v.save()
     shutil.rmtree(path.split(".mobi")[0])

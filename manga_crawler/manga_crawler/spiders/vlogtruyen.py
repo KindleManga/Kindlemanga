@@ -18,8 +18,10 @@ class VlogtruyenSpider(CrawlSpider):
     start_urls = ["https://vlogtruyen.net/the-loai/manga"]
 
     rules = (
-        Rule(LinkExtractor(
-            restrict_xpaths='//*[@class="pag-next"]'), process_request='splash_request'),
+        Rule(
+            LinkExtractor(restrict_xpaths='//*[@class="pag-next"]'),
+            process_request="splash_request",
+        ),
         Rule(
             LinkExtractor(restrict_xpaths='//*[@class="load-preview"]'),
             process_request="splash_request",
@@ -30,15 +32,15 @@ class VlogtruyenSpider(CrawlSpider):
         if "?page=" in request.url:
             return SplashRequest(
                 request.url,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
         else:
             return SplashRequest(
                 request.url,
                 callback=self.parse_item,
-                endpoint='render.html',
-                args={'wait': 1},
+                endpoint="render.html",
+                args={"wait": 1},
             )
 
     def parse_item(self, response):
@@ -48,10 +50,8 @@ class VlogtruyenSpider(CrawlSpider):
         """
 
         manga = ItemLoader(item=MangaCrawlerItem(), response=response)
-        manga.add_xpath(
-            "unicode_name", '//h1[@class="title-commic-detail"]/text()')
-        manga.add_value("name", unidecode(
-            manga.get_output_value("unicode_name")[0]))
+        manga.add_xpath("unicode_name", '//h1[@class="title-commic-detail"]/text()')
+        manga.add_value("name", unidecode(manga.get_output_value("unicode_name")[0]))
         manga.add_value("source", response.url)
         manga.add_xpath("image_src", '//meta[@property="og:image"]/@content')
         manga.add_xpath(
