@@ -256,7 +256,7 @@ requests-toolbelt==0.9.1
     # via cloudscraper
 s3transfer==0.6.0
     # via boto3
-scrapy==2.6.1
+scrapy==2.6.2
     # via -r base.in
 scrapy-splash==0.8.0
     # via -r base.in
