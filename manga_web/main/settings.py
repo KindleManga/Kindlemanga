@@ -49,12 +49,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
-    "django_celery_beat",
-    "django_celery_results",
     "widget_tweaks",
     "manga",
     "captcha",
-    "djcelery_email",
+    'django_q',
     "django_htmx",
     "cacheops",
     "django_extensions",
@@ -159,10 +157,6 @@ STATICFILES_DIRS = [
 
 # Celery settings
 CACHEOPS_REDIS = CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env("REDIS_URL")
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TIMEZONE = TIME_ZONE
 
 BUCKET_NAME = "kindle-manga"
 
@@ -173,7 +167,7 @@ RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVKEY")
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+    EMAIL_BACKEND = "django_q_email.backends.DjangoQBackend"
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_HOST_USER = env("GMAIL_EMAIL")
     EMAIL_HOST_PASSWORD = env("GMAIL_PASSWORD")
@@ -210,3 +204,14 @@ USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 
 CACHE_MIDDLEWARE_SECONDS = timedelta(days=30)
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 3,
+    'timeout': 60 * 10,
+    'retry': 60 * 15,
+    'queue_limit': 50,
+    'bulk': 3,
+    'orm': 'default',
+    'has_replica': True
+}

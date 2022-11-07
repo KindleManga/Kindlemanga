@@ -110,3 +110,7 @@ staticfiles/
 .envs/*
 !.envs/.local/
 .envs/.local/.django
+db.sqlite3.1
+.envs/.local/.django
+
+.django

@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.text import slugify
 from django.core.files.base import File
-from main.celery import app
+# from main.celery import app
 from PIL import Image, ImageFile
 
 from .models import Chapter, Volume
@@ -23,7 +23,7 @@ BUCKET_NAME = settings.BUCKET_NAME
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
 
-logger = logging.getLogger("Manga celery")
+logger = logging.getLogger("manga.tasks")
 logger.setLevel(logging.DEBUG)
 fmt = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
@@ -121,7 +121,8 @@ def delete_corrupt_file(path):
         except (IOError, SyntaxError) as e:
             os.remove(os.path.join(path, filename))
             logger.info(
-                "Removed corrupted image {}".format(os.path.join(path, filename))
+                "Removed corrupted image {}".format(
+                    os.path.join(path, filename))
             )
 
     return path
@@ -138,7 +139,7 @@ def upload_and_save(path, volume_id):
     return v.manga.name
 
 
-@app.task(name="make_volume")
+# @app.task(name="make_volume")
 def make_volume(volume_id):
     vol = Volume.objects.get(id=volume_id)
     if vol.converting:
