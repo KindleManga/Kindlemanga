@@ -1,9 +1,5 @@
 version: "3"
 
-volumes:
-  sqlite: {}
-  sqlite-backup: {}
-
 networks:
   default:
     name: manga_network
@@ -20,12 +16,11 @@ services:
     volumes:
       - ./manga_web:/app:z
       - ./manga_crawler:/crawler:z
-      - sqlite:/app/kindle_manga.db:z
       - ~/.aws/:/root/.aws:ro
     env_file:
       - ./.envs/.production/.django
     ports:
-      - "8086:5000"
+      - "8086:8080"
     command: /start
 
   celeryworker:
