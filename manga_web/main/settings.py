@@ -37,7 +37,8 @@ SECRET_KEY = env(
 DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://kindlemanga.xyz", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["https://kindlemanga.xyz",
+                        "http://localhost:8000", "https://kindlemanga.fly.dev"]
 
 # Application definition
 
@@ -76,8 +77,8 @@ MIDDLEWARE = [
 if DEBUG:
     INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+    # hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    # INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
     INSTALLED_APPS += ["debug_toolbar"]
     MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
@@ -186,8 +187,8 @@ MANAGERS = [
 # Storage
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
-AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_S3_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
+AWS_S3_SECRET_ACCESS_KEY = env("AWS_S3_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = "kindle-manga"
 
 
@@ -203,7 +204,7 @@ CACHEOPS = {
 }
 CACHEOPS_ENABLED = not DEBUG
 
-SPLASH_URL = "http://splash:8050/render.html"
+SPLASH_URL = env("SPLASH_URL", default="http://splash:8050/render.html")
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"
 
