@@ -108,8 +108,9 @@ def extract_images_url(url, source):
     Extract image url for a chapter
     """
     if source == "mangaseeonline":
-        r = s.get(
-            settings.SPLASH_URL, params={
+        r = s.post(
+            "http://playwright:5000/scrape",
+            json={
                 "url": url.replace("-page-1", ""), "wait": 1}
         )
         tree = html.fromstring(r.text)
