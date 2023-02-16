@@ -15,9 +15,9 @@ decorator==5.1.1
 executing==1.2.0
     # via stack-data
 flask==2.2.2
-    # via -r compose/production/playwright/requirements.in
+    # via -r requirements.in
 ipython==8.6.0
-    # via -r compose/production/playwright/requirements.in
+    # via -r requirements.in
 itsdangerous==2.1.2
     # via flask
 jedi==0.18.1
@@ -54,5 +54,5 @@ traitlets==5.5.0
     #   matplotlib-inline
 wcwidth==0.2.5
     # via prompt-toolkit
-werkzeug==2.2.2
+werkzeug==2.2.3
     # via flask
