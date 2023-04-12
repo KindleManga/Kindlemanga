@@ -28,7 +28,6 @@
     <meta property="og:description" content="{% block meta_description %}Tải bộ truyện tranh yêu thích của bạn về Kindle và đọc mọi lúc mọi nơi. Hoàn toàn miễn phí.{% endblock %}" />
 	  <script id="chatBroEmbedCode">/* Chatbro Widget Embed Code Start */function ChatbroLoader(chats,async){async=!1!==async;var params={embedChatsParameters:chats instanceof Array?chats:[chats],lang:navigator.language||navigator.userLanguage,needLoadCode:'undefined'==typeof Chatbro,embedParamsVersion:localStorage.embedParamsVersion,chatbroScriptVersion:localStorage.chatbroScriptVersion},xhr=new XMLHttpRequest;xhr.withCredentials=!0,xhr.onload=function(){eval(xhr.responseText)},xhr.onerror=function(){console.error('Chatbro loading error')},xhr.open('GET','//www.chatbro.com/embed.js?'+btoa(unescape(encodeURIComponent(JSON.stringify(params)))),async),xhr.send()}/* Chatbro Widget Embed Code End */ChatbroLoader({encodedChatId: '92f54'});</script>
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
-    <script src="{% static "js/instant.js" %}"></script>
     {% block extra_head %}{% endblock %}
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
@@ -128,5 +127,6 @@
 
       });
     </script>
+    <script src="{% static "js/instant.js" %}"></script>
   </body>
 </html>
