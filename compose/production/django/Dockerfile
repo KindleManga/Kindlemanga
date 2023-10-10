@@ -6,7 +6,7 @@ FROM python:${PYTHON_VERSION} as python
 # Python build stage
 FROM python as python-build-stage
 
-ARG BUILD_ENVIRONMENT=production
+ARG BUILD_ENVIRONMENT=prod
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -38,7 +38,7 @@ RUN cd kcc-5.6.3 \
 # Python 'run' stage
 FROM python as python-run-stage
 
-ARG BUILD_ENVIRONMENT=production
+ARG BUILD_ENVIRONMENT=prod
 ARG APP_HOME=/app
 
 ENV PYTHONUNBUFFERED 1
