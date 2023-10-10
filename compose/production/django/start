@@ -4,12 +4,9 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# runserver if DEBUG else gunicorn
-if [ "$DEBUG" = "True" ]; then
-  CMD="python manage.py runserver 0.0.0.0:8000"
-else
-  CMD="gunicorn --bind 0.0.0.0:8080 --workers 3 --access-logfile - --error-logfile - --log-level info main.wsgi:application"
-fi
+echo "Command: ${CMD}"
+echo "DB_FILE: ${DB_FILE}"
+echo "REPLICA_URL: ${REPLICA_URL}"
 
 # if the db file doesn't exist we get it from the REPLICA_URL
 [ ! -f $DB_FILE ] && litestream restore -v -if-replica-exists -o $DB_FILE "${REPLICA_URL}" \
