@@ -2,6 +2,8 @@ import logging
 import io
 import os
 import posixpath
+from django.core.cache import cache
+from retry import retry
 
 try:
     from urllib import unquote
@@ -13,6 +15,7 @@ except ImportError:
 from django.conf import settings
 import requests
 from lxml import html
+from fp.fp import FreeProxy
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +106,12 @@ end
 """
 
 
+def fix_url(source, url):
+    if source == "truyenkinhdien":
+        return url.replace("https://truyenkinhdien.com", "https://webtrainghiem.com")
+
+
+@retry(tries=5, delay=10, backoff=2)
 def extract_images_url(url, source):
     """
     Extract image url for a chapter
@@ -110,33 +119,31 @@ def extract_images_url(url, source):
     if source == "mangaseeonline":
         r = s.post(
             "http://playwright:5000/scrape",
-            json={
-                "url": url.replace("-page-1", ""), "wait": 1}
+            json={"url": url.replace("-page-1", ""), "wait": 1},
         )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
     if source == "nettruyen":
         r = s.get(
-            settings.SPLASH_URL, params={
-                "url": url.replace("-page-1", ""), "wait": 1}
+            settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
         )
         tree = html.fromstring(r.text)
         return tree.xpath('//*[@class="reading-detail box_doc"]/div/img/@src')
     if source == "doctruyen3q":
-        r = s.get(
-            settings.SPLASH_URL, params={"url": url, "wait": 1}
-        )
+        r = s.get(settings.SPLASH_URL, params={"url": url, "wait": 1})
         tree = html.fromstring(r.text)
         return tree.xpath('//*[contains(@id, "page_")]/img/@src')
     if source == "truyenkinhdien":
+        proxy = get_proxy()
+        url = fix_url(source, url)
         r = s.get(
             settings.SPLASH_URL.replace("render.html", "execute"),
-            params={"url": url, "lua_source": lua_script, "wait": 1},
+            params={"url": url, "lua_source": lua_script, "wait": 1, "proxy": proxy},
         )
         tree = html.fromstring(r.json()["html"])
-        return tree.xpath(
-            '//*[@class="sgdg-gallery"]/a[not(contains(@style,"display:none"))]/img/@src'
-        )
+        result = tree.xpath('//*[@class="entry-content single-page"]/img/@src')
+        print(result)
+        return result
 
 
 def image_to_bytesio(url):
@@ -149,3 +156,16 @@ def image_to_bytesio(url):
     if resp.status_code != requests.codes.ok:
         raise (Exception("Error getting image"))
     return io.BytesIO(resp.content)
+
+
+def get_proxy():
+    proxy = cache.get("proxy")
+    if proxy:
+        return proxy
+    proxy = FreeProxy().get()
+    cache.set("proxy", proxy, 60 * 60 * 10)
+    return proxy
+
+
+def reset_proxy():
+    cache.delete("proxy")

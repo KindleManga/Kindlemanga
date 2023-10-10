@@ -4,15 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manga', '0004_manga_thumbnail'),
+        ("manga", "0004_manga_thumbnail"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='manga',
-            name='web_source',
-            field=models.CharField(choices=[('doctruyen3q', 'Doctruyen3Q'), ('nettruyen', 'Nettruyen'), ('mangaseeonline', 'Mangaseeonline')], max_length=200),
+            model_name="manga",
+            name="web_source",
+            field=models.CharField(
+                choices=[
+                    ("doctruyen3q", "Doctruyen3Q"),
+                    ("nettruyen", "Nettruyen"),
+                    ("mangaseeonline", "Mangaseeonline"),
+                ],
+                max_length=200,
+            ),
         ),
     ]

@@ -37,6 +37,16 @@ class Manga(TimeStampedModel):
         elif self.web_source == "truyenkinhdien":
             return "green"
 
+    def base_url(self):
+        if self.web_source == "doctruyen3q":
+            return "https://doctruyen3q.com"
+        elif self.web_source == "nettruyen":
+            return "https://www.nettruyen.com"
+        elif self.web_source == "mangaseeonline":
+            return "https://mangaseeonline.us"
+        elif self.web_source == "truyenkinhdien":
+            return "https://webtrainghiem.com"
+
     def save(self, *args, **kwargs):
         if not self.slug:
             slug = slugify("{} {}".format(unidecode(self.name), self.web_source))

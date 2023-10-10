@@ -7,63 +7,143 @@ import manga.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Manga',
+            name="Manga",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('name', models.TextField()),
-                ('unicode_name', models.TextField(null=True)),
-                ('web_source', models.CharField(choices=[('vlogtruyen', 'Vlogtruyen'), ('mangaseeonline', 'Mangaseeonline')], max_length=200)),
-                ('source', models.TextField()),
-                ('description', models.TextField(null=True)),
-                ('total_chap', models.IntegerField(null=True)),
-                ('image_src', models.TextField(null=True)),
-                ('slug', models.SlugField(max_length=255)),
-                ('full', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("unicode_name", models.TextField(null=True)),
+                (
+                    "web_source",
+                    models.CharField(
+                        choices=[
+                            ("vlogtruyen", "Vlogtruyen"),
+                            ("mangaseeonline", "Mangaseeonline"),
+                        ],
+                        max_length=200,
+                    ),
+                ),
+                ("source", models.TextField()),
+                ("description", models.TextField(null=True)),
+                ("total_chap", models.IntegerField(null=True)),
+                ("image_src", models.TextField(null=True)),
+                ("slug", models.SlugField(max_length=255)),
+                ("full", models.BooleanField(default=False)),
             ],
             options={
-                'get_latest_by': 'modified',
-                'abstract': False,
+                "get_latest_by": "modified",
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Volume',
+            name="Volume",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('number', models.IntegerField(null=True)),
-                ('file', models.FileField(null=True, upload_to=manga.models.manga_directory_path)),
-                ('manga', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='volumes', to='manga.manga')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("number", models.IntegerField(null=True)),
+                (
+                    "file",
+                    models.FileField(
+                        null=True, upload_to=manga.models.manga_directory_path
+                    ),
+                ),
+                (
+                    "manga",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="volumes",
+                        to="manga.manga",
+                    ),
+                ),
             ],
             options={
-                'get_latest_by': 'modified',
-                'abstract': False,
+                "get_latest_by": "modified",
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Chapter',
+            name="Chapter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('number', models.IntegerField(null=True)),
-                ('name', models.TextField()),
-                ('source', models.TextField()),
-                ('volume', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='chapters', to='manga.volume')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("number", models.IntegerField(null=True)),
+                ("name", models.TextField()),
+                ("source", models.TextField()),
+                (
+                    "volume",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="chapters",
+                        to="manga.volume",
+                    ),
+                ),
             ],
             options={
-                'get_latest_by': 'modified',
-                'abstract': False,
+                "get_latest_by": "modified",
+                "abstract": False,
             },
         ),
     ]

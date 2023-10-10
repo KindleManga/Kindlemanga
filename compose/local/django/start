@@ -4,5 +4,12 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
+echo "Command: ${CMD}"
+echo "DB_FILE: ${DB_FILE}"
+echo "REPLICA_URL: ${REPLICA_URL}"
+
+# if the db file doesn't exist we get it from the REPLICA_URL
+[ ! -f $DB_FILE ] && litestream restore -v -if-replica-exists -o $DB_FILE "${REPLICA_URL}" \
+  ; python manage.py migrate \
+  ; python manage.py collectstatic --no-input \
+  ; litestream replicate -exec "${CMD}" $DB_FILE "${REPLICA_URL}"

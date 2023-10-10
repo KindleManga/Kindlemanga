@@ -1,5 +1,10 @@
 ARG PYTHON_VERSION=3.9-slim-buster
 
+FROM ghcr.io/ciromattia/kcc:docker-base-20230514
+COPY . /opt/kcc
+RUN cat /opt/kcc/kindlecomicconverter/__init__.py | grep version | awk '{print $3}' | sed "s/'//g" > /IMAGE_VERSION
+
+
 # define an alias for the specfic python version used in this file.
 FROM python:${PYTHON_VERSION} as python
 

@@ -5,16 +5,6 @@ networks:
     name: manga_network
 
 services:
-  playwright:
-    build:
-      context: ./
-      dockerfile: ./compose/production/playwright/Dockerfile
-    image: kindlemanga_playwright
-    container_name: kindlemanga_playwright_local
-    ports:
-      - "5000:5000"
-    command: ["python", "/root/api_server.py"]
-
   django: &django
     build:
       context: ./

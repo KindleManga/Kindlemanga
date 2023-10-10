@@ -12,7 +12,6 @@ boto3
 django-environ
 requests
 lxml
-KindleComicConverter
 whitenoise
 watchgod
 scrapy
@@ -22,7 +21,6 @@ django-extensions
 django-cacheops
 flower
 scrapy-splash
-PyQt5>=5.6.0
 psutil>=5.0.0
 python-slugify>=1.2.1,<3.0.0
 raven>=6.0.0
@@ -30,3 +28,5 @@ django-storages
 cloudscraper
 django-filter
 ipython
+retry
+free-proxy

@@ -12,5 +12,4 @@ class Command(BaseCommand):
         for v in Volume.objects.filter(converting=True):
             v.converting = False
             v.save()
-        self.stdout.write(
-            f"Successfully removed converting status for all volumes")
+        self.stdout.write(f"Successfully removed converting status for all volumes")

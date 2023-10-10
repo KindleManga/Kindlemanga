@@ -15,9 +15,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for kcc
   libpng-dev \
   libjpeg-dev \
-  sqlite3
+  sqlite3 \
+  p7zip-full \
+  unrar-free \
+  wget \
+  curl
 
 # Requirements are installed here to ensure they will be cached.
+COPY ./kcc-5.6.3/requirements.txt ./kcc-5.6.3/
 COPY ./manga_web/requirements .
 
 # Create Python Dependency and Sub-Dependency Wheels.
@@ -25,6 +30,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
   pip wheel --wheel-dir /usr/src/app/wheels  \
   -r ${BUILD_ENVIRONMENT}.txt
 
+RUN cd kcc-5.6.3 \
+  --mount=type=cache,target=/root/.cache/pip \
+  pip wheel --wheel-dir /usr/src/app/wheels  \
+  -r requirements.txt
 
 # Python 'run' stage
 FROM python as python-run-stage
@@ -44,6 +53,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  wget \
+  curl \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -55,6 +66,10 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 # use wheels to install python dependencies
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
 	&& rm -rf /wheels/
+
+RUN wget 'https://github.com/benbjohnson/litestream/releases/download/v0.3.11/litestream-v0.3.11-linux-amd64.deb' \
+  && dpkg -i litestream-v0.3.11-linux-amd64.deb \
+  && rm litestream-v0.3.11-linux-amd64.deb
 
 COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
@@ -82,5 +97,6 @@ RUN chmod +x /usr/local/bin/kindlegen
 COPY ./manga_crawler /crawler
 # copy application code to WORKDIR
 COPY ./manga_web ${APP_HOME}
+
 
 ENTRYPOINT ["/entrypoint"]

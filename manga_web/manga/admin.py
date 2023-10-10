@@ -20,6 +20,7 @@ class ChapterAdmin(admin.ModelAdmin):
     raw_id_fields = [
         "volume",
     ]
+    search_fields = ["id", "volume__manga__name", "name", "source"]
 
 
 admin.site.register(Manga, MangaAdmin)
