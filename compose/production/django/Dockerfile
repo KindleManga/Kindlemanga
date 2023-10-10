@@ -1,17 +1,12 @@
 ARG PYTHON_VERSION=3.9-slim-buster
 
-FROM ghcr.io/ciromattia/kcc:docker-base-20230514
-COPY . /opt/kcc
-RUN cat /opt/kcc/kindlecomicconverter/__init__.py | grep version | awk '{print $3}' | sed "s/'//g" > /IMAGE_VERSION
-
-
 # define an alias for the specfic python version used in this file.
 FROM python:${PYTHON_VERSION} as python
 
 # Python build stage
 FROM python as python-build-stage
 
-ARG BUILD_ENVIRONMENT=prod
+ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -20,9 +15,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for kcc
   libpng-dev \
   libjpeg-dev \
-  sqlite3
+  sqlite3 \
+  p7zip-full \
+  unrar-free \
+  wget \
+  curl
 
 # Requirements are installed here to ensure they will be cached.
+COPY ./kcc-5.6.3/requirements.txt ./kcc-5.6.3/
 COPY ./manga_web/requirements .
 
 # Create Python Dependency and Sub-Dependency Wheels.
@@ -30,11 +30,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
   pip wheel --wheel-dir /usr/src/app/wheels  \
   -r ${BUILD_ENVIRONMENT}.txt
 
+RUN cd kcc-5.6.3 \
+  --mount=type=cache,target=/root/.cache/pip \
+  pip wheel --wheel-dir /usr/src/app/wheels  \
+  -r requirements.txt
 
 # Python 'run' stage
 FROM python as python-run-stage
 
-ARG BUILD_ENVIRONMENT=prod
+ARG BUILD_ENVIRONMENT=local
 ARG APP_HOME=/app
 
 ENV PYTHONUNBUFFERED 1
@@ -49,6 +53,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  wget \
+  curl \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -61,7 +67,11 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
 	&& rm -rf /wheels/
 
-COPY ./compose/production/django/start /start
+RUN wget 'https://github.com/benbjohnson/litestream/releases/download/v0.3.11/litestream-v0.3.11-linux-amd64.deb' \
+  && dpkg -i litestream-v0.3.11-linux-amd64.deb \
+  && rm litestream-v0.3.11-linux-amd64.deb
+
+COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
@@ -85,7 +95,10 @@ COPY ./kindlegen /usr/local/bin
 RUN chmod +x /usr/local/bin/kindlegen
 
 COPY ./manga_crawler /crawler
-# copy application code to WORKDIR
 COPY ./manga_web ${APP_HOME}
+
+RUN cd kcc-5.6.3 \
+   && pip install -r requirements.txt
+
 
 ENTRYPOINT ["/entrypoint"]

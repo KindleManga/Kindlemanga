@@ -16,7 +16,13 @@ from PIL import Image, ImageFile
 from retry import retry
 
 from .models import Chapter, Volume
-from .utils import extract_images_url, url2filename, reset_proxy, get_proxy
+from .utils import (
+    extract_images_url,
+    url2filename,
+    reset_proxy,
+    get_proxy,
+    remove_duplicate_images,
+)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -49,7 +55,7 @@ def is_valid_image(path):
         return False
 
 
-@retry(tries=5, delay=10, backoff=2)
+@retry(tries=5, delay=2, backoff=1.5)
 def download(chapter_id, index, path, url):
     filename = url2filename(url, chapter_id, index)
     logger.debug("Downloading %s", filename)
@@ -59,16 +65,18 @@ def download(chapter_id, index, path, url):
     proxy = get_proxy()
     logger.debug("Using proxy %s", proxy)
     try:
-        r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
+        r = requests.get(url, stream=True)
     except Exception as e:
-        print(f"Failed to download {url}")
-        return
+        logger.error(f"Failed to download {url}")
+        reset_proxy()
+        raise e
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
             for chunk in r:
                 f.write(chunk)
     else:
-        cmd = f"curl '{url}' -x {proxy} -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
+        logging.debug("Trying with curl")
+        cmd = f"curl '{url}' -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
         subprocess.call(cmd, shell=True)
     if not is_valid_image(os.path.join(path, filename)):
         reset_proxy()
@@ -116,18 +124,20 @@ def download_volume(volume_id):
     for chap in chapters:
         download_chapter(path, chap.id)
 
+    remove_duplicate_images(path)
     delete_corrupt_file(path)
     return path
 
 
 def add_watermark(path):
-    img = settings.BASE_DIR / "static" / "image" / "kindlemanga_cover.png"
+    img = os.path.join(settings.BASE_DIR, "static/image/kindlemanga_cover.png")
     img = Image.open(img)
-    img.save(os.path.join(path, "0000.png"))
+    img.save(os.path.join(path, "_cover.png"))
 
 
 def generate_manga(path, volume_id, profile="KPW"):
     vol = Volume.objects.get(id=volume_id)
+    logger.info("Start converting %s", vol.title())
     args = shlex.split(
         f"/app/kcc-5.6.3/kcc-c2e.py -m -q -p {profile} -f EPUB -t {shlex.quote(vol.title())} {shlex.quote(path)}"
     )
@@ -137,7 +147,7 @@ def generate_manga(path, volume_id, profile="KPW"):
     if os.path.getsize(file_path) >> 20 < 4:
         raise ValueError("Converted file size is too small")
 
-    print(f"Make {file_path} successful")
+    logger.info("Converted %s", vol.title())
     return file_path
 
 

@@ -41,7 +41,9 @@ celery==5.2.7
 certifi==2022.5.18.1
     # via requests
 cffi==1.15.0
-    # via cryptography
+    # via
+    #   cryptography
+    #   mozjpeg-lossless-optimization
 charset-normalizer==2.0.12
     # via requests
 click==8.1.3
@@ -75,6 +77,8 @@ decorator==5.1.1
     #   retry
 deprecated==1.2.13
     # via redis
+distro==1.8.0
+    # via -r requirements/base.in
 django==4.0.5
     # via
     #   -r requirements/base.in
@@ -165,6 +169,8 @@ lxml==4.9.0
     #   scrapy
 matplotlib-inline==0.1.3
     # via ipython
+mozjpeg-lossless-optimization==1.1.3
+    # via -r requirements/base.in
 packaging==21.3
     # via redis
 parsel==1.6.0
@@ -177,6 +183,8 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
+pillow==10.0.1
+    # via -r requirements/base.in
 prometheus-client==0.14.1
     # via flower
 prompt-toolkit==3.0.29
@@ -211,6 +219,12 @@ pyparsing==3.0.9
     # via
     #   cloudscraper
     #   packaging
+pyqt5==5.15.9
+    # via -r requirements/base.in
+pyqt5-qt5==5.15.2
+    # via pyqt5
+pyqt5-sip==12.12.2
+    # via pyqt5
 python-crontab==2.6.0
     # via django-celery-beat
 python-dateutil==2.8.2

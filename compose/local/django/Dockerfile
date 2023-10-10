@@ -95,8 +95,10 @@ COPY ./kindlegen /usr/local/bin
 RUN chmod +x /usr/local/bin/kindlegen
 
 COPY ./manga_crawler /crawler
-# copy application code to WORKDIR
 COPY ./manga_web ${APP_HOME}
+
+RUN cd kcc-5.6.3 \
+   && pip install -r requirements.txt
 
 
 ENTRYPOINT ["/entrypoint"]

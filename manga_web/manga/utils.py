@@ -1,6 +1,7 @@
 import logging
 import io
 import os
+import hashlib
 import posixpath
 from django.core.cache import cache
 from retry import retry
@@ -21,6 +22,10 @@ logger = logging.getLogger(__name__)
 
 s = requests.Session()
 IMAGE_EXTS = [".jpg", ".png", ".jpeg"]
+
+
+class NoImagesFound(Exception):
+    pass
 
 
 def url2filename(url, chapter_id=None, index=None):
@@ -134,15 +139,15 @@ def extract_images_url(url, source):
         tree = html.fromstring(r.text)
         return tree.xpath('//*[contains(@id, "page_")]/img/@src')
     if source == "truyenkinhdien":
-        proxy = get_proxy()
         url = fix_url(source, url)
         r = s.get(
             settings.SPLASH_URL.replace("render.html", "execute"),
-            params={"url": url, "lua_source": lua_script, "wait": 1, "proxy": proxy},
+            params={"url": url, "lua_source": lua_script, "wait": 1},
         )
         tree = html.fromstring(r.json()["html"])
         result = tree.xpath('//*[@class="entry-content single-page"]/img/@src')
-        print(result)
+        if not result:
+            raise NoImagesFound("No images found")
         return result
 
 
@@ -169,3 +174,37 @@ def get_proxy():
 
 def reset_proxy():
     cache.delete("proxy")
+
+
+def calculate_file_hash(file_path):
+    # Create an MD5 hash of the file's content
+    hasher = hashlib.md5()
+    with open(file_path, "rb") as f:
+        while True:
+            chunk = f.read(4096)
+            if not chunk:
+                break
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+
+def remove_duplicate_images(folder_path):
+    # Dictionary to store hashes of seen images
+    seen_hashes = {}
+
+    # Iterate through files in the folder
+    for root, _, files in os.walk(folder_path):
+        for filename in files:
+            file_path = os.path.join(root, filename)
+
+            # Check if the file is an image (you can add more image file extensions if needed)
+            if file_path.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+                # Calculate the hash of the image file
+                file_hash = calculate_file_hash(file_path)
+
+                # Check if the hash already exists in the dictionary
+                if file_hash in seen_hashes:
+                    print(f"Removing duplicate: {file_path}")
+                    os.remove(file_path)
+                else:
+                    seen_hashes[file_hash] = file_path

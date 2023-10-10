@@ -86,7 +86,7 @@ def manga_directory_path(instance, filename):
 class Volume(TimeStampedModel):
     manga = models.ForeignKey(Manga, on_delete=models.CASCADE, related_name="volumes")
     number = models.CharField(null=True, max_length=10)
-    file = models.FileField(upload_to=manga_directory_path, null=True)
+    file = models.FileField(upload_to=manga_directory_path, null=True, blank=True)
     converting = models.BooleanField(default=False)
 
     def __str__(self):
