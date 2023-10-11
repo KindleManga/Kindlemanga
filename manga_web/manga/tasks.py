@@ -71,9 +71,9 @@ def download(chapter_id, index, path, url, manga_source: str):
                 for chunk in r:
                     f.write(chunk)
     except Exception as e:
-        logger.error(f"Failed to download {url}")
+        logger.error(f"Failed to download {url} - {e}")
         logging.debug("Trying with curl")
-        cmd = f"curl '{url}' -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
+        cmd = f"curl '{url}' -X {proxy} -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
         subprocess.call(cmd, shell=True)
     if not is_valid_image(os.path.join(path, filename)):
         reset_proxy(manga_source)
