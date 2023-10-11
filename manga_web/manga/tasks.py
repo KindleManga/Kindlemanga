@@ -155,7 +155,7 @@ def delete_corrupt_file(path):
         try:
             img = Image.open(os.path.join(path, filename))
             img.verify()
-            img = Image.open(path)
+            img = Image.open(os.path.join(path, filename))
             img.load()
             width, height = img.size
             if height < 500:
