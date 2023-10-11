@@ -168,7 +168,7 @@ def get_proxy(source):
     proxy = cache.get(key)
     if proxy:
         return proxy
-    proxy = FreeProxy().get()
+    proxy = FreeProxy(https=True, country_id=["US", "SG", "JP", "CA", "VN"]).get()
     cache.set(key, proxy, 60 * 60 * 10)
     return proxy
 
