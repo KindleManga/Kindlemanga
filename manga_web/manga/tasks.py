@@ -68,8 +68,6 @@ def download(chapter_id, index, path, url, manga_source: str):
         r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
     except Exception as e:
         logger.error(f"Failed to download {url}")
-        reset_proxy(manga_source)
-        raise e
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
             for chunk in r:
