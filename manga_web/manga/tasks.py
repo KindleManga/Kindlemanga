@@ -56,19 +56,19 @@ def is_valid_image(path):
 
 
 @retry(tries=5, delay=2, backoff=1.5)
-def download(chapter_id, index, path, url):
+def download(chapter_id, index, path, url, manga_source: str):
     filename = url2filename(url, chapter_id, index)
     logger.debug("Downloading %s", filename)
     if not url.startswith("http"):
         url = "http:" + url
 
-    proxy = get_proxy()
+    proxy = get_proxy(manga_source)
     logger.debug("Using proxy %s", proxy)
     try:
         r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
     except Exception as e:
         logger.error(f"Failed to download {url}")
-        reset_proxy()
+        reset_proxy(manga_source)
         raise e
     if r.status_code == 200:
         with open(os.path.join(path, filename), "wb") as f:
@@ -79,7 +79,7 @@ def download(chapter_id, index, path, url):
         cmd = f"curl '{url}' -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
         subprocess.call(cmd, shell=True)
     if not is_valid_image(os.path.join(path, filename)):
-        reset_proxy()
+        reset_proxy(manga_source)
         raise ImageInvalidError(f"Image {filename} is invalid")
     logger.debug("Downloaded %s", filename)
 
@@ -105,6 +105,8 @@ def download_chapter(path, chapter_id):
     if not os.path.exists(path):
         os.makedirs(path)
     c = Chapter.objects.get(id=chapter_id)
+    manga = c.volume.manga
+    manga_source = manga.web_source
     urls = extract_images_url(c.source, c.volume.manga.web_source)
     if len(urls) <= 2:
         logging.warning("Chapter %s has only %s images", c.id, len(urls))
@@ -113,7 +115,7 @@ def download_chapter(path, chapter_id):
     threads = []
     with ThreadPoolExecutor(max_workers=10) as executor:
         for index, url in enumerate(urls):
-            threads.append(executor.submit(download, chapter_id, index, path, url))
+            threads.append(executor.submit(download, chapter_id, index, path, url, manga_source))
 
     wait(threads)
 

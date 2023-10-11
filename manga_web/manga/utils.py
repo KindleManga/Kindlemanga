@@ -163,30 +163,30 @@ def image_to_bytesio(url):
     return io.BytesIO(resp.content)
 
 
-def get_proxy():
-    proxy = cache.get("proxy")
+def get_proxy(source):
+    key = f"proxy:{source}"
+    proxy = cache.get(key)
     if proxy:
         return proxy
     proxy = FreeProxy().get()
-    cache.set("proxy", proxy, 60 * 60 * 10)
+    cache.set(key, proxy, 60 * 60 * 10)
     return proxy
 
 
-def reset_proxy():
-    cache.delete("proxy")
+def reset_proxy(source):
+    cache.delete(f"proxy:{source}")
 
 
 def calculate_file_hash(file_path):
     # Create an MD5 hash of the file's content
     hasher = hashlib.md5()
-    with open(file_path, "rb") as f:
+    with open(file_path, 'rb') as f:
         while True:
             chunk = f.read(4096)
             if not chunk:
                 break
             hasher.update(chunk)
     return hasher.hexdigest()
-
 
 def remove_duplicate_images(folder_path):
     # Dictionary to store hashes of seen images
@@ -198,7 +198,7 @@ def remove_duplicate_images(folder_path):
             file_path = os.path.join(root, filename)
 
             # Check if the file is an image (you can add more image file extensions if needed)
-            if file_path.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+            if file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
                 # Calculate the hash of the image file
                 file_hash = calculate_file_hash(file_path)
 
