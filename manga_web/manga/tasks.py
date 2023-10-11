@@ -65,7 +65,7 @@ def download(chapter_id, index, path, url):
     proxy = get_proxy()
     logger.debug("Using proxy %s", proxy)
     try:
-        r = requests.get(url, stream=True)
+        r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
     except Exception as e:
         logger.error(f"Failed to download {url}")
         reset_proxy()
@@ -139,11 +139,11 @@ def generate_manga(path, volume_id, profile="KPW"):
     vol = Volume.objects.get(id=volume_id)
     logger.info("Start converting %s", vol.title())
     args = shlex.split(
-        f"/app/kcc-5.6.3/kcc-c2e.py -m -q -p {profile} -f EPUB -t {shlex.quote(vol.title())} {shlex.quote(path)}"
+        f"/app/kcc-5.6.3/kcc-c2e.py -m -q -p {profile} -f MOBI -t {shlex.quote(vol.title())} {shlex.quote(path)}"
     )
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     p.communicate()
-    file_path = f"{path}.epub"
+    file_path = f"{path}.mobi"
     if os.path.getsize(file_path) >> 20 < 4:
         raise ValueError("Converted file size is too small")
 
@@ -170,11 +170,11 @@ def delete_corrupt_file(path):
 
 def upload_and_save(path, volume_id):
     v = Volume.objects.get(id=volume_id)
-    file_name = f"{slugify(v.manga.name).replace('-', '_')}_vol_{v.number}.epub"
+    file_name = f"{slugify(v.manga.name).replace('-', '_')}_vol_{v.number}.mobi"
     with open(path, "rb") as f:
         v.file.save(file_name, File(f))
         v.save()
-    shutil.rmtree(path.split(".epub")[0])
+    shutil.rmtree(path.split(".mobi")[0])
     os.remove(path)
     return v.manga.name
 
