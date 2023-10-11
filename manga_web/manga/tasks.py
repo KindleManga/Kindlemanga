@@ -50,8 +50,9 @@ def is_valid_image(path):
     try:
         img = Image.open(path)
         img.verify()
+        img.load()
         return True
-    except (IOError, SyntaxError) as e:
+    except (IOError, SyntaxError, AttributeError) as e:
         return False
 
 
@@ -158,10 +159,10 @@ def delete_corrupt_file(path):
             width, height = img.size
             if height < 500:
                 os.remove(os.path.join(path, filename))
-        except (IOError, SyntaxError) as e:
+        except (IOError, SyntaxError, AttributeError) as e:
             os.remove(os.path.join(path, filename))
             logger.info(
-                "Removed corrupted image {}".format(os.path.join(path, filename))
+                "Removed corrupted image {} - {}".format(os.path.join(path, filename), e)
             )
 
     return path
