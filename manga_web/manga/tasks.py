@@ -7,6 +7,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor, wait
 
 import requests
+from requests.exceptions import ConnectionError
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.text import slugify
@@ -72,6 +73,9 @@ def download(chapter_id, index, path, url, manga_source: str):
             with open(os.path.join(path, filename), "wb") as f:
                 for chunk in r:
                     f.write(chunk)
+    except ConnectionError as e:
+        reset_proxy(manga_source)
+        raise e
     except Exception as e:
         logger.error(f"Failed to download {url} - {e}")
         logging.debug("Trying with curl")

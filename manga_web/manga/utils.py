@@ -116,7 +116,7 @@ def fix_url(source, url):
         return url.replace("https://truyenkinhdien.com", "https://webtrainghiem.com")
 
 
-@retry(tries=5, delay=10, backoff=2)
+@retry(tries=5, delay=3, backoff=1.5)
 def extract_images_url(url, source):
     """
     Extract image url for a chapter
