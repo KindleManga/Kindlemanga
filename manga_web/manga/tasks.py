@@ -68,7 +68,7 @@ def download(chapter_id, index, path, url, manga_source: str):
     proxy = get_proxy(manga_source)
     logger.debug("Using proxy %s", proxy)
     try:
-        r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
+        r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy}, timeout=10)
         if r.status_code == 200:
             with open(os.path.join(path, filename), "wb") as f:
                 for chunk in r:
@@ -76,11 +76,6 @@ def download(chapter_id, index, path, url, manga_source: str):
     except ConnectionError as e:
         reset_proxy(manga_source)
         raise e
-    except Exception as e:
-        logger.error(f"Failed to download {url} - {e}")
-        logging.debug("Trying with curl")
-        cmd = f"curl '{url}' -X {proxy} -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
-        subprocess.call(cmd, shell=True)
     if not is_valid_image(os.path.join(path, filename)):
         raise ImageInvalidError(f"Image {filename} is invalid")
     logger.debug("Downloaded %s", filename)
