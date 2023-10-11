@@ -8,7 +8,7 @@ from .tasks import make_volume
 
 
 class CreateVolumeForm(forms.Form):
-    # captcha = ReCaptchaField(widget=ReCaptchaV3)
+    captcha = ReCaptchaField(widget=ReCaptchaV3)
 
     def create_volume(self, volume_id):
         r = make_volume.delay(volume_id)
