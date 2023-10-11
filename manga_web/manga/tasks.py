@@ -66,13 +66,12 @@ def download(chapter_id, index, path, url, manga_source: str):
     logger.debug("Using proxy %s", proxy)
     try:
         r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy})
+        if r.status_code == 200:
+            with open(os.path.join(path, filename), "wb") as f:
+                for chunk in r:
+                    f.write(chunk)
     except Exception as e:
         logger.error(f"Failed to download {url}")
-    if r.status_code == 200:
-        with open(os.path.join(path, filename), "wb") as f:
-            for chunk in r:
-                f.write(chunk)
-    else:
         logging.debug("Trying with curl")
         cmd = f"curl '{url}' -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
         subprocess.call(cmd, shell=True)
