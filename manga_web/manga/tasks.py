@@ -24,7 +24,7 @@ from .utils import (
     remove_duplicate_images,
 )
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+ImageFile.LOAD_TRUNCATED_IMAGES = False
 
 BUCKET_NAME = settings.BUCKET_NAME
 # https://stackoverflow.com/questions/31784484/how-to-parallelized-file-downloads
@@ -76,7 +76,6 @@ def download(chapter_id, index, path, url, manga_source: str):
         cmd = f"curl '{url}' -X {proxy} -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' --compressed -o {os.path.join(path, filename)}"
         subprocess.call(cmd, shell=True)
     if not is_valid_image(os.path.join(path, filename)):
-        reset_proxy(manga_source)
         raise ImageInvalidError(f"Image {filename} is invalid")
     logger.debug("Downloaded %s", filename)
 
