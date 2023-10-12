@@ -1,3 +1,4 @@
+import time
 import logging
 import os
 import shlex
@@ -67,18 +68,23 @@ def download(chapter_id, index, path, url, manga_source: str):
 
     proxy = get_proxy(manga_source)
     logger.debug("Using proxy %s", proxy)
-    try:
-        r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy}, timeout=10)
-        if r.status_code == 200:
-            with open(os.path.join(path, filename), "wb") as f:
-                for chunk in r:
-                    f.write(chunk)
-    except ConnectionError as e:
-        reset_proxy(manga_source)
-        raise e
-    if not is_valid_image(os.path.join(path, filename)):
-        raise ImageInvalidError(f"Image {filename} is invalid")
-    logger.debug("Downloaded %s", filename)
+    count = 5
+    while count > 0:
+        try:
+            r = requests.get(url, stream=True, proxies={"http": proxy, "https": proxy}, timeout=10)
+            if r.status_code == 200:
+                with open(os.path.join(path, filename), "wb") as f:
+                    for chunk in r:
+                        f.write(chunk)
+            if not is_valid_image(os.path.join(path, filename)):
+                raise ImageInvalidError(f"Image {filename} is invalid")
+            logger.debug("Downloaded %s", filename)
+        except ConnectionError as e:
+            count -= 1
+            if count == 0:
+                reset_proxy(manga_source)
+                raise e
+            time.sleep(2)
 
 
 def generate_key(vol):
@@ -170,6 +176,7 @@ def delete_corrupt_file(path):
 
 
 def upload_and_save(path, volume_id):
+    logger.info("Uploading %s", path)
     v = Volume.objects.get(id=volume_id)
     file_name = f"{slugify(v.manga.name).replace('-', '_')}_vol_{v.number}.mobi"
     with open(path, "rb") as f:
@@ -177,6 +184,7 @@ def upload_and_save(path, volume_id):
         v.save()
     shutil.rmtree(path.split(".mobi")[0])
     os.remove(path)
+    logger.info("Uploaded %s", path)
     return v.manga.name
 
 

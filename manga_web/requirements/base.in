@@ -39,3 +39,5 @@ raven>=6.0.0
 # PyQt5-tools
 mozjpeg-lossless-optimization>=1.1.2
 distro
+selenium
+webdriver-manager

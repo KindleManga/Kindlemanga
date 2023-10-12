@@ -17,7 +17,9 @@ async-timeout==4.0.2
 attrs==21.4.0
     # via
     #   automat
+    #   outcome
     #   service-identity
+    #   trio
     #   twisted
 automat==20.2.0
     # via twisted
@@ -39,7 +41,9 @@ celery==5.2.7
     #   django-celery-results
     #   flower
 certifi==2022.5.18.1
-    # via requests
+    # via
+    #   requests
+    #   selenium
 cffi==1.15.0
     # via
     #   cryptography
@@ -120,6 +124,10 @@ django-timezone-field==5.0
     # via django-celery-beat
 django-widget-tweaks==1.4.12
     # via -r requirements/base.in
+exceptiongroup==1.1.3
+    # via
+    #   trio
+    #   trio-websocket
 executing==0.8.3
     # via stack-data
 feedparser==6.0.10
@@ -132,6 +140,8 @@ free-proxy==1.1.1
     # via -r requirements/base.in
 funcy==1.17
     # via django-cacheops
+h11==0.14.0
+    # via wsproto
 humanize==4.1.0
     # via flower
 hyperlink==21.0.0
@@ -142,6 +152,7 @@ idna==3.3
     #   hyperlink
     #   requests
     #   tldextract
+    #   trio
 incremental==21.3.0
     # via twisted
 ipython==8.4.0
@@ -171,8 +182,12 @@ matplotlib-inline==0.1.3
     # via ipython
 mozjpeg-lossless-optimization==1.1.3
     # via -r requirements/base.in
+outcome==1.2.0
+    # via trio
 packaging==21.3
-    # via redis
+    # via
+    #   redis
+    #   webdriver-manager
 parsel==1.6.0
     # via
     #   itemloaders
@@ -225,12 +240,16 @@ pyqt5-qt5==5.15.2
     # via pyqt5
 pyqt5-sip==12.12.2
     # via pyqt5
+pysocks==1.7.1
+    # via urllib3
 python-crontab==2.6.0
     # via django-celery-beat
 python-dateutil==2.8.2
     # via
     #   botocore
     #   python-crontab
+python-dotenv==1.0.0
+    # via webdriver-manager
 python-slugify==2.0.1
     # via -r requirements/base.in
 pytz==2022.1
@@ -254,6 +273,7 @@ requests==2.27.1
     #   requests-file
     #   requests-toolbelt
     #   tldextract
+    #   webdriver-manager
 requests-file==1.5.1
     # via tldextract
 requests-toolbelt==0.9.1
@@ -265,6 +285,8 @@ s3transfer==0.6.0
 scrapy==2.6.1
     # via -r requirements/base.in
 scrapy-splash==0.8.0
+    # via -r requirements/base.in
+selenium==4.11.2
     # via -r requirements/base.in
 service-identity==21.1.0
     # via scrapy
@@ -283,7 +305,11 @@ six==1.16.0
     #   service-identity
     #   w3lib
 sniffio==1.2.0
-    # via anyio
+    # via
+    #   anyio
+    #   trio
+sortedcontainers==2.4.0
+    # via trio
 sqlparse==0.4.2
     # via django
 stack-data==0.2.0
@@ -296,6 +322,12 @@ traitlets==5.2.2.post1
     # via
     #   ipython
     #   matplotlib-inline
+trio==0.22.2
+    # via
+    #   selenium
+    #   trio-websocket
+trio-websocket==0.11.1
+    # via selenium
 twisted==22.4.0
     # via scrapy
 typing-extensions==4.2.0
@@ -304,10 +336,11 @@ tzdata==2022.1
     # via django-celery-beat
 unidecode==1.3.4
     # via -r requirements/base.in
-urllib3==1.26.9
+urllib3[socks]==1.26.9
     # via
     #   botocore
     #   requests
+    #   selenium
 vine==5.0.0
     # via
     #   amqp
@@ -322,10 +355,14 @@ watchgod==0.8.2
     # via -r requirements/base.in
 wcwidth==0.2.5
     # via prompt-toolkit
+webdriver-manager==4.0.1
+    # via -r requirements/base.in
 whitenoise==6.1.0
     # via -r requirements/base.in
 wrapt==1.14.1
     # via deprecated
+wsproto==1.2.0
+    # via trio-websocket
 zope-interface==5.4.0
     # via
     #   scrapy

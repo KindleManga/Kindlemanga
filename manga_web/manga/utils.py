@@ -18,6 +18,12 @@ import requests
 from lxml import html
 from fp.fp import FreeProxy
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
+
 logger = logging.getLogger(__name__)
 
 s = requests.Session()
@@ -110,6 +116,20 @@ function main(splash, args)
 end
 """
 
+MANGASEE_HEADERS = {
+    "Cookies": "History=%255B%257B%2522IndexName%2522%253A%2522Naruto%2522%252C%2522SeriesName%2522%253A%2522Naruto%2522%252C%2522Chapter%2522%253A%2522100010%2522%252C%2522Page%2522%253A0%252C%2522TimeStamp%2522%253A1697010523%257D%252C%257B%2522IndexName%2522%253A%2522Ore-No-Ie-Ga-Maryoku-Spot-Datta-Ken%2522%252C%2522SeriesName%2522%253A%2522Ore%2520no%2520Ie%2520ga%2520Maryoku%2520Spot%2520datta%2520Ken%2522%252C%2522Chapter%2522%253A%2522101650%2522%252C%2522Page%2522%253A1%252C%2522TimeStamp%2522%253A1696651758%257D%255D; FullPage=yes; PHPSESSID=sgpc4vgd6kgv32uhm9qifmf460",
+    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Host": "mangasee123.com",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+}
 
 def fix_url(source, url):
     if source == "truyenkinhdien":
@@ -122,12 +142,18 @@ def extract_images_url(url, source):
     Extract image url for a chapter
     """
     if source == "mangaseeonline":
-        r = s.post(
-            "http://playwright:5000/scrape",
-            json={"url": url.replace("-page-1", ""), "wait": 1},
-        )
-        tree = html.fromstring(r.text)
-        return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
+        # r = s.get(
+        #     settings.SPLASH_URL,
+        #     params={"url": url.replace("-page-1", ""), "wait": 1},
+        # )
+        # tree = html.fromstring(r.text)
+        # return tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
+        # html_page = selenium_fetch(url)
+        # tree = html.fromstring(html_page)
+        # result = tree.xpath('//*[@id="TopPage"]/descendant::img/@src')
+        # print(result)
+        # return result
+        return None
     if source == "nettruyen":
         r = s.get(
             settings.SPLASH_URL, params={"url": url.replace("-page-1", ""), "wait": 1}
@@ -208,3 +234,28 @@ def remove_duplicate_images(folder_path):
                     os.remove(file_path)
                 else:
                     seen_hashes[file_hash] = file_path
+
+
+def selenium_fetch(url):
+    # Initialize a Chrome webdriver
+    options = webdriver.FirefoxOptions()
+    options.headless = True
+    # disable image load
+    options.set_preference("permissions.default.image", 2)
+    options.add_argument("--no-sandbox")
+    options.add_argument("--mute-audio")
+    driver = webdriver.Firefox(
+        options=options, service=FirefoxService(GeckoDriverManager().install())
+    )
+    driver.maximize_window()
+
+    try:
+        # Navigate to the specified URL
+        driver.get(url)
+        # Get the HTML source after scrolling
+        html_source = driver.page_source
+    finally:
+        # Close the browser window
+        driver.quit()
+
+    return html_source
