@@ -8,7 +8,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor, wait
 
 import requests
-from requests.exceptions import ConnectionError
+from requests.exceptions import ProxyError
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.text import slugify
@@ -79,7 +79,7 @@ def download(chapter_id, index, path, url, manga_source: str):
             if not is_valid_image(os.path.join(path, filename)):
                 raise ImageInvalidError(f"Image {filename} is invalid")
             logger.debug("Downloaded %s", filename)
-        except ConnectionError as e:
+        except ProxyError as e:
             count -= 1
             if count == 0:
                 reset_proxy(manga_source)
