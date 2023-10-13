@@ -137,7 +137,7 @@ def download_volume(volume_id):
 def add_watermark(path):
     img = os.path.join(settings.BASE_DIR, "static/image/kindlemanga_cover.png")
     img = Image.open(img)
-    img.save(os.path.join(path, "_cover.png"))
+    img.save(os.path.join(path, "_0000cover.png"))
 
 
 def generate_manga(path, volume_id, profile="KPW"):
