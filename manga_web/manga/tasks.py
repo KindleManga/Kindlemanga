@@ -79,6 +79,7 @@ def download(chapter_id, index, path, url, manga_source: str):
             if not is_valid_image(os.path.join(path, filename)):
                 raise ImageInvalidError(f"Image {filename} is invalid")
             logger.debug("Downloaded %s", filename)
+            return filename
         except ProxyError as e:
             count -= 1
             if count == 0:
