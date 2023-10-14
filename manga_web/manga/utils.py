@@ -168,7 +168,7 @@ def extract_images_url(url, source):
         url = fix_url(source, url)
         r = s.get(
             settings.SPLASH_URL.replace("render.html", "execute"),
-            params={"url": url, "lua_source": lua_script, "wait": 1},
+            params={"url": url, "lua_source": lua_script, "wait": 20},
         )
         tree = html.fromstring(r.json()["html"])
         result = tree.xpath('//*[@class="entry-content single-page"]/img/@src')
