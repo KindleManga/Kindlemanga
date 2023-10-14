@@ -138,7 +138,7 @@ def download_volume(volume_id):
             traceback.print_exc()
             logger.error("Error downloading chapter %s", chap.id)
             logger.error(e)
-            raise e
+            continue
 
     remove_duplicate_images(path)
     delete_corrupt_file(path)
