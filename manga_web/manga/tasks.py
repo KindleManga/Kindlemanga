@@ -64,7 +64,10 @@ def download(chapter_id, index, path, url, manga_source: str):
     filename = url2filename(url, chapter_id, index)
     logger.debug("Downloading %s", filename)
     if not url.startswith("http"):
-        url = "http:" + url
+        if url.startswith("//"):
+            url = "http:" + url
+        else:
+            url = "http://" + url
 
     proxy = get_proxy(manga_source)
     logger.debug("Using proxy %s", proxy)
