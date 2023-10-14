@@ -1,3 +1,4 @@
+import traceback
 import time
 import logging
 import os
@@ -131,7 +132,13 @@ def download_volume(volume_id):
     path = make_volume_dir(volume_id)
     chapters = extract_chapters(volume_id)
     for chap in chapters:
-        download_chapter(path, chap.id)
+        try:
+            download_chapter(path, chap.id)
+        except Exception as e:
+            traceback.print_exc()
+            logger.error("Error downloading chapter %s", chap.id)
+            logger.error(e)
+            raise e
 
     remove_duplicate_images(path)
     delete_corrupt_file(path)

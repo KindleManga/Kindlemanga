@@ -173,7 +173,7 @@ def extract_images_url(url, source):
         tree = html.fromstring(r.json()["html"])
         result = tree.xpath('//*[@class="entry-content single-page"]/img/@src')
         if not result:
-            raise NoImagesFound("No images found")
+            raise NoImagesFound(f"No images found for {url} - {source}")
         return result
 
 
